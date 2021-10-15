@@ -1,0 +1,19 @@
+.setup {
+    background-color: lightblue;
+}
+
+.informational {
+    background-color: linen;
+}
+
+.usage {
+    background-color: lightgreen;
+}
+
+.adjustments {
+    background-color: goldenrod;
+}
+
+.required {
+    color: red;
+}
