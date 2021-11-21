@@ -1,6 +1,6 @@
-function toggle_button(button, fields, any=false) {
+function toggle_button(button, fields, any = false) {
     if (any) {
-        let filtered_fields =  fields.filter(function (field){
+        let filtered_fields = fields.filter(function (field) {
             if (document.getElementById(field).value != "") {
                 return field;
             }
@@ -11,7 +11,7 @@ function toggle_button(button, fields, any=false) {
             document.getElementById(button).disabled = true;
         }
     } else {
-        let filtered_fields =  fields.filter(function (field){
+        let filtered_fields = fields.filter(function (field) {
             if (document.getElementById(field).value != "") {
                 return field;
             }
@@ -42,7 +42,7 @@ async function build_class_menus() {
 async function build_subclass_menu(menu, classes_id) {
     classes = await get_all_classes_and_subclasses();
     let themenu = document.getElementById(menu);
-    subclasses = classes.results.filter(({id}) => id == classes_id)[0].subclasses;
+    subclasses = classes.results.filter(({ id }) => id == classes_id)[0].subclasses;
     themenu.innerHTML = '<option value=""></option>';
     let j = 1;
     for (let eachsubclass in subclasses) {
@@ -51,6 +51,19 @@ async function build_subclass_menu(menu, classes_id) {
         themenu.options[j] = new Option(subclassname, subclassid);
         j++;
     }
+}
+
+async function build_prism_offset_menus() {
+    options = await get_offset_types_and_directions();
+    let formFields = document.getElementById("prismOffsetsForm").innerHTML;
+    for (let eachoption in options) {
+        formFields += '<label>' + eachoption + ':</label><input type="text" id="' + eachoption.toLowerCase() + 'Distance">';
+        formFields += '<select id="' + eachoption.toLowerCase() + 'Direction">';
+        formFields += '<option value="1">' + options[eachoption][0] + '</option>';
+        formFields += '<option value="-1">' + options[eachoption][1] + '</option>';
+        formFields += '</select > ';
+    }
+    document.getElementById("prismOffsetsForm").innerHTML = formFields;
 }
 
 function _display_result(result) {
@@ -155,10 +168,18 @@ async function get_prism_offsets() {
     _display_result(result);
 }
 
-async function set_prism_offsets(offsets) {
-    // data = {
-    // }
-    // _put("/prism/", data);
+async function set_prism_offsets() {
+    data = {};
+    options = await get_offset_types_and_directions();
+    for (let eachoption in options) {
+        offsetname = eachoption.toLowerCase() + "_distance";
+        offsetdistance = document.getElementById(eachoption.toLowerCase() + "Distance").value;
+        offsetdirection = document.getElementById(eachoption.toLowerCase() + "Direction").value;
+        if (offsetdistance !== "") {
+            data[offsetname] = offsetdistance * offsetdirection;
+        }
+    }
+    _put("/prism/", data);
 }
 
 async function get_all_sites() {

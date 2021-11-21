@@ -14,6 +14,10 @@
     background-color: goldenrod;
 }
 
+.utility {
+    background-color: darkgrey;
+}
+
 .required {
     color: red;
 }
