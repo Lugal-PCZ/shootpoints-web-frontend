@@ -54,15 +54,15 @@
 				optional />
 		</form>
 
-		<form id="createNewSiteForm" clearonsuccess>
-			<button id="createNewSiteButton" hx-post="/site/" hx-target="#setupOutput" hx-swap="innerHTML"
+		<form id="saveNewSiteForm" clearonsuccess>
+			<button id="saveNewSiteButton" hx-post="/site/" hx-target="#setupOutput" hx-swap="innerHTML"
 				hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
 				Create New Site
 			</button>
 			<label>Name:</label>
-			<input type="text" id="createNewSiteName" name="name" oninput="toggle_button(this);" required />
+			<input type="text" id="saveNewSiteName" name="name" oninput="toggle_button(this);" required />
 			<label>Description:</label>
-			<input type="text" id="createNewSiteDescription" name="description" />
+			<input type="text" id="saveNewSiteDescription" name="description" />
 		</form>
 
 		<form id="deleteSiteForm" clearonsuccess>
@@ -88,8 +88,9 @@
 				Save New Station
 			</button>
 			<label>Site:</label>
-			<select id="saveNewStationSite" name="sites_id" onchange="toggle_button(this);" hx-get="/site/"
-				hx-trigger="load" hx-target="this" hx-swap="innerHTML" hx-ext="client-side-templates"
+			<select id="saveNewStationSite" name="sites_id"
+				onchange="toggle_button(this); update_description(this, 'saveNewStationSiteDescription');"
+				hx-get="/site/" hx-trigger="load" hx-target="this" hx-swap="innerHTML" hx-ext="client-side-templates"
 				mustache-template="sitesmenutemplate" required>
 			</select>
 			<img class="info" id="saveNewStationSiteDescription" src="img/info.svg">
@@ -143,7 +144,7 @@
 		</form>
 
 		<form>
-			create_new_class
+			save_new_class
 		</form>
 
 		<form>
@@ -151,7 +152,7 @@
 		</form>
 
 		<form>
-			create_new_subclass
+			save_new_subclass
 		</form>
 	</div>
 </body>
