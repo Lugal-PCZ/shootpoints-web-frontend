@@ -2,119 +2,156 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="commands.js"></script>
-    <link rel="stylesheet" href="styles.css">
+	<meta charset="utf-8">
+	<title>ShootPoints</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://unpkg.com/htmx.org@1.6.1"></script>
+	<script src="https://unpkg.com/htmx.org@1.6.1/dist/ext/client-side-templates.js"></script>
+	<script src="https://unpkg.com/mustache@latest"></script>
+	<script type="text/javascript" src="helpers.js"></script>
+	<script type="text/javascript" src="templates.mustache"></script>
+	<link rel="stylesheet" href="styles.css">
 </head>
 
-<body onload="build_class_menus(); build_prism_offset_menus()">
-    <p>
-    <form class="setup">
-        <input type="button" id="setConfigsButton" onclick="set_configs(
-                document.getElementById('setConfigsPort').value,
-                document.getElementById('setConfigsMake').value,
-                document.getElementById('setConfigsModel').value,
-                document.getElementById('setConfigsLimit').value
-            )" value="Set Configs" disabled>
-        <label>Port:</label><input type="text" id="setConfigsPort"
-            oninput="toggle_button('setConfigsButton', [id, 'setConfigsMake', 'setConfigsModel', 'setConfigsLimit'], true)">
-        <label>Make:</label><input type="text" id="setConfigsMake"
-            oninput="toggle_button('setConfigsButton', ['setConfigsPort', id, 'setConfigsModel', 'setConfigsLimit'], true)">
-        <label>Model:</label><input type="text" id="setConfigsModel"
-            oninput="toggle_button('setConfigsButton', ['setConfigsPort', 'setConfigsMake', id, 'setConfigsLimit'], true)">
-        <label>Limit:</label><input type="text" id="setConfigsLimit"
-            oninput="toggle_button('setConfigsButton', ['setConfigsPort', 'setConfigsMake', 'setConfigsModel', id], true)">
-    </form>
+<body onload="htmx_render_442(); htmx_reset_form_fields()">
+	<p>For the FastAPI interface, click <a href="/docs">here</a>.</p>
 
-    <form class="informational">
-        <input type="button" onclick="show_summary()" value="Show Summary">
-    </form>
+	<div class="informational">
+		<div class="sectionheader" style="background-color: rgb(199, 189, 179);">Testing</div>
+		<form id="htmxTestingForm">
+			<span hidden hx-get="/class/" hx-trigger="load" hx-target="#classesmenu" hx-swap="innerHTML"
+				hx-ext="client-side-templates" mustache-template="classesmenutemplate"></span>
+			<label>Class/Subclass menus</label>
+			<select id="classesmenu" name="classes_id" hx-get="/subclass/" hx-trigger="change"
+				hx-target="#subclassesmenu" hx-swap="innerHTML" hx-ext="client-side-templates"
+				mustache-template="subclassesmenutemplate"
+				onchange="update_description(this, 'htmxTestingFormClassDescription');">
+			</select>
+			<img class="info" id="htmxTestingFormClassDescription" src="img/info.svg">
+			<select id="subclassesmenu" name="subclasses_id"
+				onchange="update_description(this, 'htmxTestingFormSubclassDescription');">
+			</select>
+			<img class="info" id="htmxTestingFormSubclassDescription" src="img/info.svg">
+		</form>
+	</div>
 
-    <form class="utility">
-        <input type="button" onclick="get_all_classes_and_subclasses(true)" value="Get All Classes and Subclasses">
-        <i>*this is a utility method, to be called by other methods, but not directly by the user</i>
-    </form>
+	<div class="setup">
+		<div class="sectionheader" style="background-color: rgb(142, 177, 189)">Setup</div>
+		<div class="output" id="setupOutput"></div>
 
-    <form class="setup">
-        <input type="button" id="createNewClassButton" onclick="create_new_class(
-                    document.getElementById('createNewClassName').value,
-                    document.getElementById('createNewClassDescription').value);
-                build_class_menus();" value="Create New Class" disabled>
-        <label class="required">Name:</label><input type="text" id="createNewClassName"
-            oninput="toggle_button('createNewClassButton', [id])">
-        <label>Description:</label><input type="text" id="createNewClassDescription">
-    </form>
+		<form id="setConfigsForm" clearonsuccess>
+			<button id="setConfigsButton" hx-put="/config/" hx-target="#setupOutput" hx-swap="innerHTML"
+				hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
+				Set Configs
+			</button>
+			<label>Port:</label><input type="text" id="setConfigsPort" name="port" oninput="toggle_button(this)"
+				optional />
+			<label>Make:</label><input type="text" id="setConfigsMake" name="make" oninput="toggle_button(this)"
+				optional />
+			<label>Model:</label><input type="text" id="setConfigsModel" name="model" oninput="toggle_button(this)"
+				optional />
+			<label>Limit:</label><input type="text" id="setConfigsLimit" name="limit" oninput="toggle_button(this)"
+				optional />
+		</form>
 
-    <form class="setup">
-        <input type="button" id="deleteClassButton" onclick="
-                delete_class(document.getElementById('deleteClassID').value);
-                build_class_menus();
-                document.getElementById(id).disabled = true;" value="Delete Class" disabled>
-        <label class="required">Class:</label><select class="classMenu" id="deleteClassID"
-            onchange="toggle_button('deleteClassButton', [id])"></select>
-    </form>
+		<form id="createNewSiteForm" clearonsuccess>
+			<button id="createNewSiteButton" hx-post="/site/" hx-target="#setupOutput" hx-swap="innerHTML"
+				hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
+				Create New Site
+			</button>
+			<label>Name:</label>
+			<input type="text" id="createNewSiteName" name="name" oninput="toggle_button(this);" required />
+			<label>Description:</label>
+			<input type="text" id="createNewSiteDescription" name="description" />
+		</form>
 
-    <form class=setup>
-        <input type="button" id="createNewSubclassButton" onclick="create_new_subclass(
-                    document.getElementById('createNewSubclassClassID').value,
-                    document.getElementById('createNewSubclassName').value,
-                    document.getElementById('createNewSubclassDescription').value)" value="Create New Subclass"
-            disabled>
-        <label class="required">Class:</label><select class="classMenu" id="createNewSubclassClassID"
-            onchange="toggle_button('createNewSubclassButton', [id, 'createNewSubclassName'])"></select>
-        <label class="required">Name:</label><input type="text" id="createNewSubclassName"
-            oninput="toggle_button('createNewSubclassButton', ['createNewSubclassClassID', 'createNewSubclassName'])">
-        <label>Description:</label><input type="text" id="createNewSubclassDescription">
-    </form>
+		<form id="deleteSiteForm" clearonsuccess>
+			<button id="deleteSiteButton" hx-delete="/site/" hx-confirm="Are you sure you want to delete this site?"
+				hx-target="#setupOutput" hx-swap="innerHTML" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" disabled>
+				Delete Site
+			</button>
+			<span hidden hx-get="/site/" hx-trigger="load" hx-target="#deleteSiteMenu" hx-swap="innerHTML"
+				hx-ext="client-side-templates" mustache-template="sitesmenutemplate"></span>
+			<label>Site:</label>
+			<select id="deleteSiteMenu" name="id"
+				onchange="toggle_button(this); update_description(this, 'deleteSiteFormSiteDescription');"
+				hx-get="/site/" hx-trigger="load" hx-target="this" hx-swap="innerHTML" hx-ext="client-side-templates"
+				mustache-template="sitesmenutemplate" required>
+			</select>
+			<img class="info" id="deleteSiteFormSiteDescription" src="img/info.svg">
+		</form>
 
-    <form class="setup">
-        <input type="button" id="deleteSubclassButton" onclick="delete_subclass(
-                document.getElementById('deleteSubclassClassID').value,
-                document.getElementById('deleteSubclassID').value
-            )" value="Delete Subclass" disabled>
-        <label class="required">Class:</label><select class="classMenu" id="deleteSubclassClassID"
-            onchange="toggle_button('deleteSubclassButton', [id, 'deleteSubclassID']); build_subclass_menu('deleteSubclassID', value)"></select>
-        <!-- <label class="required">ClassID:</label><input type="text" id="deleteSubclassClassID" oninput="toggle_button('deleteSubclassButton', ['deleteSubclassClassID', 'deleteSubclassID'])"> -->
-        <label class="required">Subclass:</label><select id="deleteSubclassID"
-            onchange="toggle_button('deleteSubclassButton', ['deleteSubclassClassID', id])"></select>
-    </form>
+		<form id="saveNewStationForm" clearonsuccess>
+			<button id="saveNewStationButton" hx-post="/station/" hx-target="#setupOutput" hx-swap="innerHTML"
+				hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
+				Save New Station
+			</button>
+			<label>Site:</label>
+			<select id="saveNewStationSite" name="sites_id" onchange="toggle_button(this);" hx-get="/site/"
+				hx-trigger="load" hx-target="this" hx-swap="innerHTML" hx-ext="client-side-templates"
+				mustache-template="sitesmenutemplate" required>
+			</select>
+			<img class="info" id="saveNewStationSiteDescription" src="img/info.svg">
+			<label>Name:</label>
+			<input type="text" id="saveNewStationName" name="name" oninput="toggle_button(this);" required />
+			<label>Coordinate System:</label>
+			<select id="saveNewStationCoordinateSystem" name="coordinatesystem"
+				onchange="toggle_button(this); update_required_new_site_fields();" required>
+				<option></option>
+				<option value='Site'>Site</option>
+				<option value='UTM'>UTM</option>
+				<option value='Lat/Lon'>Lat/Lon</option>
+			</select><br>
+			<label>Northing:</label>
+			<input type="text" id="saveNewStationNorthing" name="northing" onchange="toggle_button(this);" />
+			<label>Easting:</label>
+			<input type="text" id="saveNewStationEasting" name="easting" onchange="toggle_button(this);" />
+			<label>Elevation:</label>
+			<input type="text" id="saveNewStationElevation" name="elevation" onchange="toggle_button(this);" />
+			<label>UTMZone:</label>
+			<input type="text" id="saveNewStationUTMZone" name="utmzone" onchange="toggle_button(this);" /><br>
+			<label>Latitude:</label>
+			<input type="text" id="saveNewStationLatitude" name="latitude" onchange="toggle_button(this);" />
+			<label>Longitude:</label>
+			<input type="text" id="saveNewStationLongitude" name="longitude" onchange="toggle_button(this);" />
+			<label>Description:</label>
+			<input type="text" id="saveNewStationDescription" name="description" />
+		</form>
 
-    <form class="utility">
-        <input type="button" onclick="get_offset_types_and_directions(true)" value="Get Offset Types and Directions">
-        <i>*this is a utility method, to be called by other methods, but not directly by the user</i>
-    </form>
+		<form id="deleteStationForm" clearonsuccess>
+			<button id="deleteStationFormButton" hx-delete="/station/"
+				hx-confirm="Are you sure you want to delete this station?" hx-target="#setupOutput" hx-swap="innerHTML"
+				hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
+				Delete Station
+			</button>
+			<span hidden hx-get="/site/" hx-trigger="load" hx-target="#deleteStationFormSiteMenu" hx-swap="innerHTML"
+				hx-ext="client-side-templates" mustache-template="sitesmenutemplate"></span>
+			<label>Site:</label>
+			<select id="deleteStationFormSiteMenu" name="sites_id"
+				onchange="toggle_button(this); update_description(this, 'deleteStationFormSiteDescription');"
+				hx-get="/station/" hx-trigger="change" hx-target="#deleteStationFormStationMenu" hx-swap="innerHTML"
+				hx-ext="client-side-templates" mustache-template="stationsmenutemplate" required>
+			</select>
+			<img class="info" id="deleteStationFormSiteDescription" src="img/info.svg">
+			<label>Station:</label>
+			<select id="deleteStationFormStationMenu" name="id"
+				onchange="toggle_button(this); update_description(this, 'deleteStationFormStationDescription');"
+				required>
+			</select>
+			<img class="info" id="deleteStationFormStationDescription" src="img/info.svg">
+		</form>
 
-    <form class="informational">
-        <input type="button" onclick="get_prism_offsets()" value="Get Prism Offsets">
-    </form>
+		<form>
+			create_new_class
+		</form>
 
-    <form class="adjustments" id="prismOffsetsForm">
-        <input type="button" id="setPrismOffsetsButton" onclick="set_prism_offsets()" value="Set Prism Offsets">
-    </form>
+		<form>
+			delete_class
+		</form>
 
-    <form class="informational">
-        <input type="button" onclick="get_all_sites()" value="Get All Sites">
-    </form>
-
-
-
-
-
-
-
-
-
-    <!-- <form class="informational">
-            <input type="button" onclick="get_site(
-                document.getElementById('get_site_id').value
-            )" value="Get Site">
-            <label>SiteID:</label><input type="text" id="get_site_id">
-        </form> -->
-    <hr>
-    <div id="result"></div>
-    </p>
+		<form>
+			create_new_subclass
+		</form>
+	</div>
 </body>
-
-</html>

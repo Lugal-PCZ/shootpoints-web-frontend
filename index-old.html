@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="commands.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="build_class_menus(); build_prism_offset_menus(); build_site_menus(), build_geometry_menus()">
+    <p>For the Fast API interface, click <a href="/docs">here</a>.</p>
+
+    <form class="setup">
+        <input type="button" id="setConfigsButton" onclick="set_configs(
+                document.getElementById('setConfigsPort').value,
+                document.getElementById('setConfigsMake').value,
+                document.getElementById('setConfigsModel').value,
+                document.getElementById('setConfigsLimit').value
+            )" value="Set Configs" disabled />
+        <label>Port:</label><input type="text" id="setConfigsPort"
+            oninput="toggle_button('setConfigsButton', [id, 'setConfigsMake', 'setConfigsModel', 'setConfigsLimit'], true)" />
+        <label>Make:</label><input type="text" id="setConfigsMake"
+            oninput="toggle_button('setConfigsButton', ['setConfigsPort', id, 'setConfigsModel', 'setConfigsLimit'], true)" />
+        <label>Model:</label><input type="text" id="setConfigsModel"
+            oninput="toggle_button('setConfigsButton', ['setConfigsPort', 'setConfigsMake', id, 'setConfigsLimit'], true)" />
+        <label>Limit:</label><input type="text" id="setConfigsLimit"
+            oninput="toggle_button('setConfigsButton', ['setConfigsPort', 'setConfigsMake', 'setConfigsModel', id], true)" />
+    </form>
+
+    <form class="informational">
+        <input type="button" onclick="show_summary(true)" value="Show Summary" />
+    </form>
+
+    <form class="utility">
+        <input type="button" onclick="get_all_classes_and_subclasses(true)" value="Get All Classes and Subclasses" />
+        <i>*this is a utility method, to be called by other methods, but not directly by the user</i>
+    </form>
+
+    <form class="setup">
+        <input type="button" id="createNewClassButton" onclick="create_new_class(
+                document.getElementById('createNewClassName').value,
+                document.getElementById('createNewClassDescription').value
+            );" value="Create New Class" disabled />
+        <label class="required">Name:</label><input type="text" id="createNewClassName"
+            oninput="toggle_button('createNewClassButton', [id])" />
+        <label>Description:</label><input type="text" id="createNewClassDescription" />
+    </form>
+
+    <form class="setup">
+        <input type="button" id="deleteClassButton" onclick="
+                delete_class(document.getElementById('deleteClassID').value);
+                document.getElementById(id).disabled = true;" value="Delete Class" disabled />
+        <label class="required">Class:</label><select class="classMenu" id="deleteClassID"
+            onchange="toggle_button('deleteClassButton', [id])"></select>
+    </form>
+
+    <form class=setup>
+        <input type="button" id="createNewSubclassButton" onclick="create_new_subclass(
+                    document.getElementById('createNewSubclassClassID').value,
+                    document.getElementById('createNewSubclassName').value,
+                    document.getElementById('createNewSubclassDescription').value)" value="Create New Subclass"
+            disabled />
+        <label class="required">Class:</label><select class="classMenu" id="createNewSubclassClassID"
+            onchange="toggle_button('createNewSubclassButton', [id, 'createNewSubclassName'])"></select>
+        <label class="required">Name:</label><input type="text" id="createNewSubclassName"
+            oninput="toggle_button('createNewSubclassButton', ['createNewSubclassClassID', 'createNewSubclassName'])" />
+        <label>Description:</label><input type="text" id="createNewSubclassDescription" />
+    </form>
+
+    <form class="setup">
+        <input type="button" id="deleteSubclassButton" onclick="delete_subclass(
+                document.getElementById('deleteSubclassClassID').value,
+                document.getElementById('deleteSubclassID').value
+            )" value="Delete Subclass" disabled />
+        <label class="required">Class:</label><select class="classMenu" id="deleteSubclassClassID"
+            onchange="toggle_button('deleteSubclassButton', [id, 'deleteSubclassID']); build_subclass_menu('deleteSubclassID', value)"></select>
+        <label class="required">Subclass:</label><select id="deleteSubclassID"
+            onchange="toggle_button('deleteSubclassButton', ['deleteSubclassClassID', id])"></select>
+    </form>
+
+    <form class="utility">
+        <input type="button" onclick="get_offset_types_and_directions(true)" value="Get Offset Types and Directions" />
+        <i>*this is a utility method, to be called by other methods, but not directly by the user</i>
+    </form>
+
+    <form class="informational">
+        <input type="button" onclick="get_prism_offsets(true)" value="Get Prism Offsets" />
+        <i>*Is this useful? The same info is conveyed in the summary.</i>
+    </form>
+
+    <form class="adjustments" id="prismOffsetsForm">
+        <input type="button" id="setPrismOffsetsButton" onclick="set_prism_offsets()" value="Set Prism Offsets" />
+    </form>
+
+    <form class="utility">
+        <input type="button" onclick="get_all_sites(true)" value="Get All Sites" />
+        <i>*this is a utility method, to be called by other methods, but not directly by the user</i>
+    </form>
+
+    <form class="setup">
+        <input type="button" id="createNewSiteButton" onclick="create_new_site(
+                document.getElementById('createNewSiteName').value,
+                document.getElementById('createNewSiteDescription').value
+            );" value="Create New Site" disabled />
+        <label class="required">Name:</label><input type="text" id="createNewSiteName"
+            oninput="toggle_button('createNewSiteButton', [id])" />
+        <label>Description:</label><input type="text" id="createNewSiteDescription" />
+    </form>
+
+    <form class="setup">
+        <input type="button" id="deleteSiteButton" onclick="
+                delete_site(document.getElementById('deleteSiteID').value);
+                document.getElementById(id).disabled = true;" value="Delete Site" disabled />
+        <label class="required">Site:</label><select class="siteMenu" id="deleteSiteID"
+            onchange="toggle_button('deleteSiteButton', [id])"></select>
+    </form>
+
+    <form class="informational">
+        <input type="button" onclick="get_atmospheric_conditions(true)" value="Get Atmospheric Conditions" />
+        <i>*Is this useful? The same info is conveyed in the summary.</i>
+    </form>
+
+    <form class="adjustments">
+        <input type="button" id="setAtmosphericConditionsButton" onclick="set_atmospheric_conditions(
+                document.getElementById('setAtmosphericPressure').value,
+                document.getElementById('setAtmosphericTemperature').value
+            )" value="Set Atmospheric Conditions" disabled>
+        <label class="required">Pressure:</label><input type="text" id="setAtmosphericPressure"
+            oninput="toggle_button('setAtmosphericConditionsButton', [id, 'setAtmosphericTemperature'])">
+        <label class="required">Temperature:</label><input type="text" id="setAtmosphericTemperature"
+            oninput="toggle_button('setAtmosphericConditionsButton', ['setAtmosphericPressure', id])">
+    </form>
+
+    <form class="utility">
+        <input type="button" onclick="get_geometries(true)" value="Get Geometries">
+        <i>*this is a utility method, to be called by other methods, but not directly by the user</i>
+    </form>
+
+    <form class="usage">
+        <input type="button" id="startNewGroupingButton" onclick="start_new_grouping(
+                document.getElementById('startNewGroupingGeometryID').value,
+                document.getElementById('startNewGroupingSubclassID').value,
+                document.getElementById('startNewGroupingLabel').value,
+                document.getElementById('startNewGroupingComment').value
+            );" value="Start New Grouping" disabled />
+        <label class="required">Geometry:</label><select class="geometryMenu" id="startNewGroupingGeometryID"
+            onchange="toggle_button('startNewGroupingButton', [id, 'startNewGroupingClassID', 'startNewGroupingSubclassID', 'startNewGroupingLabel'])"></select>
+        <label class="required">Class:</label><select class="classMenu" id="startNewGroupingClassID"
+            onchange="toggle_button('startNewGroupingButton', ['startNewGroupingGeometryID', id, 'startNewGroupingSubclassID', 'startNewGroupingLabel']); build_subclass_menu('startNewGroupingSubclassID', value)"></select>
+        <label class="required">Subclass:</label><select class="subclassMenu" id="startNewGroupingSubclassID"
+            onchange="toggle_button('startNewGroupingButton', ['startNewGroupingGeometryID', 'startNewGroupingClassID', id, 'startNewGroupingLabel'])"></select>
+        <label class="required">Label:</label><input type="text" id="startNewGroupingLabel"
+            oninput="toggle_button('startNewGroupingButton', ['startNewGroupingGeometryID', 'startNewGroupingClassID', 'startNewGroupingSubclassID', id])" />
+        <label>Comment:</label><input type="text" id="startnewGroupingComment" />
+    </form>
+
+    <hr>
+    <div id="result"></div>
+</body>
+
+</html>

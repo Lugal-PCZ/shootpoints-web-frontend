@@ -1,0 +1,43 @@
+function append_mustache_template(templatename, templatetext) {
+	let mustachetemplate = document.createElement("template")
+	mustachetemplate.setAttribute("id", templatename)
+	mustachetemplate.innerHTML = templatetext
+	document.getElementsByTagName('head')[0].appendChild(mustachetemplate);
+}
+
+append_mustache_template("classesmenutemplate", `
+	<option value="0"></option>
+	{{#classes}}
+	<option value="{{id}}" description="{{description}}">{{name}}</option>
+	{{/classes}}
+`);
+
+append_mustache_template("subclassesmenutemplate", `
+	<option value="0"></option>
+	{{#subclasses}}
+	<option value="{{id}}" description="{{description}}">{{name}}</option>
+	{{/subclasses}}
+`);
+
+append_mustache_template("sitesmenutemplate", `
+	<option value="0"></option>
+	{{#sites}}
+	<option value="{{id}}" description="{{description}}">{{name}}</option>
+	{{/sites}}
+`);
+
+append_mustache_template("stationsmenutemplate", `
+	<option value="0"></option>
+	{{#stations}}
+	<option value="{{id}}" description="{{description}}">{{name}}</option>
+	{{/stations}}
+`);
+
+append_mustache_template("outputtemplate", `
+	{{#errors}}
+	<b>ERROR:</b> {{.}}
+	{{/errors}}
+	{{#result}}
+	{{.}}
+	{{/result}}
+`);
