@@ -6,6 +6,7 @@ function htmx_render_442() {
 		if (evt.detail.xhr.status === 422) {
 			evt.detail.shouldSwap = true;
 			// set isError to false to avoid error logging in console
+			// Note: for some reason, this doesn't seem to be working.
 			evt.detail.isError = false;
 		};
 	});
@@ -16,6 +17,9 @@ function htmx_reset_form_fields() {
 	document.addEventListener('htmx:afterOnLoad', function (evt) {
 		if (evt.detail.xhr.status >= 200 && evt.detail.xhr.status <= 299) {
 			if (evt.detail.elt.nodeName === "BUTTON") {
+				let menupreloaders = document.getElementById("menuPreloaders").innerHTML;
+				document.getElementById("menuPreloaders").innerHTML = menupreloaders;
+				htmx.process(document.getElementById("menuPreloaders"));
 				try {
 					let formtoclear = document.getElementById(evt.detail.elt.id).parentNode;
 					if (formtoclear.hasAttribute("clearonsuccess")) {
@@ -32,6 +36,18 @@ function htmx_reset_form_fields() {
 	});
 }
 
+function collapsesection(thesection) {
+	// let childforms = Array.from(thesection.parentNode.getElementsByTagName("form"));
+	// childforms.forEach(childform => {
+	// 	childform.hidden = !childform.hidden;
+	// });
+	thesection.parentNode.querySelector(".sectionforms").hidden = !thesection.parentNode.querySelector(".sectionforms").hidden;
+	let collapser = thesection.parentNode.querySelector(".collapser");
+	collapser.hidden = !collapser.hidden;
+	let expander = thesection.parentNode.querySelector(".expander");
+	expander.hidden = !expander.hidden;
+}
+
 function toggle_button(theelement) {
 	let thebutton = theelement.parentNode.getElementsByTagName("button")[0]
 	let requiredfields = [...theelement.parentNode.querySelectorAll("[required]")];
@@ -46,12 +62,14 @@ function toggle_button(theelement) {
 			return field;
 		}
 	});
-	if (requiredfieldswithdata.length === requiredfields.length || optionalfieldswithdata.length > 0) {
+	if (requiredfields.length > 0 && requiredfieldswithdata.length === requiredfields.length) {
+		thebutton.disabled = false;
+	} else if (optionalfields.length > 0 && optionalfieldswithdata.length > 0) {
 		thebutton.disabled = false;
 	} else {
 		thebutton.disabled = true;
 	}
-}
+};
 
 function update_description(source, target) {
 	let thedescription = source.options[source.selectedIndex].getAttribute("description");

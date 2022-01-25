@@ -1,3 +1,7 @@
+body {
+	background-color: rgb(41, 41, 41);
+}
+
 div {
 	width: 100%;
 	border-style: solid;
@@ -16,10 +20,19 @@ form {
 
 select {
 	width: 25ex;
+	border: thin lightgrey solid;
 }
 
 input {
 	margin-right: 1ex;
+	border: thin lightgrey solid;
+}
+
+#outputBox {
+	width: calc(100% - 1em);
+	height: 3em;
+	padding: 0.5em;
+	background-color: gainsboro;
 }
 
 .sectionheader {
@@ -33,24 +46,23 @@ input {
 	font-weight: bold;
 }
 
-.output {
-	width: calc(100% - 2em);
-	height: 3em;
-	margin: 0.5em;
+.sectionforms {
+	width: calc(100% - 1em);
+	border-style: none;
 	padding: 0.5em;
-	background-color: white;
-}
+	margin: 0em;
+}	
 
 .setup {
 	background-color: lightblue;
 }
 
-.informational {
-	background-color: linen;
-}
-
 .usage {
 	background-color: lightgreen;
+}
+
+.informational {
+	background-color: linen;
 }
 
 .adjustments {
@@ -61,7 +73,7 @@ input {
 	background-color: darkgrey;
 }
 
-.info {
+.infobutton {
 	vertical-align: -0.25em;
 	margin-right: 1ex;
 }
