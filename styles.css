@@ -1,5 +1,5 @@
 body {
-	background-color: rgb(41, 41, 41);
+	background-color: rgb(56, 50, 46);
 }
 
 div {
@@ -32,7 +32,7 @@ input {
 	width: calc(100% - 1em);
 	height: 3em;
 	padding: 0.5em;
-	background-color: gainsboro;
+	background-color: rgb(230, 230, 230);
 }
 
 .sectionheader {
@@ -54,23 +54,15 @@ input {
 }	
 
 .setup {
-	background-color: lightblue;
-}
-
-.usage {
-	background-color: lightgreen;
-}
-
-.informational {
 	background-color: linen;
 }
 
-.adjustments {
-	background-color: goldenrod;
+.usage {
+	background-color: lightblue;
 }
 
-.utility {
-	background-color: darkgrey;
+.informational {
+	background-color: gainsboro;
 }
 
 .infobutton {

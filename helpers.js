@@ -48,6 +48,28 @@ function collapsesection(thesection) {
 	expander.hidden = !expander.hidden;
 }
 
+function show_required_field(thefield) {
+	document.getElementById(thefield + "Label").hidden = false;
+	document.getElementById(thefield).hidden = false;
+	try {
+		document.getElementById(thefield.replace("Menu", "Description")).hidden = false;
+	} catch {
+		// ignore the error
+	}
+	document.getElementById(thefield).required = true;
+}
+
+function hide_required_field(thefield) {
+	document.getElementById(thefield + "Label").hidden = true;
+	document.getElementById(thefield).hidden = true;
+	try {
+		document.getElementById(thefield.replace("Menu", "Description")).hidden = true;
+	} catch {
+		// ignore the error
+	}
+	document.getElementById(thefield).required = false;
+}
+
 function toggle_button(theelement) {
 	let thebutton = theelement.parentNode.getElementsByTagName("button")[0]
 	let requiredfields = [...theelement.parentNode.querySelectorAll("[required]")];
@@ -83,45 +105,72 @@ function update_description(source, target) {
 	}
 }
 
-function update_required_new_site_fields() {
-	let coordinatesystem = document.getElementById("saveNewStationCoordinateSystem").value;
-	let northing = document.getElementById("saveNewStationNorthing");
-	let easting = document.getElementById("saveNewStationEasting");
-	let elevation = document.getElementById("saveNewStationElevation");
-	let utmzone = document.getElementById("saveNewStationUTMZone");
-	let latitude = document.getElementById("saveNewStationLatitude");
-	let longitude = document.getElementById("saveNewStationLongitude");
-	switch (coordinatesystem) {
+function update_required_new_site_fields(coordinatesystemmenu) {
+	document.getElementById("saveNewStationFormHiddenField").required = false;
+	switch (coordinatesystemmenu.value) {
 		case "Site":
-			northing.required = true;
-			easting.required = true;
-			elevation.required = true;
-			utmzone.required = false;
-			latitude.required = false;
-			longitude.required = false;
+			show_required_field("saveNewStationNorthing");
+			show_required_field("saveNewStationEasting");
+			show_required_field("saveNewStationElevation");
+			hide_required_field("saveNewStationUTMZone");
+			hide_required_field("saveNewStationLatitude");
+			hide_required_field("saveNewStationLongitude");
 			break;
 		case "UTM":
-			northing.required = true;
-			easting.required = true;
-			elevation.required = true;
-			utmzone.required = true;
-			latitude.required = false;
-			longitude.required = false;
+			show_required_field("saveNewStationNorthing");
+			show_required_field("saveNewStationEasting");
+			show_required_field("saveNewStationElevation");
+			show_required_field("saveNewStationUTMZone");
+			hide_required_field("saveNewStationLatitude");
+			hide_required_field("saveNewStationLongitude");
 			break;
 		case "Lat/Lon":
-			northing.required = false;
-			easting.required = false;
-			elevation.required = false;
-			utmzone.required = false;
-			latitude.required = true;
-			longitude.required = true;
+			hide_required_field("saveNewStationNorthing");
+			hide_required_field("saveNewStationEasting");
+			hide_required_field("saveNewStationUTMZone");
+			show_required_field("saveNewStationLatitude");
+			show_required_field("saveNewStationLongitude");
+			show_required_field("saveNewStationElevation");
 			break;
 		default:
-			northing.required = false;
-			easting.required = false;
-			elevation.required = false;
-			utmzone.required = false;
-			latitude.required = false;
-			longitude.required = false;
+			hide_required_field("saveNewStationNorthing");
+			hide_required_field("saveNewStationEasting");
+			hide_required_field("saveNewStationElevation");
+			hide_required_field("saveNewStationUTMZone");
+			hide_required_field("saveNewStationLatitude");
+			hide_required_field("saveNewStationLongitude");
+	}
+}
+
+function update_backsight_station_menu(occupiedstationmenu) {
+	let options = occupiedstationmenu.innerHTML.split("\n");
+	let newoptions = Array();
+	options.forEach((option) => {
+		if (option.indexOf('value="' + occupiedstationmenu.value + '"') == -1) {
+			newoptions.push(option);
+		}
+	});
+	document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = newoptions.join("\n");
+}
+
+function update_required_new_session_fields(sessiontypemenu) {
+	switch (sessiontypemenu.value) {
+		case "Backsight":
+			show_required_field("startNewSessionFormBacksightStationMenu");
+			show_required_field("startNewSessionFormPrismHeight");
+			hide_required_field("startNewSessionFormInstrumentHeight");
+			hide_required_field("startNewSessionFormAzimuth");
+			break;
+		case "Azimuth":
+			hide_required_field("startNewSessionFormBacksightStationMenu");
+			hide_required_field("startNewSessionFormPrismHeight");
+			show_required_field("startNewSessionFormInstrumentHeight");
+			show_required_field("startNewSessionFormAzimuth");
+			break;
+		default:
+			hide_required_field("startNewSessionFormBacksightStationMenu");
+			hide_required_field("startNewSessionFormPrismHeight");
+			hide_required_field("startNewSessionFormInstrumentHeight");
+			hide_required_field("startNewSessionFormAzimuth");
 	}
 }
