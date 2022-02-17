@@ -32,6 +32,10 @@
 			hx-ext="client-side-templates" mustache-template="classesmenutemplate" hidden></span>
 		<span hx-get="/site/" hx-trigger="load" hx-target="#startNewSessionFormSitesMenu" hx-swap="innerHTML"
 			hx-ext="client-side-templates" mustache-template="sitesmenutemplate" hidden></span>
+		<span hx-get="/geometry/" hx-trigger="load" hx-target="#startNewGroupingFormGeometriesMenu" hx-swap="innerHTML"
+			hx-ext="client-side-templates" mustache-template="geometriesmenutemplate" hidden></span>
+		<span hx-get="/class/" hx-trigger="load" hx-target="#startNewGroupingFormClassesMenu" hx-swap="innerHTML"
+			hx-ext="client-side-templates" mustache-template="classesmenutemplate" hidden></span>
 	</div>
 
 	<div class="outputbox" id="outputBox" hx-get="/summary/" hx-trigger="load" hx-target="this" hx-swap="innerHTML"
@@ -54,7 +58,7 @@
 					oninput="toggle_button(this);" optional />
 				<label>Model:</label><input type="text" id="setConfigsFormModel" name="model"
 					oninput="toggle_button(this);" optional />
-				<label>Limit:</label><input type="text" id="setConfigsFormLimit" name="limit"
+				<label>Backsight Error Limit (cm):</label><input type="text" id="setConfigsFormLimit" name="limit"
 					oninput="toggle_button(this);" optional />
 			</form>
 
@@ -264,6 +268,38 @@
 				<label id="startNewSessionFormAzimuthLabel" hidden>Azimuth (ddd.mmss):</label>
 				<input type="text" id="startNewSessionFormAzimuth" name="azimuth" oninput="toggle_button(this);"
 					hidden />
+			</form>
+
+			<form id="startNewGroupingForm">
+				<button id="startNewGroupingFormButton" hx-post="/grouping/" hx-target="#outputBox" hx-swap="innerHTML"
+					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
+					Start New Grouping
+				</button>
+				<label>Geometry:</label>
+				<select id="startNewGroupingFormGeometriesMenu" name="geometry_id"
+					onchange="toggle_button(this); update_description(this, 'startNewGroupingFormGeometryDescription');"
+					required>
+				</select>
+				<img class="infobutton" id="startNewGroupingFormGeometryDescription" src="img/info.svg">
+				<label>Class:</label>
+				<select id="startNewGroupingFormClassesMenu" name="classes_id" hx-get="/subclass/" hx-trigger="change"
+					hx-target="#startNewGroupingFormSubclassesMenu" hx-swap="innerHTML" hx-ext="client-side-templates"
+					mustache-template="subclassesmenutemplate"
+					onchange="toggle_button(this); update_description(this, 'startNewGroupingFormClassDescription');"
+					required>
+				</select>
+				<img class="infobutton" id="startNewGroupingFormClassDescription" src="img/info.svg">
+				<label>Subclass:</label>
+				<select id="startNewGroupingFormSubclassesMenu" name="subclasses_id"
+					onchange="toggle_button(this); update_description(this, 'startNewGroupingFormSubclassDescription');"
+					required>
+				</select>
+				<img class="infobutton" id="startNewGroupingFormSubclassDescription" src="img/info.svg">
+				<label>Label:</label>
+				<input type="text" id="startNewGroupingFormLabel" name="label" oninput="toggle_button(this);"
+					required />
+				<label>Description:</label>
+				<input type="text" id="startNewGroupingFormDescription" name="description" />
 			</form>
 		</div>
 	</div>

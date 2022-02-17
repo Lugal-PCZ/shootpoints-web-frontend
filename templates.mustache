@@ -1,8 +1,8 @@
 function append_mustache_template(templatename, templatetext) {
-let mustachetemplate = document.createElement("template")
-mustachetemplate.setAttribute("id", templatename)
-mustachetemplate.innerHTML = templatetext
-document.getElementsByTagName('head')[0].appendChild(mustachetemplate);
+    let mustachetemplate = document.createElement("template")
+    mustachetemplate.setAttribute("id", templatename)
+    mustachetemplate.innerHTML = templatetext
+    document.getElementsByTagName('head')[0].appendChild(mustachetemplate);
 }
 
 append_mustache_template("classesmenutemplate", `
@@ -31,6 +31,13 @@ append_mustache_template("stationsmenutemplate", `
 {{#stations}}
 <option value="{{id}}" description="{{description}}">{{name}}</option>
 {{/stations}}
+`);
+
+append_mustache_template("geometriesmenutemplate", `
+<option value="0"></option>
+{{#geometries}}
+<option value="{{id}}" description="{{description}}">{{name}}</option>
+{{/geometries}}
 `);
 
 append_mustache_template("setuperrorstemplate", `
