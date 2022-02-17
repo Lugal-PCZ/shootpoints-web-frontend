@@ -29,7 +29,7 @@ function htmx_reset_form_fields() {
 					}
 				}
 				catch (e) {
-					// clearonsuccess isn't set in the calling element, just skip it
+					// clearonsuccess isn't set in the calling element, so just skip it
 				}
 			}
 		};

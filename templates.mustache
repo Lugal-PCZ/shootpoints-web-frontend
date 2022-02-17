@@ -33,6 +33,12 @@ append_mustache_template("stationsmenutemplate", `
 {{/stations}}
 `);
 
+append_mustache_template("setuperrorstemplate", `
+{{#setup_errors}}
+<b>ERROR:</b> {{.}}
+{{/setup_errors}}
+`);
+
 append_mustache_template("outputtemplate", `
 {{#errors}}
 <b>ERROR:</b> {{.}}

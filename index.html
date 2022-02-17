@@ -34,31 +34,8 @@
 			hx-ext="client-side-templates" mustache-template="sitesmenutemplate" hidden></span>
 	</div>
 
-	<div class="outputbox" id="outputBox"></div>
-
-	<div class="informational">
-		<div class="sectionheader" style="background-color: darkgrey;" onclick="collapsesection(this);">
-			Testing <span class="collapser">‣</span><span class="expander" hidden>▾</span>
-		</div>
-
-		<div class="sectionforms" hidden>
-			<form id="htmxTestingForm">
-				<span hidden hx-get="/class/" hx-trigger="load" hx-target="#htmxTestingFormClassesMenu"
-					hx-swap="innerHTML" hx-ext="client-side-templates" mustache-template="classesmenutemplate"></span>
-				<label>Class/Subclass menus</label>
-				<select id="htmxTestingFormClassesMenu" name="classes_id" hx-get="/subclass/" hx-trigger="change"
-					hx-target="#htmxTestingFormSubclassesMenu" hx-swap="innerHTML" hx-ext="client-side-templates"
-					mustache-template="subclassesmenutemplate"
-					onchange="update_description(this, 'htmxTestingFormClassDescription');">
-				</select>
-				<img class="infobutton" id="htmxTestingFormClassDescription" src="img/info.svg">
-				<select id="htmxTestingFormSubclassesMenu" name="subclasses_id"
-					onchange="update_description(this, 'htmxTestingFormSubclassDescription');">
-				</select>
-				<img class="infobutton" id="htmxTestingFormSubclassDescription" src="img/info.svg">
-			</form>
-		</div>
-	</div>
+	<div class="outputbox" id="outputBox" hx-get="/summary/" hx-trigger="load" hx-target="this" hx-swap="innerHTML"
+		hx-ext="client-side-templates" mustache-template="setuperrorstemplate"></div>
 
 	<div class="setup">
 		<div class="sectionheader" style="background-color: rgb(199, 189, 179);" onclick="collapsesection(this);">
