@@ -6,8 +6,7 @@ function htmx_render_442() {
 		if (evt.detail.xhr.status === 422) {
 			evt.detail.shouldSwap = true;
 			// set isError to false to avoid error logging in console
-			// Note: for some reason, this doesn't seem to be working.
-			evt.detail.isError = false;
+			evt.detail.isError = false;  // Note: for some reason, this doesn't seem to be working.
 		};
 	});
 }
@@ -16,16 +15,15 @@ function htmx_reset_form_fields() {
 	// clear form fields on successful submission
 	document.addEventListener('htmx:afterOnLoad', function (evt) {
 		if (evt.detail.xhr.status >= 200 && evt.detail.xhr.status <= 299) {
-			if (evt.detail.elt.nodeName === "BUTTON") {
-				let menupreloaders = document.getElementById("menuPreloaders").innerHTML;
-				document.getElementById("menuPreloaders").innerHTML = menupreloaders;
-				htmx.process(document.getElementById("menuPreloaders"));
+			if (evt.detail.elt.nodeName === "FORM") {
+				let preLoaders = document.getElementById("preLoaders").innerHTML;
+				document.getElementById("preLoaders").innerHTML = preLoaders;
+				htmx.process(document.getElementById("preLoaders"));
 				try {
-					let formtoclear = document.getElementById(evt.detail.elt.id).parentNode;
+					let formtoclear = document.getElementById(evt.detail.elt.id);
 					if (formtoclear.hasAttribute("clearonsuccess")) {
 						formtoclear.reset();
-						let thebutton = formtoclear.getElementsByTagName("button");
-						thedescription.disabled = true
+						formtoclear.getElementsByTagName("button")[0].disabled = true;
 					}
 				}
 				catch (e) {
@@ -36,11 +34,46 @@ function htmx_reset_form_fields() {
 	});
 }
 
-function collapsesection(thesection) {
-	// let childforms = Array.from(thesection.parentNode.getElementsByTagName("form"));
-	// childforms.forEach(childform => {
-	// 	childform.hidden = !childform.hidden;
-	// });
+function show_on_the_fly_adjustments_popup() {
+	fetch("/atmosphere/")
+		.then(response => response.json())
+		.then(data => {
+			document.getElementById("setAtmosphericConditionsFormTemperature").value = data.temperature;
+			document.getElementById("setAtmosphericConditionsFormPressure").value = data.pressure;
+		});
+	fetch("/prism_raw/")
+		.then(response => response.json())
+		.then(data => {
+			document.getElementById("setPrismOffsetsVerticalDistance").value = Math.abs(data.vertical_distance);
+			if (data.vertical_distance !== 0) {
+				document.getElementById("setPrismOffsetsVerticalDirection").value = data.vertical_distance / Math.abs(data.vertical_distance);
+			}
+			document.getElementById("setPrismOffsetsLatitudeDistance").value = Math.abs(data.latitude_distance);
+			if (data.latitude_distance !== 0) {
+				document.getElementById("setPrismOffsetsLatitudeDirection").value = data.latitude_distance / Math.abs(data.latitude_distance);
+			}
+			document.getElementById("setPrismOffsetsLongitudeDistance").value = Math.abs(data.longitude_distance);
+			if (data.longitude_distance !== 0) {
+				document.getElementById("setPrismOffsetsLongitudeDirection").value = data.longitude_distance / Math.abs(data.longitude_distance);
+			}
+			document.getElementById("setPrismOffsetsRadialDistance").value = Math.abs(data.radial_distance);
+			if (data.radial_distance !== 0) {
+				document.getElementById("setPrismOffsetsRadialDirection").value = data.radial_distance / Math.abs(data.radial_distance);
+			}
+			document.getElementById("setPrismOffsetsTangentDistance").value = Math.abs(data.tangent_distance);
+			if (data.tangent_distance !== 0) {
+				document.getElementById("setPrismOffsetsTangentDirection").value = data.tangent_distance / Math.abs(data.tangent_distance);
+			}
+			document.getElementById("setPrismOffsetsWedgeDistance").value = Math.abs(data.wedge_distance);
+			if (data.wedge_distance !== 0) {
+				document.getElementById("setPrismOffsetsWedgeDirection").value = data.wedge_distance / Math.abs(data.wedge_distance);
+			}
+		});
+	let thepopup = document.getElementById("onTheFlyAdjustmentsPopup");
+	thepopup.hidden = false;
+}
+
+function collapse_section(thesection) {
 	thesection.parentNode.querySelector(".sectionforms").hidden = !thesection.parentNode.querySelector(".sectionforms").hidden;
 	let collapser = thesection.parentNode.querySelector(".collapser");
 	collapser.hidden = !collapser.hidden;
@@ -70,29 +103,6 @@ function hide_required_field(thefield) {
 	document.getElementById(thefield).required = false;
 }
 
-function toggle_button(theelement) {
-	let thebutton = theelement.parentNode.getElementsByTagName("button")[0]
-	let requiredfields = [...theelement.parentNode.querySelectorAll("[required]")];
-	let optionalfields = [...theelement.parentNode.querySelectorAll("[optional]")];
-	let requiredfieldswithdata = requiredfields.filter(function (field) {
-		if (document.getElementById(field.id).value != "0" && document.getElementById(field.id).value != "") {
-			return field;
-		}
-	});
-	let optionalfieldswithdata = optionalfields.filter(function (field) {
-		if (document.getElementById(field.id).value != "0" && document.getElementById(field.id).value != "") {
-			return field;
-		}
-	});
-	if (requiredfields.length > 0 && requiredfieldswithdata.length === requiredfields.length) {
-		thebutton.disabled = false;
-	} else if (optionalfields.length > 0 && optionalfieldswithdata.length > 0) {
-		thebutton.disabled = false;
-	} else {
-		thebutton.disabled = true;
-	}
-};
-
 function update_description(source, target) {
 	let thedescription = source.options[source.selectedIndex].getAttribute("description");
 	if (thedescription === "") {
@@ -101,12 +111,14 @@ function update_description(source, target) {
 	if (thedescription === null) {
 		document.getElementById(target).removeAttribute("onclick");
 	} else {
+		thedescription = thedescription.replaceAll("\\", "\\\\");
+		thedescription = thedescription.replaceAll("\'", "\\\'");
+		thedescription = thedescription.replaceAll("\"", "\\\"");
 		document.getElementById(target).setAttribute("onclick", "alert('" + thedescription + "')");
 	}
 }
 
 function update_required_new_site_fields(coordinatesystemmenu) {
-	document.getElementById("saveNewStationFormHiddenField").required = false;
 	switch (coordinatesystemmenu.value) {
 		case "Site":
 			show_required_field("saveNewStationNorthing");
@@ -174,3 +186,29 @@ function update_required_new_session_fields(sessiontypemenu) {
 			hide_required_field("startNewSessionFormAzimuth");
 	}
 }
+
+function show_shot_form(theform) {
+	switch (theform) {
+		case "takeShotForm":
+			document.getElementById(theform).hidden = true;
+			document.getElementById("saveShotForm").hidden = true;
+			document.getElementById("cancelShotForm").hidden = false;
+			break;
+		case "cancelShotForm":
+			document.getElementById(theform).hidden = true;
+			document.getElementById("saveShotForm").hidden = true;
+			document.getElementById("takeShotForm").hidden = false;
+			break;
+		case "saveShotForm":
+			document.getElementById(theform).hidden = true;
+			document.getElementById("cancelShotForm").hidden = true;
+			document.getElementById("takeShotForm").hidden = false;
+			break;
+	}
+}
+
+// async function foo() {
+// 	let response = await fetch("/atmosphere/");
+// 	let json = await response.json();
+// 	alert(Mustache.render("Atmosphere: {{temperature}}°C, {{pressure}}mmHg", json));
+// }

@@ -5,212 +5,261 @@
 	<meta charset="utf-8">
 	<title>ShootPoints</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://unpkg.com/htmx.org@1.6.1"></script>
-	<script src="https://unpkg.com/htmx.org@1.6.1/dist/ext/client-side-templates.js"></script>
-	<script src="https://unpkg.com/mustache@latest"></script>
+	<script src="https://unpkg.com/htmx.org@latest/dist/htmx.min.js"></script>
+	<script src="https://unpkg.com/htmx.org@latest/dist/ext/client-side-templates.js"></script>
+	<!-- <script src="https://unpkg.com/mustache@latest/mustache.min.js"></script> -->
+	<script src="lib/mustache.min.js"></script>
 	<script type="text/javascript" src="helpers.js"></script>
 	<script type="text/javascript" src="templates.mustache"></script>
 	<link rel="stylesheet" href="styles.css">
 </head>
 
 <body onload="htmx_render_442(); htmx_reset_form_fields()">
-	<!-- The following link is just a convenience for development, and should be removed once all the endpoints are mapped in the front end. -->
-	<p><a href="/docs" style="color: white">For the FastAPI interface, click here.</a></p>
-
-	<div id="menuPreloaders" hidden>
-		<span hx-get="/site/" hx-trigger="load" hx-target="#deleteSiteFormSitesMenu" hx-swap="innerHTML"
-			hx-ext="client-side-templates" mustache-template="sitesmenutemplate" hidden></span>
-		<span hx-get="/site/" hx-trigger="load" hx-target="#saveNewStationFormSitesMenu" hx-swap="innerHTML"
-			hx-ext="client-side-templates" mustache-template="sitesmenutemplate" hidden></span>
-		<span hx-get="/site/" hx-trigger="load" hx-target="#deleteStationFormSitesMenu" hx-swap="innerHTML"
-			hx-ext="client-side-templates" mustache-template="sitesmenutemplate" hidden></span>
-		<span hx-get="/class/" hx-trigger="load" hx-target="#deleteClassFormClassesMenu" hx-swap="innerHTML"
+	<div id="preLoaders" hidden>
+		<span hx-get="/atmosphere/" hx-trigger="load" hx-target="#atmosphereinfo" hx-ext="client-side-templates"
+			mustache-template="atmosphereinfotemplate" hidden></span>
+		<span hx-get="/prism/" hx-trigger="load" hx-target="#prismoffsets" hx-ext="client-side-templates"
+			mustache-template="prismoffsetstemplate" hidden></span>
+		<span hx-get="/site/" hx-trigger="load" hx-target="#deleteSiteFormSitesMenu" hx-ext="client-side-templates"
+			mustache-template="sitesmenutemplate" hidden></span>
+		<span hx-get="/site/" hx-trigger="load" hx-target="#saveNewStationFormSitesMenu" hx-ext="client-side-templates"
+			mustache-template="sitesmenutemplate" hidden></span>
+		<span hx-get="/site/" hx-trigger="load" hx-target="#deleteStationFormSitesMenu" hx-ext="client-side-templates"
+			mustache-template="sitesmenutemplate" hidden></span>
+		<span hx-get="/class/" hx-trigger="load" hx-target="#deleteClassFormClassesMenu" hx-ext="client-side-templates"
+			mustache-template="classesmenutemplate" hidden></span>
+		<span hx-get="/class/" hx-trigger="load" hx-target="#saveNewSubclassFormClassesMenu"
 			hx-ext="client-side-templates" mustache-template="classesmenutemplate" hidden></span>
-		<span hx-get="/class/" hx-trigger="load" hx-target="#saveNewSubclassFormClassesMenu" hx-swap="innerHTML"
+		<span hx-get="/class/" hx-trigger="load" hx-target="#deleteSubclassFormClassesMenu"
 			hx-ext="client-side-templates" mustache-template="classesmenutemplate" hidden></span>
-		<span hx-get="/class/" hx-trigger="load" hx-target="#deleteSubclassFormClassesMenu" hx-swap="innerHTML"
-			hx-ext="client-side-templates" mustache-template="classesmenutemplate" hidden></span>
-		<span hx-get="/site/" hx-trigger="load" hx-target="#startNewSessionFormSitesMenu" hx-swap="innerHTML"
-			hx-ext="client-side-templates" mustache-template="sitesmenutemplate" hidden></span>
-		<span hx-get="/geometry/" hx-trigger="load" hx-target="#startNewGroupingFormGeometriesMenu" hx-swap="innerHTML"
+		<span hx-get="/site/" hx-trigger="load" hx-target="#startNewSessionFormSitesMenu" hx-ext="client-side-templates"
+			mustache-template="sitesmenutemplate" hidden></span>
+		<span hx-get="/geometry/" hx-trigger="load" hx-target="#startNewGroupingFormGeometriesMenu"
 			hx-ext="client-side-templates" mustache-template="geometriesmenutemplate" hidden></span>
-		<span hx-get="/class/" hx-trigger="load" hx-target="#startNewGroupingFormClassesMenu" hx-swap="innerHTML"
+		<span hx-get="/class/" hx-trigger="load" hx-target="#startNewGroupingFormClassesMenu"
 			hx-ext="client-side-templates" mustache-template="classesmenutemplate" hidden></span>
 	</div>
 
-	<div class="outputbox" id="outputBox" hx-get="/summary/" hx-trigger="load" hx-target="this" hx-swap="innerHTML"
+	<div id="sitemaptitle">ShootPoints</div>
+
+	<div id="onTheFlyAdjustmentsPopup" hidden>
+		<div class="sectionheader">
+			On-The-Fly Adjustments
+			<span style="float: right;"
+				onclick="document.getElementById('onTheFlyAdjustmentsPopup').hidden=true">×&nbsp;</span>
+		</div>
+		<form id="setAtmosphericConditionsForm" hx-put="/atmosphere/" hx-target="#outputBox"
+			hx-ext="client-side-templates" mustache-template="outputtemplate">
+			<input type="submit" id="setAtmosphericConditionsFormButton" value="Set Atmospheric Conditions" /><br>
+			<label for="setAtmosphericConditionsFormTemperature">Temperature (°C):</label>
+			<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature" required
+				pattern="-?\d{1,2}" />
+			<label for="setAtmosphericConditionsFormPressure">Pressure (mmHg):</label>
+			<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure" required pattern="[78]\d{2}" />
+		</form>
+		<form id="setPrismOffsetsForm" hx-put="/prism/" hx-target="#outputBox" hx-ext="client-side-templates"
+			mustache-template="outputtemplate">
+			<input type="submit" id="setPrismOffsetsFormButton" value="Set Prism Offsets" />
+			<span style="font-size: small"> (direction is from prism to point, as seen from the total
+				station)</span><br>
+			<label for="setPrismOffsetsVerticalDistance">Vertical Offset:</label>
+			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance"
+				pattern="\d\.?(\.\d{1,2})?" />
+			<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
+				<option value="-1">Down</option>
+				<option value="1">Up</option>
+			</select><span class="clearfield"
+				onclick="getElementById('setPrismOffsetsVerticalDistance').value='0';">×</span><br>
+			<label for="setPrismOffsetsLatitudeDistance">Latitude Offset:</label>
+			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance"
+				pattern="\d\.?(\.\d{1,2})?" />
+			<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
+				<option value="1">North</option>
+				<option value="-1">South</option>
+			</select><span class="clearfield"
+				onclick="getElementById('setPrismOffsetsLatitudeDistance').value='0';">×</span><br>
+			<label for="setPrismOffsetsLongitudeDistance">Longitude Offset:</label>
+			<input type="text" id="setPrismOffsetsLongitudeDistance" name="longitude_distance" />
+			<select id="setPrismOffsetsLongitudeDirection" name="longitude_direction">
+				<option value="1">East</option>
+				<option value="-1">West</option>
+			</select><span class="clearfield"
+				onclick="getElementById('setPrismOffsetsLongitudeDistance').value='0';">×</span><br>
+			<label for="setPrismOffsetsRadialDistance">Radial Offset:</label>
+			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance" pattern="\d\.?(\.\d{1,2})?" />
+			<select id="setPrismOffsetsRadialDirection" name="radial_direction">
+				<option value="1">Away</option>
+				<option value="-1">Toward</option>
+			</select><span class="clearfield"
+				onclick="getElementById('setPrismOffsetsRadialDistance').value='0';">×</span><br>
+			<label for="setPrismOffsetsTangentDistance">Tangent Offset:</label>
+			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance"
+				pattern="\d\.?(\.\d{1,2})?" />
+			<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
+				<option value="1">Right</option>
+				<option value="-1">Left</option>
+			</select><span class="clearfield"
+				onclick="getElementById('setPrismOffsetsTangentDistance').value='0';">×</span><br>
+			<label for="setPrismOffsetsWedgeDistance">Wedge Offset:</label>
+			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance" pattern="\d\.?(\.\d{1,2})?" />
+			<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
+				<option value="1">Clockwise</option>
+				<option value="-1">Counter-Clockwise</option>
+			</select><span class="clearfield"
+				onclick="getElementById('setPrismOffsetsWedgeDistance').value='0';">×</span><br>
+		</form>
+	</div>
+
+	<!-- The following link is just a convenience for development, and should be removed once all the endpoints are mapped in the front end. -->
+	<a href="/docs" style="float: right; color: white;">For the FastAPI interface, click here.</a>
+	<img id="editAtmosphereAndPrismOffsets" src="img/gear.svg" onclick="show_on_the_fly_adjustments_popup()">
+	<span class="info">
+		<p id="atmosphereinfo" hx-get="/atmosphere/" hx-trigger="load" hx-target="this" hx-ext="client-side-templates"
+			mustache-template="atmosphereinfotemplate"></p>
+		<p id="prismoffsets" hx-get="/prism/" hx-trigger="load" hx-target="this" hx-ext="client-side-templates"
+			mustache-template="prismoffsetstemplate"></p>
+	</span>
+
+	<div class="outputbox" id="outputBox" hx-get="/summary/" hx-trigger="load" hx-target="this"
 		hx-ext="client-side-templates" mustache-template="setuperrorstemplate"></div>
 
 	<div class="setup">
-		<div class="sectionheader" style="background-color: rgb(199, 189, 179);" onclick="collapsesection(this);">
+		<div class="sectionheader" onclick="collapse_section(this);">
 			Setup <span class="collapser">‣</span><span class="expander" hidden>▾</span>
 		</div>
 
 		<div class="sectionforms" hidden>
-			<form id="setConfigsForm" clearonsuccess>
-				<button id="setConfigsFormButton" hx-put="/config/" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Set Configs
-				</button>
-				<label>Port:</label><input type="text" id="setConfigsFormPort" name="port"
-					oninput="toggle_button(this);" optional />
-				<label>Make:</label><input type="text" id="setConfigsFormMake" name="make"
-					oninput="toggle_button(this);" optional />
-				<label>Model:</label><input type="text" id="setConfigsFormModel" name="model"
-					oninput="toggle_button(this);" optional />
-				<label>Backsight Error Limit (cm):</label><input type="text" id="setConfigsFormLimit" name="limit"
-					oninput="toggle_button(this);" optional />
+			<form id="setConfigsForm" hx-put="/config/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="setConfigsFormButton" value="Set Configs" /><br>
+				<!-- TODO: Figure out how to pre-populate these fields with the current values -->
+				<label for="setConfigsFormPort">Port:</label>
+				<input type="text" id="setConfigsFormPort" name="port" />
+				<label for="setConfigsFormMake">Make:</label>
+				<input type="text" id="setConfigsFormMake" name="make" />
+				<label for="setConfigsFormModel">Model:</label>
+				<input type="text" id="setConfigsFormModel" name="model" />
+				<label for="setConfigsFormLimit">Backsight Error Limit (cm):</label>
+				<input type="text" id="setConfigsFormLimit" name="limit" pattern="\d{1,2}" />
 			</form>
 
-			<form id="saveNewSiteForm" clearonsuccess>
-				<button id="saveNewSiteFormButton" hx-post="/site/" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Save New Site
-				</button>
-				<label>Name:</label>
-				<input type="text" id="saveNewSiteFormSiteName" name="name" oninput="toggle_button(this);" required />
-				<label>Description:</label>
+			<form id="saveNewSiteForm" hx-post="/site/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="saveNewSiteFormButton" value="Save New Site" /><br>
+				<label for="saveNewSiteFormSiteName">Name:</label>
+				<input type="text" id="saveNewSiteFormSiteName" name="name" required />
+				<label for="saveNewSiteFormSiteDescription">Description:</label>
 				<input type="text" id="saveNewSiteFormSiteDescription" name="description" />
 			</form>
 
-			<form id="deleteSiteForm" clearonsuccess>
-				<button id=" deleteSiteFormButton" hx-delete="/site/"
-					hx-confirm="Are you sure you want to delete this site?" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Delete Site
-				</button>
-				<label>Site:</label>
+			<form id="deleteSiteForm" hx-delete="/site/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="deleteSiteFormButton" value="Delete Site" /><br>
+				<label for="deleteSiteFormSitesMenu">Site:</label>
 				<select id="deleteSiteFormSitesMenu" name="sites_id"
-					onchange="toggle_button(this); update_description(this, 'deleteSiteFormSiteDescription');" required>
+					onchange="update_description(this, 'deleteSiteFormSiteDescription');" required>
 				</select>
 				<img class="infobutton" id="deleteSiteFormSiteDescription" src="img/info.svg">
 			</form>
 
-			<form id="saveNewStationForm" clearonsuccess>
-				<button id="saveNewStationFormButton" hx-post="/station/" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Save New Station
-				</button>
-				<!-- saveNewStationFormHiddenField helps saveNewStationCoordinateSystem toggle the button correctly -->
-				<input id="saveNewStationFormHiddenField" type="hidden" required />
-				<label>Site:</label>
+			<form id="saveNewStationForm" hx-post="/station/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="saveNewStationFormButton" value="Save New Station" /><br>
+				<label for="saveNewStationFormSitesMenu">Site:</label>
 				<select id="saveNewStationFormSitesMenu" name="sites_id"
-					onchange="toggle_button(this); update_description(this, 'saveNewStationFormSiteDescription');"
-					required>
+					onchange="update_description(this, 'saveNewStationFormSiteDescription');" required>
 				</select>
 				<img class="infobutton" id="saveNewStationFormSiteDescription" src="img/info.svg">
-				<label>Name:</label>
-				<input type="text" id="saveNewStationFormName" name="name" oninput="toggle_button(this);" required />
-				<label>Description:</label>
-				<input type="text" id="saveNewStationDescription" name="description" /><br>
-				<label>Coordinate System:</label>
+				<label for="saveNewStationFormName">Name:</label>
+				<input type="text" id="saveNewStationFormName" name="name" required />
+				<label for="saveNewStationDescription">Description:</label>
+				<input type="text" id="saveNewStationDescription" name="description" />
+				<label for="saveNewStationCoordinateSystem">Coordinate System:</label>
 				<select id="saveNewStationCoordinateSystem" name="coordinatesystem"
-					onchange="update_required_new_site_fields(this); toggle_button(this);" required>
+					onchange="update_required_new_site_fields(this);" required>
 					<option></option>
 					<option value='Site'>Site</option>
 					<option value='UTM'>UTM</option>
 					<option value='Lat/Lon'>Lat/Lon</option>
 				</select><br>
-				<label id="saveNewStationNorthingLabel" hidden>Northing:</label>
-				<input type="text" id="saveNewStationNorthing" name="northing" oninput="toggle_button(this);" hidden />
-				<label id="saveNewStationEastingLabel" hidden>Easting:</label>
-				<input type="text" id="saveNewStationEasting" name="easting" oninput="toggle_button(this);" hidden />
-				<label id="saveNewStationLatitudeLabel" hidden>Latitude:</label>
-				<input type="text" id="saveNewStationLatitude" name="latitude" oninput="toggle_button(this);" hidden />
-				<label id="saveNewStationLongitudeLabel" hidden>Longitude:</label>
-				<input type="text" id="saveNewStationLongitude" name="longitude" oninput="toggle_button(this);"
-					hidden />
-				<label id="saveNewStationElevationLabel" hidden>Elevation:</label>
-				<input type="text" id="saveNewStationElevation" name="elevation" oninput="toggle_button(this);"
-					hidden />
-				<label id="saveNewStationUTMZoneLabel" hidden>UTMZone:</label>
-				<input type="text" id="saveNewStationUTMZone" name="utmzone" oninput="toggle_button(this);" hidden />
+				<label for="saveNewStationNorthing" id="saveNewStationNorthingLabel" hidden>Northing:</label>
+				<input type="text" id="saveNewStationNorthing" name="northing" hidden />
+				<label for="saveNewStationEasting" id="saveNewStationEastingLabel" hidden>Easting:</label>
+				<input type="text" id="saveNewStationEasting" name="easting" hidden />
+				<label for="saveNewStationLatitude" id="saveNewStationLatitudeLabel" hidden>Latitude:</label>
+				<input type="text" id="saveNewStationLatitude" name="latitude" hidden />
+				<label for="saveNewStationLongitude" id="saveNewStationLongitudeLabel" hidden>Longitude:</label>
+				<input type="text" id="saveNewStationLongitude" name="longitude" hidden />
+				<label for="saveNewStationElevation" id="saveNewStationElevationLabel" hidden>Elevation:</label>
+				<input type="text" id="saveNewStationElevation" name="elevation" hidden />
+				<label for="saveNewStationUTMZone" id="saveNewStationUTMZoneLabel" hidden>UTMZone:</label>
+				<input type="text" id="saveNewStationUTMZone" name="utmzone" hidden />
 
 			</form>
 
-			<form id="deleteStationForm" clearonsuccess>
-				<button id="deleteStationFormButton" hx-delete="/station/"
-					hx-confirm="Are you sure you want to delete this station?" hx-target="#outputBox"
-					hx-swap="innerHTML" hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Delete Station
-				</button>
-				<label>Site:</label>
+			<form id="deleteStationForm" hx-delete="/station/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="deleteStationFormButton" value="Delete Station" /><br>
+				<label for="deleteStationFormSitesMenu">Site:</label>
 				<select id="deleteStationFormSitesMenu" name="sites_id"
-					onchange="toggle_button(this); update_description(this, 'deleteStationFormSiteDescription');"
-					hx-get="/station/" hx-trigger="change" hx-target="#deleteStationFormStationsMenu"
-					hx-swap="innerHTML" hx-ext="client-side-templates" mustache-template="stationsmenutemplate"
-					required>
+					onchange="update_description(this, 'deleteStationFormSiteDescription');" hx-get="/station/"
+					hx-trigger="change" hx-target="#deleteStationFormStationsMenu" hx-ext="client-side-templates"
+					mustache-template="stationsmenutemplate" required>
 				</select>
 				<img class="infobutton" id="deleteStationFormSiteDescription" src="img/info.svg">
-				<label>Station:</label>
+				<label for="deleteStationFormStationsMenu">Station:</label>
 				<select id="deleteStationFormStationsMenu" name="stations_id"
-					onchange="toggle_button(this); update_description(this, 'deleteStationFormStationDescription');"
-					required>
+					onchange="update_description(this, 'deleteStationFormStationDescription');" required>
 				</select>
 				<img class="infobutton" id="deleteStationFormStationDescription" src="img/info.svg">
 			</form>
 
-			<form id="saveNewClassForm" clearonsuccess>
-				<button id="saveNewClassFormButton" hx-post="/class/" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Save New Class
-				</button>
-				<label>Name:</label>
-				<input type="text" id="saveNewClassFormClassName" name="name" oninput="toggle_button(this);" required />
-				<label>Description:</label>
+			<form id="saveNewClassForm" hx-post="/class/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="saveNewClassFormButton" value="Save New Class" /><br>
+				<label for="saveNewClassFormClassName">Name:</label>
+				<input type="text" id="saveNewClassFormClassName" name="name" required />
+				<label for="saveNewClassFormClassDescription">Description:</label>
 				<input type="text" id="saveNewClassFormClassDescription" name="description" />
 			</form>
 
-			<form id="deleteClassForm" clearonsuccess>
-				<button id=" deleteClassFormButton" hx-delete="/class/"
-					hx-confirm="Are you sure you want to delete this class?" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Delete Class
-				</button>
-				<label>Class:</label>
+			<form id="deleteClassForm" hx-delete="/class/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id=" deleteClassFormButton" value="Delete Class" /><br>
+				<label for="deleteClassFormClassesMenu">Class:</label>
 				<select id="deleteClassFormClassesMenu" name="classes_id"
-					onchange="toggle_button(this); update_description(this, 'deleteClassFormClassDescription');"
-					required>
+					onchange="update_description(this, 'deleteClassFormClassDescription');" required>
 				</select>
 				<img class="infobutton" id="deleteClassFormClassDescription" src="img/info.svg">
 			</form>
 
-			<form id="saveNewSubclassForm" clearonsuccess>
-				<button id="saveNewSubclassFormButton" hx-post="/subclass/" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Save New Subclass
-				</button>
-				<label>Class:</label>
+			<form id="saveNewSubclassForm" hx-post="/subclass/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="saveNewSubclassFormButton" value="Save New Subclass" /><br>
+				<label for="saveNewSubclassFormClassesMenu">Class:</label>
 				<select id="saveNewSubclassFormClassesMenu" name="classes_id"
-					onchange="toggle_button(this); update_description(this, 'saveNewSubclassFormClassDescription');"
-					required>
+					onchange="update_description(this, 'saveNewSubclassFormClassDescription');" required>
 				</select>
 				<img class="infobutton" id="saveNewSubclassFormClassDescription" src="img/info.svg">
-				<label>Name:</label>
-				<input type="text" id="saveNewSubclassFormSubclassName" name="name" oninput="toggle_button(this);"
-					required />
-				<label>Description:</label>
+				<label for="saveNewSubclassFormSubclassName">Name:</label>
+				<input type="text" id="saveNewSubclassFormSubclassName" name="name" required />
+				<label for="saveNewSubclassFormSubclassDescription">Description:</label>
 				<input type="text" id="saveNewSubclassFormSubclassDescription" name="description" />
 			</form>
 
-			<form id="deleteSubclassForm" clearonsuccess>
-				<button id=" deleteSubclassFormButton" hx-delete="/subclass/"
-					hx-confirm="Are you sure you want to delete this subclass?" hx-target="#outputBox"
-					hx-swap="innerHTML" hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Delete Subclass
-				</button>
-				<label>Class:</label>
+			<form id="deleteSubclassForm" hx-delete="/subclass/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id=" deleteSubclassFormButton" value="Delete Subclass" /><br>
+				<label for="deleteSubclassFormClassesMenu">Class:</label>
 				<select id="deleteSubclassFormClassesMenu" name="classes_id" hx-get="/subclass/" hx-trigger="change"
-					hx-target="#deleteSubclassFormSubclassesMenu" hx-swap="innerHTML" hx-ext="client-side-templates"
+					hx-target="#deleteSubclassFormSubclassesMenu" hx-ext="client-side-templates"
 					mustache-template="subclassesmenutemplate"
-					onchange="toggle_button(this); update_description(this, 'deleteSubclassFormClassDescription');"
-					required>
+					onchange="update_description(this, 'deleteSubclassFormClassDescription');" required>
 				</select>
 				<img class="infobutton" id="deleteSubclassFormClassDescription" src="img/info.svg">
-				<label>Subclass:</label>
+				<label for="deleteSubclassFormSubclassesMenu">Subclass:</label>
 				<select id="deleteSubclassFormSubclassesMenu" name="subclasses_id"
-					onchange="toggle_button(this); update_description(this, 'deleteSubclassFormSubclassDescription');"
-					required>
+					onchange="update_description(this, 'deleteSubclassFormSubclassDescription');" required>
 				</select>
 				<img class="infobutton" id="deleteSubclassFormSubclassDescription" src="img/info.svg">
 			</form>
@@ -218,88 +267,99 @@
 	</div>
 
 	<div class="usage">
-		<div class="sectionheader" style=" background-color: rgb(142, 177, 189)" ;" onclick="collapsesection(this);">
-			Surveying <span class="collapser" hidden>‣</span><span class="expander">▾</span>
+		<div class="sectionheader" onclick="collapse_section(this);">
+			Surveying <span class="collapser">‣</span><span class="expander" hidden>▾</span>
 		</div>
 
-		<div class="sectionforms">
-			<form id="startNewSessionForm" clearonsuccess>
-				<button id="startNewSessionFormButton" hx-post="/session/" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Start New Session
-				</button>
-				<label>Label:</label>
-				<input type="text" id="startNewSessionFormLabel" name="label" oninput="toggle_button(this);" required />
-				<label>Surveyor:</label>
-				<input type="text" id="startNewSessionFormSurveyor" name="surveyor" oninput="toggle_button(this);"
+		<div class="sectionforms" hidden>
+			<form id="startNewSessionForm" hx-post="/session/" hx-target="#outputBox"
+				hx-indicator="#startNewSessionFormIndicator" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="startNewSessionFormButton" value="Start New Session">
+				<img id="startNewSessionFormIndicator" class="htmx-indicator" src="img/cylon.svg" /><br>
+				<label for="startNewSessionFormLabel">Label:</label>
+				<input type="text" id="startNewSessionFormLabel" name="label"
+					onclick="alert('Before proceeding, please verify that the atmospheric conditions are correct.')"
 					required />
-				<label>Site:</label>
+				<label for="startNewSessionFormSurveyor">Surveyor:</label>
+				<input type="text" id="startNewSessionFormSurveyor" name="surveyor" required />
+				<label for="startNewSessionFormSitesMenu">Site:</label>
 				<select id="startNewSessionFormSitesMenu" name="sites_id"
-					onchange="toggle_button(this); update_description(this, 'startNewSessionFormSiteDescription');"
-					hx-get="/station/" hx-trigger="change" hx-target="#startNewSessionFormOccupiedPointMenu"
-					hx-swap="innerHTML" hx-ext="client-side-templates" mustache-template="stationsmenutemplate"
-					required>
+					onchange="update_description(this, 'startNewSessionFormSiteDescription');" hx-get="/station/"
+					hx-trigger="change" hx-target="#startNewSessionFormOccupiedPointMenu" hx-ext="client-side-templates"
+					mustache-template="stationsmenutemplate" required>
 				</select>
 				<img class="infobutton" id="startNewSessionFormSiteDescription" src="img/info.svg">
-				<label>Occupied Point:</label>
-				<select id="startNewSessionFormOccupiedPointMenu" name="occupied_point_id" onchange="toggle_button(this); update_description(this, 'startNewSessionFormOccupiedPointDescription');
+				<label for="startNewSessionFormOccupiedPointMenu">Occupied Point:</label>
+				<select id="startNewSessionFormOccupiedPointMenu" name="occupied_point_id" onchange="update_description(this, 'startNewSessionFormOccupiedPointDescription');
 					update_backsight_station_menu(this);" required>
 				</select>
 				<img class="infobutton" id="startNewSessionFormOccupiedPointDescription" src="img/info.svg">
-				<label>Session Type:</label>
+				<label for="startNewSessionFormSessionTypeMenu">Session Type:</label>
 				<select id="startNewSessionFormSessionTypeMenu" name="sessiontype"
-					onchange="update_required_new_session_fields(this); toggle_button(this);" required>
+					onchange="update_required_new_session_fields(this);" required>
 					<option></option>
 					<option value="Backsight">Backsight</option>
 					<option value="Azimuth">Azimuth</option>
 				</select><br>
-				<label id="startNewSessionFormBacksightStationMenuLabel" hidden>Backsight Station:</label>
+				<label for="startNewSessionFormBacksightStationMenu" id="startNewSessionFormBacksightStationMenuLabel"
+					hidden>Backsight Station:</label>
 				<select id="startNewSessionFormBacksightStationMenu" name="backsight_station_id"
-					onchange="toggle_button(this); update_description(this, 'startNewSessionFormBacksightStationDescription');"
-					hidden>
+					onchange="update_description(this, 'startNewSessionFormBacksightStationDescription');" hidden>
 				</select>
 				<img class="infobutton" id="startNewSessionFormBacksightStationDescription" src="img/info.svg" hidden>
-				<label id="startNewSessionFormPrismHeightLabel" hidden>Prism Height:</label>
-				<input type="text" id="startNewSessionFormPrismHeight" name="prism_height"
-					oninput="toggle_button(this);" hidden />
-				<label id="startNewSessionFormInstrumentHeightLabel" hidden>Instrument Height:</label>
-				<input type="text" id="startNewSessionFormInstrumentHeight" name="instrument_height"
-					oninput="toggle_button(this);" hidden />
-				<label id="startNewSessionFormAzimuthLabel" hidden>Azimuth (ddd.mmss):</label>
-				<input type="text" id="startNewSessionFormAzimuth" name="azimuth" oninput="toggle_button(this);"
+				<label for="startNewSessionFormPrismHeight" id="startNewSessionFormPrismHeightLabel" hidden>Prism
+					Height:</label>
+				<input type="text" id="startNewSessionFormPrismHeight" name="prism_height" pattern="\d\.?(\.\d{1,2})?"
 					hidden />
+				<label for="startNewSessionFormInstrumentHeight" id="startNewSessionFormInstrumentHeightLabel"
+					hidden>Instrument Height:</label>
+				<input type="text" id="startNewSessionFormInstrumentHeight" name="instrument_height"
+					pattern="\d\.?(\.\d{1,2})?" hidden />
+				<label for="startNewSessionFormAzimuth" id="startNewSessionFormAzimuthLabel" hidden>Azimuth
+					(ddd.mmss):</label>
+				<input type="text" id="startNewSessionFormAzimuth" name="azimuth" pattern="\d{1,3}\.\d{4}" hidden />
 			</form>
 
-			<form id="startNewGroupingForm">
-				<button id="startNewGroupingFormButton" hx-post="/grouping/" hx-target="#outputBox" hx-swap="innerHTML"
-					hx-ext="client-side-templates" mustache-template="outputtemplate" disabled>
-					Start New Grouping
-				</button>
-				<label>Geometry:</label>
+			<form id="startNewGroupingForm" hx-post="/grouping/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" clearonsuccess>
+				<input type="submit" id="startNewGroupingFormButton" value="Start New Grouping" /><br>
+				<label for="startNewGroupingFormGeometriesMenu">Geometry:</label>
 				<select id="startNewGroupingFormGeometriesMenu" name="geometry_id"
-					onchange="toggle_button(this); update_description(this, 'startNewGroupingFormGeometryDescription');"
-					required>
+					onchange="update_description(this, 'startNewGroupingFormGeometryDescription');" required>
 				</select>
 				<img class="infobutton" id="startNewGroupingFormGeometryDescription" src="img/info.svg">
-				<label>Class:</label>
+				<label for="startNewGroupingFormClassesMenu">Class:</label>
 				<select id="startNewGroupingFormClassesMenu" name="classes_id" hx-get="/subclass/" hx-trigger="change"
-					hx-target="#startNewGroupingFormSubclassesMenu" hx-swap="innerHTML" hx-ext="client-side-templates"
+					hx-target="#startNewGroupingFormSubclassesMenu" hx-ext="client-side-templates"
 					mustache-template="subclassesmenutemplate"
-					onchange="toggle_button(this); update_description(this, 'startNewGroupingFormClassDescription');"
-					required>
+					onchange="update_description(this, 'startNewGroupingFormClassDescription');" required>
 				</select>
 				<img class="infobutton" id="startNewGroupingFormClassDescription" src="img/info.svg">
-				<label>Subclass:</label>
+				<label for="startNewGroupingFormSubclassesMenu">Subclass:</label>
 				<select id="startNewGroupingFormSubclassesMenu" name="subclasses_id"
-					onchange="toggle_button(this); update_description(this, 'startNewGroupingFormSubclassDescription');"
-					required>
+					onchange="update_description(this, 'startNewGroupingFormSubclassDescription');" required>
 				</select>
 				<img class="infobutton" id="startNewGroupingFormSubclassDescription" src="img/info.svg">
-				<label>Label:</label>
-				<input type="text" id="startNewGroupingFormLabel" name="label" oninput="toggle_button(this);"
-					required />
-				<label>Description:</label>
+				<label for="startNewGroupingFormLabel">Label:</label>
+				<input type="text" id="startNewGroupingFormLabel" name="label" required />
+				<label for="startNewGroupingFormDescription">Description:</label>
 				<input type="text" id="startNewGroupingFormDescription" name="description" />
+			</form>
+
+			<form id="takeShotForm" hx-get="/shot/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="shotdatatemplate" onsubmit="show_shot_form(this.id);">
+				<input type="submit" id="takeShotFormButton" value="Take Shot" />
+			</form>
+			<form id="cancelShotForm" hx-get="/cancel/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" onsubmit="show_shot_form(this.id);" hidden>
+				<input type="submit" id="cancelShotFormButton" value="Cancel Shot" />
+				<img id="takeShotFormIndicator" src="img/cylon.svg" /><br>
+			</form>
+			<form id="saveShotForm" hx-post="/shot/" hx-target="#outputBox" hx-ext="client-side-templates"
+				mustache-template="outputtemplate" onsubmit="show_shot_form(this.id);" hidden>
+				<input type="submit" id="saveShotFormButton" value="Cancel Shot" />
+				<img id="takeShotFormIndicator" src="img/cylon.svg" /><br>
 			</form>
 		</div>
 	</div>

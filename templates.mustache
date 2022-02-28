@@ -5,36 +5,44 @@ function append_mustache_template(templatename, templatetext) {
     document.getElementsByTagName('head')[0].appendChild(mustachetemplate);
 }
 
+append_mustache_template("atmosphereinfotemplate", `
+Atmosphere: {{temperature}}°C, {{pressure}}mmHg
+`);
+
+append_mustache_template("prismoffsetstemplate", `
+Prism Offsets: {{.}}
+`);
+
 append_mustache_template("classesmenutemplate", `
-<option value="0"></option>
+<option></option>
 {{#classes}}
 <option value="{{id}}" description="{{description}}">{{name}}</option>
 {{/classes}}
 `);
 
 append_mustache_template("subclassesmenutemplate", `
-<option value="0"></option>
+<option></option>
 {{#subclasses}}
 <option value="{{id}}" description="{{description}}">{{name}}</option>
 {{/subclasses}}
 `);
 
 append_mustache_template("sitesmenutemplate", `
-<option value="0"></option>
+<option></option>
 {{#sites}}
 <option value="{{id}}" description="{{description}}">{{name}}</option>
 {{/sites}}
 `);
 
 append_mustache_template("stationsmenutemplate", `
-<option value="0"></option>
+<option></option>
 {{#stations}}
 <option value="{{id}}" description="{{description}}">{{name}}</option>
 {{/stations}}
 `);
 
 append_mustache_template("geometriesmenutemplate", `
-<option value="0"></option>
+<option></option>
 {{#geometries}}
 <option value="{{id}}" description="{{description}}">{{name}}</option>
 {{/geometries}}
@@ -42,15 +50,28 @@ append_mustache_template("geometriesmenutemplate", `
 
 append_mustache_template("setuperrorstemplate", `
 {{#setup_errors}}
-<b>ERROR:</b> {{.}}
+<b style="color: red;">ERROR:</b> {{.}}
 {{/setup_errors}}
 `);
 
 append_mustache_template("outputtemplate", `
 {{#errors}}
-<b>ERROR:</b> {{.}}
+<b style="color: red;">ERROR:</b> {{.}}<br>
 {{/errors}}
 {{#result}}
-{{.}}
+{{.}}<br>
+{{/result}}
+`);
+
+append_mustache_template("shotdatatemplate", `
+{{#errors}}
+<b style="color: red;">ERROR:</b> {{.}}<br>
+{{/errors}}
+{{#result}}
+<table class="shotdata">
+<tr><td>delta_n = {{delta_n}}</td><td>calculated_n = {{calculated_n}}</td></tr>
+<tr><td>delta_e = {{delta_e}}</td><td>calculated_e = {{calculated_e}}</td></tr>
+<tr><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>
+</table>
 {{/result}}
 `);
