@@ -1,3 +1,137 @@
+function output_template() {
+	template = '' +
+		'{{#errors}}' +
+		'<b style="color: red;"> ERROR:</b> {{.}} <br>\n' +
+		'{{/errors}}' +
+		'{{#result}}' +
+		'{{.}}<br>\n' +
+		'{{/result}}';
+	return template
+}
+
+function menu_template(theoptions) {
+	template = '' +
+		'<option></option>\n' +
+		'{{#' + theoptions + '}}' +
+		'<option value="{{id}}" description="{{description}}">{{name}}</option>\n' +
+		'{{/' + theoptions + '}}';
+	return template
+}
+
+function clear_field(thefield) {
+	document.getElementById(thefield).value = 0;
+}
+
+async function load_setup_errors() {
+	let target = document.getElementById("outputBox");
+	let template = '' +
+		'{{#setup_errors}}' +
+		'<b style="color: red;">ERROR:</b> {{.}}' +
+		'{{/setup_errors}}';
+	let response = await fetch("/summary/");
+	let json = await response.json();
+	target.innerHTML = Mustache.render(template, json);
+}
+
+async function load_atmospheric_conditions() {
+	let target = document.getElementById("atmosphericConditions");
+	let template = "Atmosphere: {{ temperature }}°C, {{ pressure }}mmHg";
+	let response = await fetch("/atmosphere/");
+	let json = await response.json();
+	target.innerHTML = Mustache.render(template, json);
+}
+
+async function load_prism_offsets() {
+	let target = document.getElementById("prismOffsets");
+	let template = "Prism Offsets: {{.}}";
+	let response = await fetch("/prism/");
+	let json = await response.json();
+	target.innerHTML = Mustache.render(template, json);
+}
+
+async function set_atmospheric_conditions() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/atmosphere/", {
+		method: "PUT",
+		body: new FormData(setAtmosphericConditionsForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	load_atmospheric_conditions();
+}
+
+async function set_prism_offsets() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/prism/", {
+		method: "PUT",
+		body: new FormData(setPrismOffsetsForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	load_prism_offsets();
+}
+
+async function load_sites_menus() {
+	let response = await fetch("/site/");
+	let json = await response.json();
+	Array.from(document.querySelectorAll('.sitesmenu')).forEach(function (target) {
+		target.innerHTML = Mustache.render(menu_template('sites'), json);
+	});
+}
+
+async function load_classes_menus() {
+	let response = await fetch("/class/");
+	let json = await response.json();
+	Array.from(document.querySelectorAll('.classesmenu')).forEach(function (target) {
+		target.innerHTML = Mustache.render(menu_template('classes'), json);
+	});
+}
+
+async function load_geometries_menus() {
+	let response = await fetch("/geometry/");
+	let json = await response.json();
+	Array.from(document.querySelectorAll('.geometriesmenu')).forEach(function (target) {
+		target.innerHTML = Mustache.render(menu_template('geometries'), json);
+	});
+}
+
+async function update_dependent_station_menu(thesite, themenu) {
+	let target = document.getElementById(themenu);
+	if (thesite.value === "") {
+		target.innerHTML = "";
+	} else {
+		let response = await fetch("/station/" + thesite.value);
+		let json = await response.json();
+		target.innerHTML = Mustache.render(menu_template('stations'), json);
+	}
+}
+
+async function update_dependent_subclass_menu(theclass, themenu) {
+	let target = document.getElementById(themenu);
+	if (theclass.value === "") {
+		target.innerHTML = "";
+	} else {
+		let response = await fetch("/subclass/" + theclass.value);
+		let json = await response.json();
+		target.innerHTML = Mustache.render(menu_template('subclasses'), json);
+	}
+}
+
+function update_backsight_station_menu(occupiedstationmenu) {
+	let options = occupiedstationmenu.innerHTML.split("\n");
+	let newoptions = Array();
+	options.forEach((option) => {
+		if (option.indexOf('value="' + occupiedstationmenu.value + '"') === -1) {
+			newoptions.push(option);
+		}
+	});
+	document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = newoptions.join("\n");
+}
+
+
+
 // Custom helper functions to provide functionality that isn't directly available in htmx.
 
 function htmx_render_442() {
@@ -154,17 +288,6 @@ function update_required_new_site_fields(coordinatesystemmenu) {
 	}
 }
 
-function update_backsight_station_menu(occupiedstationmenu) {
-	let options = occupiedstationmenu.innerHTML.split("\n");
-	let newoptions = Array();
-	options.forEach((option) => {
-		if (option.indexOf('value="' + occupiedstationmenu.value + '"') == -1) {
-			newoptions.push(option);
-		}
-	});
-	document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = newoptions.join("\n");
-}
-
 function update_required_new_session_fields(sessiontypemenu) {
 	switch (sessiontypemenu.value) {
 		case "Backsight":
@@ -206,9 +329,3 @@ function show_shot_form(theform) {
 			break;
 	}
 }
-
-// async function foo() {
-// 	let response = await fetch("/atmosphere/");
-// 	let json = await response.json();
-// 	alert(Mustache.render("Atmosphere: {{temperature}}°C, {{pressure}}mmHg", json));
-// }
