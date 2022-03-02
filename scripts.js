@@ -1,3 +1,5 @@
+// TODO: abstract the CRUD methods below
+
 function output_template() {
 	template = '' +
 		'{{#errors}}' +
@@ -97,6 +99,138 @@ async function load_geometries_menus() {
 	});
 }
 
+async function set_configs() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/config/", {
+		method: "PUT",
+		body: new FormData(setConfigsForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("setConfigsForm").reset();
+	}
+}
+
+async function save_new_site() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/site/", {
+		method: "POST",
+		body: new FormData(saveNewSiteForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("saveNewSiteForm").reset();
+		load_sites_menus();
+	}
+}
+
+async function delete_site() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/site/", {
+		method: "DELETE",
+		body: new FormData(deleteSiteForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("deleteSiteForm").reset();
+		load_sites_menus();
+	}
+}
+
+async function save_new_station() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/station/", {
+		method: "POST",
+		body: new FormData(saveNewStationForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("saveNewStationForm").reset();
+	}
+}
+
+async function delete_station() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/station/", {
+		method: "DELETE",
+		body: new FormData(deleteStationForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("deleteStationForm").reset();
+		document.getElementById("deleteStationFormStationsMenu").innerHTML = "";
+	}
+}
+
+async function save_new_class() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/class/", {
+		method: "POST",
+		body: new FormData(saveNewClassForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("saveNewClassForm").reset();
+		load_classes_menus();
+	}
+}
+
+async function delete_class() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/class/", {
+		method: "DELETE",
+		body: new FormData(deleteClassForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("deleteClassForm").reset();
+		load_classes_menus();
+	}
+}
+
+async function save_new_subclass() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/subclass/", {
+		method: "POST",
+		body: new FormData(saveNewSubclassForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("saveNewSubclassForm").reset();
+	}
+}
+
+async function delete_subclass() {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		"/subclass/", {
+		method: "DELETE",
+		body: new FormData(deleteSubclassForm)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	if (response.status >= 200 && response.status <= 299) {
+		document.getElementById("deleteSubclassForm").reset();
+		document.getElementById("deleteSubclassFormSubclassesMenu").innerHTML = "";
+	}
+}
+
 async function update_dependent_station_menu(thesite, themenu) {
 	let target = document.getElementById(themenu);
 	if (thesite.value === "") {
@@ -134,39 +268,6 @@ function update_backsight_station_menu(occupiedstationmenu) {
 
 // Custom helper functions to provide functionality that isn't directly available in htmx.
 
-function htmx_render_442() {
-	// force htmx to render 422 responses like it does 2xx ones
-	document.addEventListener('htmx:beforeSwap', function (evt) {
-		if (evt.detail.xhr.status === 422) {
-			evt.detail.shouldSwap = true;
-			// set isError to false to avoid error logging in console
-			evt.detail.isError = false;  // Note: for some reason, this doesn't seem to be working.
-		};
-	});
-}
-
-function htmx_reset_form_fields() {
-	// clear form fields on successful submission
-	document.addEventListener('htmx:afterOnLoad', function (evt) {
-		if (evt.detail.xhr.status >= 200 && evt.detail.xhr.status <= 299) {
-			if (evt.detail.elt.nodeName === "FORM") {
-				let preLoaders = document.getElementById("preLoaders").innerHTML;
-				document.getElementById("preLoaders").innerHTML = preLoaders;
-				htmx.process(document.getElementById("preLoaders"));
-				try {
-					let formtoclear = document.getElementById(evt.detail.elt.id);
-					if (formtoclear.hasAttribute("clearonsuccess")) {
-						formtoclear.reset();
-						formtoclear.getElementsByTagName("button")[0].disabled = true;
-					}
-				}
-				catch (e) {
-					// clearonsuccess isn't set in the calling element, so just skip it
-				}
-			}
-		};
-	});
-}
 
 function show_on_the_fly_adjustments_popup() {
 	fetch("/atmosphere/")

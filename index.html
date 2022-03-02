@@ -30,7 +30,7 @@
 		</div>
 		<form id="setAtmosphericConditionsForm">
 			<input type="button" id="setAtmosphericConditionsFormButton" value="Set Atmospheric Conditions"
-				onclick="set_atmospheric_conditions()" /><br>
+				onclick="set_atmospheric_conditions();" /><br>
 			<label for="setAtmosphericConditionsFormTemperature">Temperature (°C):</label>
 			<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature" pattern="-?\d{1,2}"
 				required />
@@ -39,7 +39,7 @@
 		</form>
 		<form id="setPrismOffsetsForm">
 			<input type="button" id="setPrismOffsetsFormButton" value="Set Prism Offsets"
-				onclick="set_prism_offsets()" />
+				onclick="set_prism_offsets();" />
 			<span style="font-size: small"> (direction is from prism to point, as seen from the total
 				station)</span><br>
 			<label for="setPrismOffsetsVerticalDistance">Vertical Offset:</label>
@@ -107,9 +107,8 @@
 		</div>
 
 		<div class="sectionforms" hidden>
-			<form id="setConfigsForm" hx-put="/config/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="setConfigsFormButton" value="Set Configs" /><br>
+			<form id="setConfigsForm">
+				<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" /><br>
 				<!-- TODO: Figure out how to pre-populate these fields with the current values -->
 				<label for="setConfigsFormPort">Port:</label>
 				<input type="text" id="setConfigsFormPort" name="port" />
@@ -121,18 +120,16 @@
 				<input type="text" id="setConfigsFormLimit" name="limit" pattern="\d{1,2}" />
 			</form>
 
-			<form id="saveNewSiteForm" hx-post="/site/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="saveNewSiteFormButton" value="Save New Site" /><br>
+			<form id="saveNewSiteForm">
+				<input type="button" id="saveNewSiteFormButton" value="Save New Site" onclick="save_new_site();" /><br>
 				<label for="saveNewSiteFormSiteName">Name:</label>
 				<input type="text" id="saveNewSiteFormSiteName" name="name" required />
 				<label for="saveNewSiteFormSiteDescription">Description:</label>
 				<input type="text" id="saveNewSiteFormSiteDescription" name="description" />
 			</form>
 
-			<form id="deleteSiteForm" hx-delete="/site/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="deleteSiteFormButton" value="Delete Site" /><br>
+			<form id="deleteSiteForm">
+				<input type="button" id="deleteSiteFormButton" value="Delete Site" onclick="delete_site();" /><br>
 				<label for="deleteSiteFormSitesMenu">Site:</label>
 				<select id="deleteSiteFormSitesMenu" class="sitesmenu" name="sites_id"
 					onchange="update_description(this, 'deleteSiteFormSiteDescription');" required>
@@ -140,9 +137,9 @@
 				<img class="infobutton" id="deleteSiteFormSiteDescription" src="img/info.svg">
 			</form>
 
-			<form id="saveNewStationForm" hx-post="/station/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="saveNewStationFormButton" value="Save New Station" /><br>
+			<form id="saveNewStationForm">
+				<input type="button" id="saveNewStationFormButton" value="Save New Station"
+					onclick="save_new_station();" /><br>
 				<label for="saveNewStationFormSitesMenu">Site:</label>
 				<select id="saveNewStationFormSitesMenu" class="sitesmenu" name="sites_id"
 					onchange="update_description(this, 'saveNewStationFormSiteDescription');" required>
@@ -175,9 +172,9 @@
 
 			</form>
 
-			<form id="deleteStationForm" hx-delete="/station/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="deleteStationFormButton" value="Delete Station" /><br>
+			<form id="deleteStationForm">
+				<input type="button" id="deleteStationFormButton" value="Delete Station"
+					onclick="delete_station();" /><br>
 				<label for="deleteStationFormSitesMenu">Site:</label>
 				<select id="deleteStationFormSitesMenu" class="sitesmenu" name="sites_id"
 					onchange="update_description(this, 'deleteStationFormSiteDescription'); update_dependent_station_menu(this, 'deleteStationFormStationsMenu');"
@@ -191,18 +188,17 @@
 				<img class="infobutton" id="deleteStationFormStationDescription" src="img/info.svg">
 			</form>
 
-			<form id="saveNewClassForm" hx-post="/class/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="saveNewClassFormButton" value="Save New Class" /><br>
+			<form id="saveNewClassForm">
+				<input type="button" id="saveNewClassFormButton" value="Save New Class"
+					onclick="save_new_class();" /><br>
 				<label for="saveNewClassFormClassName">Name:</label>
 				<input type="text" id="saveNewClassFormClassName" name="name" required />
 				<label for="saveNewClassFormClassDescription">Description:</label>
 				<input type="text" id="saveNewClassFormClassDescription" name="description" />
 			</form>
 
-			<form id="deleteClassForm" hx-delete="/class/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id=" deleteClassFormButton" value="Delete Class" /><br>
+			<form id="deleteClassForm">
+				<input type="button" id=" deleteClassFormButton" value="Delete Class" onclick="delete_class();" /><br>
 				<label for="deleteClassFormClassesMenu">Class:</label>
 				<select id="deleteClassFormClassesMenu" class="classesmenu" name="classes_id"
 					onchange="update_description(this, 'deleteClassFormClassDescription');" required>
@@ -210,9 +206,9 @@
 				<img class="infobutton" id="deleteClassFormClassDescription" src="img/info.svg">
 			</form>
 
-			<form id="saveNewSubclassForm" hx-post="/subclass/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="saveNewSubclassFormButton" value="Save New Subclass" /><br>
+			<form id="saveNewSubclassForm">
+				<input type="button" id="saveNewSubclassFormButton" value="Save New Subclass"
+					onclick="save_new_subclass();" /><br>
 				<label for="saveNewSubclassFormClassesMenu">Class:</label>
 				<select id="saveNewSubclassFormClassesMenu" class="classesmenu" name="classes_id"
 					onchange="update_description(this, 'saveNewSubclassFormClassDescription');" required>
@@ -224,9 +220,9 @@
 				<input type="text" id="saveNewSubclassFormSubclassDescription" name="description" />
 			</form>
 
-			<form id="deleteSubclassForm" hx-delete="/subclass/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id=" deleteSubclassFormButton" value="Delete Subclass" /><br>
+			<form id="deleteSubclassForm">
+				<input type="button" id=" deleteSubclassFormButton" value="Delete Subclass"
+					onclick="delete_subclass();" /><br>
 				<label for="deleteSubclassFormClassesMenu">Class:</label>
 				<select id="deleteSubclassFormClassesMenu" class="classesmenu" name="classes_id"
 					onchange="update_description(this, 'deleteSubclassFormClassDescription'); update_dependent_subclass_menu(this, 'deleteSubclassFormSubclassesMenu')"
