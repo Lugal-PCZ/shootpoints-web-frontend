@@ -24,6 +24,18 @@ function clear_field(thefield) {
 	document.getElementById(thefield).value = 0;
 }
 
+async function _update_data_via_api(theurl, themethod, theform) {
+	let target = document.getElementById("outputBox");
+	let response = await fetch(
+		theurl, {
+		method: themethod,
+		body: new FormData(theform)
+	});
+	let json = await response.json();
+	target.innerHTML = Mustache.render(output_template(), json);
+	return response.status;
+}
+
 async function load_setup_errors() {
 	let target = document.getElementById("outputBox");
 	let template = '' +
@@ -52,26 +64,12 @@ async function load_prism_offsets() {
 }
 
 async function set_atmospheric_conditions() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/atmosphere/", {
-		method: "PUT",
-		body: new FormData(setAtmosphericConditionsForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
+	let result = await _update_data_via_api("/atmosphere/", "PUT", setAtmosphericConditionsForm);
 	load_atmospheric_conditions();
 }
 
 async function set_prism_offsets() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/prism/", {
-		method: "PUT",
-		body: new FormData(setPrismOffsetsForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
+	let result = await _update_data_via_api("/prism/", "PUT", setPrismOffsetsForm);
 	load_prism_offsets();
 }
 
@@ -100,132 +98,69 @@ async function load_geometries_menus() {
 }
 
 async function set_configs() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/config/", {
-		method: "PUT",
-		body: new FormData(setConfigsForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/config/", "PUT", setConfigsForm);
+	if (result >= 200 && result <= 299) {
 		document.getElementById("setConfigsForm").reset();
 	}
 }
 
 async function save_new_site() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/site/", {
-		method: "POST",
-		body: new FormData(saveNewSiteForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/site/", "POST", saveNewSiteForm);
+	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewSiteForm").reset();
 		load_sites_menus();
 	}
 }
 
 async function delete_site() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/site/", {
-		method: "DELETE",
-		body: new FormData(deleteSiteForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/site/", "DELETE", deleteSiteForm)
+	if (result >= 200 && result <= 299) {
 		document.getElementById("deleteSiteForm").reset();
 		load_sites_menus();
 	}
 }
 
 async function save_new_station() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/station/", {
-		method: "POST",
-		body: new FormData(saveNewStationForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/station/", "POST", saveNewStationForm);
+	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewStationForm").reset();
 	}
 }
 
 async function delete_station() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/station/", {
-		method: "DELETE",
-		body: new FormData(deleteStationForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
+	if (result >= 200 && result <= 299) {
 		document.getElementById("deleteStationForm").reset();
 		document.getElementById("deleteStationFormStationsMenu").innerHTML = "";
 	}
 }
 
 async function save_new_class() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/class/", {
-		method: "POST",
-		body: new FormData(saveNewClassForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/class/", "POST", saveNewClassForm);
+	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewClassForm").reset();
 		load_classes_menus();
 	}
 }
 
 async function delete_class() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/class/", {
-		method: "DELETE",
-		body: new FormData(deleteClassForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
+	if (result >= 200 && result <= 299) {
 		document.getElementById("deleteClassForm").reset();
 		load_classes_menus();
 	}
 }
 
 async function save_new_subclass() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/subclass/", {
-		method: "POST",
-		body: new FormData(saveNewSubclassForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/subclass/", "POST", saveNewSubclassForm);
+	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewSubclassForm").reset();
 	}
 }
 
 async function delete_subclass() {
-	let target = document.getElementById("outputBox");
-	let response = await fetch(
-		"/subclass/", {
-		method: "DELETE",
-		body: new FormData(deleteSubclassForm)
-	});
-	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
-	if (response.status >= 200 && response.status <= 299) {
+	let result = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
+	if (result >= 200 && result <= 299) {
 		document.getElementById("deleteSubclassForm").reset();
 		document.getElementById("deleteSubclassFormSubclassesMenu").innerHTML = "";
 	}
