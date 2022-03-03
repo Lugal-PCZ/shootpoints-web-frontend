@@ -70,6 +70,7 @@ async function delete_class() {
 	let result = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
 	if (result >= 200 && result <= 299) {
 		document.getElementById("deleteClassForm").reset();
+		document.getElementById("deleteClassFormClassDescription").removeAttribute("onclick");
 		load_classes_menus();
 	}
 }
@@ -79,6 +80,7 @@ async function delete_site() {
 	if (result >= 200 && result <= 299) {
 		document.getElementById("deleteSiteForm").reset();
 		load_sites_menus();
+		document.getElementById("deleteSiteFormSiteDescription").removeAttribute("onclick");
 	}
 }
 
@@ -86,7 +88,9 @@ async function delete_station() {
 	let result = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
 	if (result >= 200 && result <= 299) {
 		document.getElementById("deleteStationForm").reset();
+		document.getElementById("deleteStationFormSiteDescription").removeAttribute("onclick");
 		document.getElementById("deleteStationFormStationsMenu").innerHTML = "";
+		document.getElementById("deleteStationFormStationDescription").removeAttribute("onclick");
 	}
 }
 
@@ -94,7 +98,9 @@ async function delete_subclass() {
 	let result = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
 	if (result >= 200 && result <= 299) {
 		document.getElementById("deleteSubclassForm").reset();
+		document.getElementById("deleteSubclassFormClassDescription").removeAttribute("onclick");
 		document.getElementById("deleteSubclassFormSubclassesMenu").innerHTML = "";
+		document.getElementById("deleteSubclassFormSubclassDescription").removeAttribute("onclick");
 	}
 }
 
@@ -118,6 +124,7 @@ async function save_new_station() {
 	let result = await _update_data_via_api("/station/", "POST", saveNewStationForm);
 	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewStationForm").reset();
+		document.getElementById("saveNewStationFormSiteDescription").removeAttribute("onclick");
 	}
 }
 
@@ -125,6 +132,7 @@ async function save_new_subclass() {
 	let result = await _update_data_via_api("/subclass/", "POST", saveNewSubclassForm);
 	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewSubclassForm").reset();
+		document.getElementById("saveNewSubclassFormClassDescription").removeAttribute("onclick");
 	}
 }
 
@@ -143,6 +151,27 @@ async function set_configs() {
 async function set_prism_offsets() {
 	let result = await _update_data_via_api("/prism/", "PUT", setPrismOffsetsForm);
 	load_prism_offsets();
+}
+
+async function start_new_grouping() {
+	let result = await _update_data_via_api("/grouping/", "POST", startNewGroupingForm);
+	if (result >= 200 && result <= 299) {
+		document.getElementById("startNewGroupingForm").reset();
+		document.getElementById("startNewGroupingFormSubclassesMenu").innerHTML = "";
+		document.getElementById("startNewGroupingFormSubclassDescription").removeAttribute("onclick");
+	}
+}
+
+async function start_new_session() {
+	let result = await _update_data_via_api("/session/", "POST", startNewSessionForm);
+	if (result >= 200 && result <= 299) {
+		document.getElementById("startNewSessionForm").reset();
+		document.getElementById("startNewSessionFormOccupiedPointMenu").innerHTML = "";
+		document.getElementById("startNewSessionFormOccupiedPointDescription").removeAttribute("onclick");
+		document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = "";
+		document.getElementById("startNewSessionFormBacksightStationDescription").removeAttribute("onclick");
+		update_required_new_session_fields(document.getElementById("startNewSessionFormSessionTypeMenu"));
+	}
 }
 
 
@@ -174,11 +203,11 @@ function clear_field(thefield) {
 	document.getElementById(thefield).value = 0;
 }
 
-function collapse_section(thesection) {
-	thesection.parentNode.querySelector(".sectionforms").hidden = !thesection.parentNode.querySelector(".sectionforms").hidden;
-	let collapser = thesection.parentNode.querySelector(".collapser");
+function collapse_grouping(thegrouping) {
+	thegrouping.parentNode.querySelector(".formgrouping").hidden = !thegrouping.parentNode.querySelector(".formgrouping").hidden;
+	let collapser = thegrouping.parentNode.querySelector(".collapser");
 	collapser.hidden = !collapser.hidden;
-	let expander = thesection.parentNode.querySelector(".expander");
+	let expander = thegrouping.parentNode.querySelector(".expander");
 	expander.hidden = !expander.hidden;
 }
 

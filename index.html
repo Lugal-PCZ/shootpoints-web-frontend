@@ -19,11 +19,9 @@
 	load_classes_menus();
 	load_geometries_menus();
 	">
-	<!-- htmx_render_442();
-	htmx_reset_form_fields(); -->
 
 	<div id="onTheFlyAdjustmentsPopup" hidden>
-		<div class="sectionheader">
+		<div class="groupingheader">
 			On-The-Fly Adjustments
 			<span style="float: right;"
 				onclick="document.getElementById('onTheFlyAdjustmentsPopup').hidden=true">×&nbsp;</span>
@@ -91,9 +89,7 @@
 		</form>
 	</div>
 
-	<!-- The following link is just a convenience for development, and should be removed once all the endpoints are mapped in the front end. -->
-	<a href="/docs" style="float: right; color: white;">For the FastAPI interface, click here.</a>
-	<img id="editAtmosphereAndPrismOffsets" src="img/gear.svg" onclick="show_on_the_fly_adjustments_popup()">
+	<img id="editAtmosphereAndPrismOffsets" src="img/arrows.svg" onclick="show_on_the_fly_adjustments_popup()">
 	<span class="info">
 		<span id="atmosphericConditions">Atmosphere:</span><br>
 		<span id="prismOffsets">Prism Offsets:</span>
@@ -102,11 +98,11 @@
 	<div id="outputBox"></div>
 
 	<div class="setup">
-		<div class="sectionheader" onclick="collapse_section(this);">
+		<div class="groupingheader" onclick="collapse_grouping(this);">
 			Setup <span class="collapser">‣</span><span class="expander" hidden>▾</span>
 		</div>
 
-		<div class="sectionforms" hidden>
+		<div class="formgrouping" hidden>
 			<form id="setConfigsForm">
 				<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" /><br>
 				<!-- TODO: Figure out how to pre-populate these fields with the current values -->
@@ -239,15 +235,14 @@
 	</div>
 
 	<div class="usage">
-		<div class="sectionheader" onclick="collapse_section(this);">
+		<div class="groupingheader" onclick="collapse_grouping(this);">
 			Surveying <span class="collapser">‣</span><span class="expander" hidden>▾</span>
 		</div>
 
-		<div class="sectionforms" hidden>
-			<form id="startNewSessionForm" hx-post="/session/" hx-target="#outputBox"
-				hx-indicator="#startNewSessionFormIndicator" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="startNewSessionFormButton" value="Start New Session">
+		<div class="formgrouping" hidden>
+			<form id="startNewSessionForm">
+				<input type="button" id="startNewSessionFormButton" value="Start New Session"
+					onclick="start_new_session();">
 				<img id="startNewSessionFormIndicator" class="htmx-indicator" src="img/cylon.svg" hidden /><br>
 				<label for="startNewSessionFormLabel">Label:</label>
 				<input type="text" id="startNewSessionFormLabel" name="label"
@@ -294,7 +289,8 @@
 
 			<form id="startNewGroupingForm" hx-post="/grouping/" hx-target="#outputBox" hx-ext="client-side-templates"
 				mustache-template="outputtemplate" clearonsuccess>
-				<input type="button" id="startNewGroupingFormButton" value="Start New Grouping" /><br>
+				<input type="button" id="startNewGroupingFormButton" value="Start New Grouping"
+					onclick="start_new_grouping();" /><br>
 				<label for="startNewGroupingFormGeometriesMenu">Geometry:</label>
 				<select id="startNewGroupingFormGeometriesMenu" class="geometriesmenu" name="geometry_id"
 					onchange="update_description(this, 'startNewGroupingFormGeometryDescription');" required>
@@ -333,4 +329,8 @@
 			</form>
 		</div>
 	</div>
+
+	<!-- The following link is just a convenience for development, and should be removed once all the endpoints are mapped in the front end. -->
+	<a href="/docs" style="color: white;">For the FastAPI interface,
+		click here.</a>
 </body>

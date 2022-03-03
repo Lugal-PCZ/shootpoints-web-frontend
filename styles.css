@@ -47,7 +47,7 @@ input:invalid, select:invalid{
 
 #editAtmosphereAndPrismOffsets {
 	float: left;
-	height: 27px;
+	height: 28px;
 	filter: invert(100%);
 	padding-top: 2px
 }
@@ -69,7 +69,7 @@ input:invalid, select:invalid{
 	padding-bottom: 1ex;
 }
 
-.sectionheader {
+.groupingheader {
 	width: calc(100% - 1em);
 	border-style: none;
 	border-bottom-left-radius: 0px;
@@ -81,7 +81,7 @@ input:invalid, select:invalid{
 	background: rgba(0, 0, 0, 0.27);
 }
 
-.sectionforms {
+.formgrouping {
 	width: calc(100% - 1em);
 	border-style: none;
 	padding: 0.5em;
