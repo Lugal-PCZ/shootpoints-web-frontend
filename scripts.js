@@ -157,6 +157,8 @@ async function start_new_grouping() {
 	let result = await _update_data_via_api("/grouping/", "POST", startNewGroupingForm);
 	if (result >= 200 && result <= 299) {
 		document.getElementById("startNewGroupingForm").reset();
+		document.getElementById("startNewGroupingFormGeometryDescription").removeAttribute("onclick");
+		document.getElementById("startNewGroupingFormClassDescription").removeAttribute("onclick");
 		document.getElementById("startNewGroupingFormSubclassesMenu").innerHTML = "";
 		document.getElementById("startNewGroupingFormSubclassDescription").removeAttribute("onclick");
 	}
@@ -166,6 +168,7 @@ async function start_new_session() {
 	let result = await _update_data_via_api("/session/", "POST", startNewSessionForm);
 	if (result >= 200 && result <= 299) {
 		document.getElementById("startNewSessionForm").reset();
+		document.getElementById("startNewSessionFormSiteDescription").removeAttribute("onclick");
 		document.getElementById("startNewSessionFormOccupiedPointMenu").innerHTML = "";
 		document.getElementById("startNewSessionFormOccupiedPointDescription").removeAttribute("onclick");
 		document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = "";
@@ -204,7 +207,7 @@ function clear_field(thefield) {
 }
 
 function collapse_grouping(thegrouping) {
-	thegrouping.parentNode.querySelector(".formgrouping").hidden = !thegrouping.parentNode.querySelector(".formgrouping").hidden;
+	thegrouping.parentNode.querySelector(".formcollection").hidden = !thegrouping.parentNode.querySelector(".formcollection").hidden;
 	let collapser = thegrouping.parentNode.querySelector(".collapser");
 	collapser.hidden = !collapser.hidden;
 	let expander = thegrouping.parentNode.querySelector(".expander");
