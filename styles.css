@@ -81,7 +81,7 @@ input:invalid, select:invalid{
 	background: rgba(0, 0, 0, 0.27);
 }
 
-.formgrouping {
+.formcollection {
 	width: calc(100% - 1em);
 	border-style: none;
 	padding: 0.5em;
