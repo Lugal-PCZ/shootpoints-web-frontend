@@ -1,11 +1,12 @@
+// todo: disable buttons if all validity.valid != true
+
 // Data getters
 
 async function load_atmospheric_conditions() {
-	let target = document.getElementById("atmosphericConditions");
 	let template = "Atmosphere: {{ temperature }}°C, {{ pressure }}mmHg";
 	let response = await fetch("/atmosphere/");
 	let json = await response.json();
-	target.innerHTML = Mustache.render(template, json);
+	document.getElementById("atmosphericConditions").innerHTML = Mustache.render(template, json);
 }
 
 async function load_classes_menus() {
@@ -14,6 +15,12 @@ async function load_classes_menus() {
 	Array.from(document.querySelectorAll('.classesmenu')).forEach(function (target) {
 		target.innerHTML = Mustache.render(menu_template('classes'), json);
 	});
+}
+
+async function load_date_and_time() {
+	let now = new Date();
+	document.getElementById("dateAndTime").innerHTML = now.toString();
+	setTimeout(load_date_and_time, 1000);
 }
 
 async function load_geometries_menus() {
@@ -29,7 +36,11 @@ async function load_prism_offsets() {
 	let template = "Prism Offsets: {{.}}";
 	let response = await fetch("/prism/");
 	let json = await response.json();
-	target.innerHTML = Mustache.render(template, json);
+	if (Object.keys(json).length === 0) {
+		target.innerHTML = "Prism Offsets: <i>(offsets are 0 in all directions)</i>";
+	} else {
+		target.innerHTML = Mustache.render(template, json);
+	}
 }
 
 async function load_setup_errors() {
@@ -67,40 +78,56 @@ async function _update_data_via_api(theurl, themethod, theform) {
 }
 
 async function delete_class() {
-	let result = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
-	if (result >= 200 && result <= 299) {
-		document.getElementById("deleteClassForm").reset();
-		document.getElementById("deleteClassFormClassDescription").removeAttribute("onclick");
-		load_classes_menus();
+	let classname = document.getElementById("deleteClassFormClassesMenu");
+	if (confirm("Delete class “" + classname.options[classname.selectedIndex].text + "?”")) {
+		let result = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
+		if (result >= 200 && result <= 299) {
+			document.getElementById("deleteClassForm").reset();
+			toggle_button(document.getElementById("deleteClassForm").children[0]);
+			document.getElementById("deleteClassFormClassDescription").removeAttribute("onclick");
+			load_classes_menus();
+		}
 	}
 }
 
 async function delete_site() {
-	let result = await _update_data_via_api("/site/", "DELETE", deleteSiteForm)
-	if (result >= 200 && result <= 299) {
-		document.getElementById("deleteSiteForm").reset();
-		load_sites_menus();
-		document.getElementById("deleteSiteFormSiteDescription").removeAttribute("onclick");
+	let sitename = document.getElementById("deleteSiteFormSitesMenu");
+	if (confirm("Delete site “" + sitename.options[sitename.selectedIndex].text + "?”")) {
+		let result = await _update_data_via_api("/site/", "DELETE", deleteSiteForm)
+		if (result >= 200 && result <= 299) {
+			document.getElementById("deleteSiteForm").reset();
+			toggle_button(document.getElementById("deleteSiteForm").children[0]);
+			load_sites_menus();
+			document.getElementById("deleteSiteFormSiteDescription").removeAttribute("onclick");
+		}
 	}
 }
 
 async function delete_station() {
-	let result = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
-	if (result >= 200 && result <= 299) {
-		document.getElementById("deleteStationForm").reset();
-		document.getElementById("deleteStationFormSiteDescription").removeAttribute("onclick");
-		document.getElementById("deleteStationFormStationsMenu").innerHTML = "";
-		document.getElementById("deleteStationFormStationDescription").removeAttribute("onclick");
+	let stationname = document.getElementById("deleteStationFormStationsMenu");
+	if (confirm("Delete station “" + stationname.options[stationname.selectedIndex].text + "?”")) {
+		let result = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
+		if (result >= 200 && result <= 299) {
+			document.getElementById("deleteStationForm").reset();
+			toggle_button(document.getElementById("deleteStationForm").children[0]);
+			document.getElementById("deleteStationFormSiteDescription").removeAttribute("onclick");
+			document.getElementById("deleteStationFormStationsMenu").innerHTML = "";
+			document.getElementById("deleteStationFormStationDescription").removeAttribute("onclick");
+		}
 	}
 }
 
 async function delete_subclass() {
-	let result = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
-	if (result >= 200 && result <= 299) {
-		document.getElementById("deleteSubclassForm").reset();
-		document.getElementById("deleteSubclassFormClassDescription").removeAttribute("onclick");
-		document.getElementById("deleteSubclassFormSubclassesMenu").innerHTML = "";
-		document.getElementById("deleteSubclassFormSubclassDescription").removeAttribute("onclick");
+	let subclassname = document.getElementById("deleteSubclassFormSubclassesMenu");
+	if (confirm("Delete subclass “" + subclassname.options[subclassname.selectedIndex].text + "?”")) {
+		let result = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
+		if (result >= 200 && result <= 299) {
+			document.getElementById("deleteSubclassForm").reset();
+			toggle_button(document.getElementById("deleteSubclassForm").children[0]);
+			document.getElementById("deleteSubclassFormClassDescription").removeAttribute("onclick");
+			document.getElementById("deleteSubclassFormSubclassesMenu").innerHTML = "";
+			document.getElementById("deleteSubclassFormSubclassDescription").removeAttribute("onclick");
+		}
 	}
 }
 
@@ -108,6 +135,7 @@ async function save_new_class() {
 	let result = await _update_data_via_api("/class/", "POST", saveNewClassForm);
 	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewClassForm").reset();
+		toggle_button(document.getElementById("saveNewClassForm").children[0]);
 		load_classes_menus();
 	}
 }
@@ -116,6 +144,7 @@ async function save_new_site() {
 	let result = await _update_data_via_api("/site/", "POST", saveNewSiteForm);
 	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewSiteForm").reset();
+		toggle_button(document.getElementById("saveNewSiteForm").children[0]);
 		load_sites_menus();
 	}
 }
@@ -124,6 +153,7 @@ async function save_new_station() {
 	let result = await _update_data_via_api("/station/", "POST", saveNewStationForm);
 	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewStationForm").reset();
+		toggle_button(document.getElementById("saveNewStationForm").children[0]);
 		document.getElementById("saveNewStationFormSiteDescription").removeAttribute("onclick");
 	}
 }
@@ -132,6 +162,7 @@ async function save_new_subclass() {
 	let result = await _update_data_via_api("/subclass/", "POST", saveNewSubclassForm);
 	if (result >= 200 && result <= 299) {
 		document.getElementById("saveNewSubclassForm").reset();
+		toggle_button(document.getElementById("saveNewSubclassForm").children[0]);
 		document.getElementById("saveNewSubclassFormClassDescription").removeAttribute("onclick");
 	}
 }
@@ -165,15 +196,17 @@ async function start_new_grouping() {
 }
 
 async function start_new_session() {
-	let result = await _update_data_via_api("/session/", "POST", startNewSessionForm);
-	if (result >= 200 && result <= 299) {
-		document.getElementById("startNewSessionForm").reset();
-		document.getElementById("startNewSessionFormSiteDescription").removeAttribute("onclick");
-		document.getElementById("startNewSessionFormOccupiedPointMenu").innerHTML = "";
-		document.getElementById("startNewSessionFormOccupiedPointDescription").removeAttribute("onclick");
-		document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = "";
-		document.getElementById("startNewSessionFormBacksightStationDescription").removeAttribute("onclick");
-		update_required_new_session_fields(document.getElementById("startNewSessionFormSessionTypeMenu"));
+	if (confirm("Before proceeding, please verify that the date, time, and atmospheric conditions are set correctly.") === true) {
+		let result = await _update_data_via_api("/session/", "POST", startNewSessionForm);
+		if (result >= 200 && result <= 299) {
+			document.getElementById("startNewSessionForm").reset();
+			document.getElementById("startNewSessionFormSiteDescription").removeAttribute("onclick");
+			document.getElementById("startNewSessionFormOccupiedPointMenu").innerHTML = "";
+			document.getElementById("startNewSessionFormOccupiedPointDescription").removeAttribute("onclick");
+			document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = "";
+			document.getElementById("startNewSessionFormBacksightStationDescription").removeAttribute("onclick");
+			update_required_new_session_fields(document.getElementById("startNewSessionFormSessionTypeMenu"));
+		}
 	}
 }
 
@@ -273,6 +306,20 @@ function show_shot_form(theform) {
 	}
 }
 
+function show_utilities_popup() {
+	alert('Coming soon: data download, date/time set, and RPi shutdown.');
+}
+
+function toggle_button(thetrigger) {
+	let allfieldsarevalid = true;
+	thetrigger.parentNode.childNodes.forEach(element => {
+		if (element.required) {
+			allfieldsarevalid *= element.validity.valid;
+		}
+	});
+	thetrigger.parentNode.querySelector("input[type=button]").disabled = !allfieldsarevalid;
+}
+
 function update_backsight_station_menu(occupiedstationmenu) {
 	let options = occupiedstationmenu.innerHTML.split("\n");
 	let newoptions = Array();
@@ -286,37 +333,48 @@ function update_backsight_station_menu(occupiedstationmenu) {
 
 async function update_dependent_station_menu(thesite, themenu) {
 	let target = document.getElementById(themenu);
+	let targetdescription = target.id.replace(/e?sMenu/, "Description");
 	if (thesite.value === "") {
 		target.innerHTML = "";
+		document.getElementById(targetdescription).removeAttribute("onclick");
 	} else {
 		let response = await fetch("/station/" + thesite.value);
 		let json = await response.json();
 		target.innerHTML = Mustache.render(menu_template('stations'), json);
+		if (json.stations.length === 0) {
+			document.getElementById(targetdescription).removeAttribute("onclick");
+		}
 	}
 }
 
 async function update_dependent_subclass_menu(theclass, themenu) {
 	let target = document.getElementById(themenu);
+	let targetdescription = target.id.replace(/e?sMenu/, "Description");
 	if (theclass.value === "") {
 		target.innerHTML = "";
+		document.getElementById(targetdescription).removeAttribute("onclick");
 	} else {
 		let response = await fetch("/subclass/" + theclass.value);
 		let json = await response.json();
 		target.innerHTML = Mustache.render(menu_template('subclasses'), json);
+		if (json.stations.length === 0) {
+			document.getElementById(targetdescription).removeAttribute("onclick");
+		}
 	}
 }
 
 function update_description(source, target) {
 	let thedescription = source.options[source.selectedIndex].getAttribute("description");
-	if (thedescription === "") {
-		thedescription = "(no description recorded)"
-	}
 	if (thedescription === null) {
 		document.getElementById(target).removeAttribute("onclick");
 	} else {
-		thedescription = thedescription.replaceAll("\\", "\\\\");
-		thedescription = thedescription.replaceAll("\'", "\\\'");
-		thedescription = thedescription.replaceAll("\"", "\\\"");
+		if (thedescription === "") {
+			thedescription = "(no description recorded)"
+		} else {
+			thedescription = thedescription.replaceAll("\\", "\\\\");
+			thedescription = thedescription.replaceAll("\'", "\\\'");
+			thedescription = thedescription.replaceAll("\"", "\\\"");
+		}
 		document.getElementById(target).setAttribute("onclick", "alert('" + thedescription + "')");
 	}
 }
