@@ -318,23 +318,26 @@
 				<img class="infobutton" id="currentGroupingInfoDetails" src="img/info.svg">
 				<hr>
 				<input type="button" id="startNewGroupingFormButton" value="Start New Grouping"
-					onclick="start_new_grouping();" /><br>
+					onclick="start_new_grouping();" disabled /><br>
 				<label for="startNewGroupingFormLabel">Label:</label>
-				<input type="text" id="startNewGroupingFormLabel" name="label" required />
+				<input type="text" id="startNewGroupingFormLabel" name="label" oninput="toggle_button(this);"
+					required />
 				<label for="startNewGroupingFormGeometriesMenu">Geometry:</label>
 				<select id="startNewGroupingFormGeometriesMenu" class="geometriesmenu" name="geometry_id"
-					onchange="update_description(this, 'startNewGroupingFormGeometryDescription');" required>
+					onchange="update_description(this, 'startNewGroupingFormGeometryDescription'); toggle_button(this);"
+					required>
 				</select>
 				<img class="infobutton" id="startNewGroupingFormGeometryDescription" src="img/info.svg">
 				<label for="startNewGroupingFormClassesMenu">Class:</label>
 				<select id="startNewGroupingFormClassesMenu" class="classesmenu" name="classes_id"
-					onchange="update_description(this, 'startNewGroupingFormClassDescription'); update_dependent_subclass_menu(this, 'startNewGroupingFormSubclassesMenu')"
+					onchange="update_description(this, 'startNewGroupingFormClassDescription'); update_dependent_subclass_menu(this, 'startNewGroupingFormSubclassesMenu'); toggle_button(this);"
 					required>
 				</select>
 				<img class="infobutton" id="startNewGroupingFormClassDescription" src="img/info.svg">
 				<label for="startNewGroupingFormSubclassesMenu">Subclass:</label>
 				<select id="startNewGroupingFormSubclassesMenu" name="subclasses_id"
-					onchange="update_description(this, 'startNewGroupingFormSubclassDescription');" required>
+					onchange="update_description(this, 'startNewGroupingFormSubclassDescription'); toggle_button(this);"
+					required>
 				</select>
 				<img class="infobutton" id="startNewGroupingFormSubclassDescription" src="img/info.svg">
 				<label for="startNewGroupingFormDescription">Description:</label>
