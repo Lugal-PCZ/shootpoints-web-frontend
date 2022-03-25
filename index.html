@@ -260,8 +260,7 @@
 			Surveying <span class="collapser">‣</span><span class="expander" hidden>▾</span>
 		</div>
 
-		<div class="formcollection">
-			<!-- <div class="formcollection" hidden> -->
+		<div class="formcollection" hidden>
 			<form id="startNewSessionForm">
 				<span id="currentSessionInfo" class="currentSurveyingInfo"><b>Current Session:</b></span>
 				<img class="infobutton" id="currentSessionInfoDetails" src="img/info.svg">
@@ -344,19 +343,20 @@
 				<input type="text" id="startNewGroupingFormDescription" name="description" />
 			</form>
 
-			<form id="takeShotForm" hx-get="/shot/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="shotdatatemplate" onsubmit="show_shot_form(this.id);">
-				<input type="button" id="takeShotFormButton" value="Take Shot" />
+			<form id="takeShotForm">
+				<input type="button" id="takeShotFormButton" value="Take Shot" onclick="take_shot();" disabled />
 			</form>
-			<form id="cancelShotForm" hx-get="/cancel/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" onsubmit="show_shot_form(this.id);" hidden>
-				<input type="button" id="cancelShotFormButton" value="Cancel Shot" />
+			<form id="cancelShotForm" hidden>
+				<input type="button" id="cancelShotFormButton" value="Cancel Shot" onclick="cancel_shot();" />
 				<img id="takeShotFormIndicator" src="img/cylon.svg" /><br>
 			</form>
-			<form id="saveShotForm" hx-post="/shot/" hx-target="#outputBox" hx-ext="client-side-templates"
-				mustache-template="outputtemplate" onsubmit="show_shot_form(this.id);" hidden>
-				<input type="button" id="saveShotFormButton" value="Cancel Shot" />
-				<img id="takeShotFormIndicator" src="img/cylon.svg" /><br>
+			<form id="saveLastShotForm" hidden>
+				<input type="button" value="Retake Shot" onclick="take_shot();" />
+				<input type="button" id="saveLastShotFormButton" value="Save Last Shot" onclick="save_last_shot();" />
+				<label for="saveLastShotFormLabel">Label:</label>
+				<input type="text" id="saveLastShotFormLabel" name="label" />
+				<label for="saveLastShotFormComment">Comment:</label>
+				<input type="text" id="saveLastShotFormComment" name="comment" />
 			</form>
 		</div>
 	</div>

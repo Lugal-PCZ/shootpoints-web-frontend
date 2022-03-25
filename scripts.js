@@ -1,9 +1,7 @@
-// todo: disable buttons if all validity.valid != true
-
 // Data getters
 
 async function load_atmospheric_conditions() {
-	let template = "Atmosphere: {{ temperature }}°C, {{ pressure }}mmHg";
+	let template = "Atmosphere: {{temperature}}°C, {{pressure}}mmHg";
 	let response = await fetch("/atmosphere/");
 	let json = await response.json();
 	document.getElementById("atmosphericConditions").innerHTML = Mustache.render(template, json);
@@ -18,21 +16,23 @@ async function load_classes_menus() {
 }
 
 async function load_current_grouping_info() {
-	let template = "<b>Current Grouping:</b> {{ label }} ({{ geometry_name }})"
+	let template = "<b>Current Grouping:</b> {{label}} ({{geometry_name}})"
 	let details = null;
 	let response = await fetch("/grouping/");
 	let json = await response.json();
 	if (json.label === null) {
 		document.getElementById("currentGroupingInfo").innerHTML = "<b>Current Grouping:</b> <i>(no current grouping)</i>";
+		document.getElementById("takeShotFormButton").disabled = true;
 	} else {
 		document.getElementById("currentGroupingInfo").innerHTML = Mustache.render(template, json);
 		details = "Class: " + json.classes_name + "||Subclass: " + json.subclasses_name + "||Description: " + json.description + "||Number of Shots: " + json.num_shots;
+		document.getElementById("takeShotFormButton").disabled = false;
 	}
 	update_details(details, "currentGroupingInfoDetails");
 }
 
 async function load_current_session_info() {
-	let template = "<b>Current Session:</b> {{ label }} (started {{ started }})"
+	let template = "<b>Current Session:</b> {{label}} (started {{started}})"
 	let details = null;
 	let response = await fetch("/session/");
 	let json = await response.json();
@@ -60,26 +60,24 @@ async function load_geometries_menus() {
 }
 
 async function load_prism_offsets() {
-	let target = document.getElementById("prismOffsets");
 	let template = "Prism Offsets: {{.}}";
 	let response = await fetch("/prism/");
 	let json = await response.json();
 	if (Object.keys(json).length === 0) {
-		target.innerHTML = "Prism Offsets: <i>(offsets are 0 in all directions)</i>";
+		document.getElementById("prismOffsets").innerHTML = "Prism Offsets: <i>(offsets are 0 in all directions)</i>";
 	} else {
-		target.innerHTML = Mustache.render(template, json);
+		document.getElementById("prismOffsets").innerHTML = Mustache.render(template, json);
 	}
 }
 
 async function load_setup_errors() {
-	let target = document.getElementById("outputBox");
 	let template = '' +
 		'{{#setup_errors}}' +
 		'<b style="color: red;">ERROR:</b> {{.}}' +
 		'{{/setup_errors}}';
 	let response = await fetch("/setuperrors/");
 	let json = await response.json();
-	target.innerHTML = Mustache.render(template, json);
+	document.getElementById("outputBox").innerHTML = Mustache.render(template, json);
 }
 
 async function load_sites_menus() {
@@ -94,22 +92,21 @@ async function load_sites_menus() {
 // Data setters
 
 async function _update_data_via_api(theurl, themethod, theform) {
-	let target = document.getElementById("outputBox");
 	let response = await fetch(
 		theurl, {
 		method: themethod,
 		body: new FormData(theform)
 	});
 	let json = await response.json();
-	target.innerHTML = Mustache.render(output_template(), json);
+	document.getElementById("outputBox").innerHTML = Mustache.render(output_template(), json);
 	return response.status;
 }
 
 async function delete_class() {
 	let classname = document.getElementById("deleteClassFormClassesMenu");
 	if (confirm("Delete class “" + classname.options[classname.selectedIndex].text + "?”")) {
-		let result = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
-		if (result >= 200 && result <= 299) {
+		let status = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
+		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteClassForm").reset();
 			toggle_button(document.getElementById("deleteClassForm").children[0]);
 			document.getElementById("deleteClassFormClassDescription").removeAttribute("onclick");
@@ -121,8 +118,8 @@ async function delete_class() {
 async function delete_site() {
 	let sitename = document.getElementById("deleteSiteFormSitesMenu");
 	if (confirm("Delete site “" + sitename.options[sitename.selectedIndex].text + "?”")) {
-		let result = await _update_data_via_api("/site/", "DELETE", deleteSiteForm)
-		if (result >= 200 && result <= 299) {
+		let status = await _update_data_via_api("/site/", "DELETE", deleteSiteForm)
+		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSiteForm").reset();
 			toggle_button(document.getElementById("deleteSiteForm").children[0]);
 			load_sites_menus();
@@ -134,8 +131,8 @@ async function delete_site() {
 async function delete_station() {
 	let stationname = document.getElementById("deleteStationFormStationsMenu");
 	if (confirm("Delete station “" + stationname.options[stationname.selectedIndex].text + "?”")) {
-		let result = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
-		if (result >= 200 && result <= 299) {
+		let status = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
+		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteStationForm").reset();
 			toggle_button(document.getElementById("deleteStationForm").children[0]);
 			document.getElementById("deleteStationFormSiteDescription").removeAttribute("onclick");
@@ -148,8 +145,8 @@ async function delete_station() {
 async function delete_subclass() {
 	let subclassname = document.getElementById("deleteSubclassFormSubclassesMenu");
 	if (confirm("Delete subclass “" + subclassname.options[subclassname.selectedIndex].text + "?”")) {
-		let result = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
-		if (result >= 200 && result <= 299) {
+		let status = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
+		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSubclassForm").reset();
 			toggle_button(document.getElementById("deleteSubclassForm").children[0]);
 			document.getElementById("deleteSubclassFormClassDescription").removeAttribute("onclick");
@@ -160,8 +157,8 @@ async function delete_subclass() {
 }
 
 async function save_new_class() {
-	let result = await _update_data_via_api("/class/", "POST", saveNewClassForm);
-	if (result >= 200 && result <= 299) {
+	let status = await _update_data_via_api("/class/", "POST", saveNewClassForm);
+	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewClassForm").reset();
 		toggle_button(document.getElementById("saveNewClassForm").children[0]);
 		load_classes_menus();
@@ -169,8 +166,8 @@ async function save_new_class() {
 }
 
 async function save_new_site() {
-	let result = await _update_data_via_api("/site/", "POST", saveNewSiteForm);
-	if (result >= 200 && result <= 299) {
+	let status = await _update_data_via_api("/site/", "POST", saveNewSiteForm);
+	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewSiteForm").reset();
 		toggle_button(document.getElementById("saveNewSiteForm").children[0]);
 		load_sites_menus();
@@ -178,8 +175,8 @@ async function save_new_site() {
 }
 
 async function save_new_station() {
-	let result = await _update_data_via_api("/station/", "POST", saveNewStationForm);
-	if (result >= 200 && result <= 299) {
+	let status = await _update_data_via_api("/station/", "POST", saveNewStationForm);
+	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewStationForm").reset();
 		toggle_button(document.getElementById("saveNewStationForm").children[0]);
 		document.getElementById("saveNewStationFormSiteDescription").removeAttribute("onclick");
@@ -187,8 +184,8 @@ async function save_new_station() {
 }
 
 async function save_new_subclass() {
-	let result = await _update_data_via_api("/subclass/", "POST", saveNewSubclassForm);
-	if (result >= 200 && result <= 299) {
+	let status = await _update_data_via_api("/subclass/", "POST", saveNewSubclassForm);
+	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewSubclassForm").reset();
 		toggle_button(document.getElementById("saveNewSubclassForm").children[0]);
 		document.getElementById("saveNewSubclassFormClassDescription").removeAttribute("onclick");
@@ -196,25 +193,25 @@ async function save_new_subclass() {
 }
 
 async function set_atmospheric_conditions() {
-	let result = await _update_data_via_api("/atmosphere/", "PUT", setAtmosphericConditionsForm);
+	await _update_data_via_api("/atmosphere/", "PUT", setAtmosphericConditionsForm);
 	load_atmospheric_conditions();
 }
 
 async function set_configs() {
-	let result = await _update_data_via_api("/config/", "PUT", setConfigsForm);
-	if (result >= 200 && result <= 299) {
+	let status = await _update_data_via_api("/config/", "PUT", setConfigsForm);
+	if (status >= 200 && status <= 299) {
 		document.getElementById("setConfigsForm").reset();
 	}
 }
 
 async function set_prism_offsets() {
-	let result = await _update_data_via_api("/prism/", "PUT", setPrismOffsetsForm);
+	await _update_data_via_api("/prism/", "PUT", setPrismOffsetsForm);
 	load_prism_offsets();
 }
 
 async function start_new_grouping() {
-	let result = await _update_data_via_api("/grouping/", "POST", startNewGroupingForm);
-	if (result >= 200 && result <= 299) {
+	let status = await _update_data_via_api("/grouping/", "POST", startNewGroupingForm);
+	if (status >= 200 && status <= 299) {
 		document.getElementById("startNewGroupingForm").reset();
 		document.getElementById("startNewGroupingFormGeometryDescription").removeAttribute("onclick");
 		document.getElementById("startNewGroupingFormClassDescription").removeAttribute("onclick");
@@ -227,9 +224,8 @@ async function start_new_grouping() {
 async function start_new_session() {
 	if (confirm("Please verify that the date, time, and atmospheric conditions are set correctly. Press “Ok” to proceed or “Cancel” to go back.") === true) {
 		document.getElementById("startNewSessionFormIndicator").hidden = false;
-		let result = await _update_data_via_api("/session/", "POST", startNewSessionForm);
-		document.getElementById("startNewSessionFormIndicator").hidden = true;
-		if (result >= 200 && result <= 299) {
+		let status = await _update_data_via_api("/session/", "POST", startNewSessionForm);
+		if (status >= 200 && status <= 299) {
 			document.getElementById("startNewSessionForm").reset();
 			document.getElementById("startNewSessionFormSiteDescription").removeAttribute("onclick");
 			document.getElementById("startNewSessionFormOccupiedPointMenu").innerHTML = "";
@@ -241,9 +237,50 @@ async function start_new_session() {
 			load_current_session_info();
 			load_current_grouping_info();
 		}
+		document.getElementById("startNewSessionFormIndicator").hidden = true;
 	}
 }
 
+// Shot Handling
+
+async function take_shot() {
+	let template = '' +
+		'{{#errors}}' +
+		'<b style="color: red; ">ERROR:</b> {{.}}<br>' +
+		'{{/errors}}' +
+		'{{#result}}' +
+		'<table class="shotdata">' +
+		'<tr><td>delta_n = {{delta_n}}</td><td>calculated_n = {{calculated_n}}</td></tr>' +
+		'<tr><td>delta_e = {{delta_e}}</td><td>calculated_e = {{calculated_e}}</td></tr>' +
+		'<tr><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
+		'</table>' +
+		'{{/result}}';
+	show_and_hide_shot_forms("take");
+	document.getElementById("outputBox").innerHTML = "";
+	let response = await fetch("/shot/");
+	let json = await response.json();
+	if (response.status >= 200 && response.status <= 299) {
+		if (json.result === "Measurement canceled by user.") {
+			template = output_template();
+			show_and_hide_shot_forms("cancel");
+		} else {
+			show_and_hide_shot_forms("save");
+		}
+	}
+	document.getElementById("outputBox").innerHTML = Mustache.render(template, json);
+}
+
+async function cancel_shot() {
+	show_and_hide_shot_forms("cancel");
+	await fetch("/cancel/");
+}
+
+async function save_last_shot() {
+	show_and_hide_shot_forms("cancel");
+	document.getElementById("outputBox").innerHTML = "";
+	await _update_data_via_api("/shot/", "POST", saveLastShotForm);
+	load_current_grouping_info();
+}
 
 // UI manipulators
 
@@ -287,6 +324,26 @@ function details_popup(details) {
 	alert(details);
 }
 
+function show_and_hide_shot_forms(theaction) {
+	switch (theaction) {
+		case "take":
+			document.getElementById("takeShotForm").hidden = true;
+			document.getElementById("cancelShotForm").hidden = false;
+			document.getElementById("saveLastShotForm").hidden = true;
+			break;
+		case "cancel":
+			document.getElementById("takeShotForm").hidden = false;
+			document.getElementById("cancelShotForm").hidden = true;
+			document.getElementById("saveLastShotForm").hidden = true;
+			break;
+		case "save":
+			document.getElementById("takeShotForm").hidden = true;
+			document.getElementById("cancelShotForm").hidden = true;
+			document.getElementById("saveLastShotForm").hidden = false;
+			break;
+	}
+}
+
 function show_on_the_fly_adjustments_popup() {
 	fetch("/atmosphere/")
 		.then(response => response.json())
@@ -324,26 +381,6 @@ function show_on_the_fly_adjustments_popup() {
 		});
 	let thepopup = document.getElementById("onTheFlyAdjustmentsPopup");
 	thepopup.hidden = false;
-}
-
-function show_shot_form(theform) {
-	switch (theform) {
-		case "takeShotForm":
-			document.getElementById(theform).hidden = true;
-			document.getElementById("saveShotForm").hidden = true;
-			document.getElementById("cancelShotForm").hidden = false;
-			break;
-		case "cancelShotForm":
-			document.getElementById(theform).hidden = true;
-			document.getElementById("saveShotForm").hidden = true;
-			document.getElementById("takeShotForm").hidden = false;
-			break;
-		case "saveShotForm":
-			document.getElementById(theform).hidden = true;
-			document.getElementById("cancelShotForm").hidden = true;
-			document.getElementById("takeShotForm").hidden = false;
-			break;
-	}
 }
 
 function show_utilities_popup() {
@@ -397,7 +434,8 @@ async function update_dependent_subclass_menu(theclass, themenu) {
 		let response = await fetch("/subclass/" + theclass.value);
 		let json = await response.json();
 		target.innerHTML = Mustache.render(menu_template('subclasses'), json);
-		if (json.stations.length === 0) {
+		alert(JSON.stringify(json));
+		if (json.subclasses.length === 0) {
 			document.getElementById(targetdescription).removeAttribute("onclick");
 		}
 	}
@@ -493,7 +531,7 @@ function update_required_new_site_fields(coordinatesystemmenu) {
 // Mustache templates
 
 function menu_template(theoptions) {
-	template = '' +
+	let template = '' +
 		'<option></option>\n' +
 		'{{#' + theoptions + '}}' +
 		'<option value="{{id}}" description="{{description}}">{{name}}</option>\n' +
@@ -502,7 +540,7 @@ function menu_template(theoptions) {
 }
 
 function output_template() {
-	template = '' +
+	let template = '' +
 		'{{#errors}}' +
 		'<b style="color: red;"> ERROR:</b> {{.}} <br>\n' +
 		'{{/errors}}' +
