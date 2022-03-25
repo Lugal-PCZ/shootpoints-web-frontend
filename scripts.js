@@ -225,8 +225,10 @@ async function start_new_grouping() {
 }
 
 async function start_new_session() {
-	if (confirm("Before proceeding, please verify that the date, time, and atmospheric conditions are set correctly.") === true) {
+	if (confirm("Please verify that the date, time, and atmospheric conditions are set correctly. Press “Ok” to proceed or “Cancel” to go back.") === true) {
+		document.getElementById("startNewSessionFormIndicator").hidden = false;
 		let result = await _update_data_via_api("/session/", "POST", startNewSessionForm);
+		document.getElementById("startNewSessionFormIndicator").hidden = true;
 		if (result >= 200 && result <= 299) {
 			document.getElementById("startNewSessionForm").reset();
 			document.getElementById("startNewSessionFormSiteDescription").removeAttribute("onclick");
@@ -235,7 +237,9 @@ async function start_new_session() {
 			document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = "";
 			document.getElementById("startNewSessionFormBacksightStationDescription").removeAttribute("onclick");
 			update_required_new_session_fields(document.getElementById("startNewSessionFormSessionTypeMenu"));
+			document.getElementById("startNewSessionFormButton").disabled = true;
 			load_current_session_info();
+			load_current_grouping_info();
 		}
 	}
 }

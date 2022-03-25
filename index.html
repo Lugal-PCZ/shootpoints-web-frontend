@@ -260,32 +260,34 @@
 			Surveying <span class="collapser">‣</span><span class="expander" hidden>▾</span>
 		</div>
 
-		<div class="formcollection" hidden>
+		<div class="formcollection">
+			<!-- <div class="formcollection" hidden> -->
 			<form id="startNewSessionForm">
 				<span id="currentSessionInfo" class="currentSurveyingInfo"><b>Current Session:</b></span>
 				<img class="infobutton" id="currentSessionInfoDetails" src="img/info.svg">
 				<hr>
 				<input type="button" id="startNewSessionFormButton" value="Start New Session"
-					onclick="start_new_session();">
-				<img id="startNewSessionFormIndicator" class="htmx-indicator" src="img/cylon.svg" hidden /><br>
+					onclick="start_new_session();" disabled>
+				<img id="startNewSessionFormIndicator" src="img/cylon.svg" hidden /><br>
 				<label for="startNewSessionFormLabel">Label:</label>
-				<input type="text" id="startNewSessionFormLabel" name="label" required />
+				<input type="text" id="startNewSessionFormLabel" name="label" oninput="toggle_button(this);" required />
 				<label for="startNewSessionFormSurveyor">Surveyor:</label>
-				<input type="text" id="startNewSessionFormSurveyor" name="surveyor" required />
+				<input type="text" id="startNewSessionFormSurveyor" name="surveyor" oninput="toggle_button(this);"
+					required />
 				<label for="startNewSessionFormSitesMenu">Site:</label>
 				<select id="startNewSessionFormSitesMenu" class="sitesmenu" name="sites_id"
-					onchange="update_description(this, 'startNewSessionFormSiteDescription'); update_dependent_station_menu(this, 'startNewSessionFormOccupiedPointMenu');"
+					onchange="update_description(this, 'startNewSessionFormSiteDescription'); update_dependent_station_menu(this, 'startNewSessionFormOccupiedPointMenu'); toggle_button(this);"
 					required>
 				</select>
 				<img class="infobutton" id="startNewSessionFormSiteDescription" src="img/info.svg">
 				<label for="startNewSessionFormOccupiedPointMenu">Occupied Point:</label>
 				<select id="startNewSessionFormOccupiedPointMenu" name="occupied_point_id" onchange="update_description(this, 'startNewSessionFormOccupiedPointDescription');
-					update_backsight_station_menu(this);" required>
+					update_backsight_station_menu(this); toggle_button(this);" required>
 				</select>
 				<img class="infobutton" id="startNewSessionFormOccupiedPointDescription" src="img/info.svg">
 				<label for="startNewSessionFormSessionTypeMenu">Session Type:</label>
 				<select id="startNewSessionFormSessionTypeMenu" name="sessiontype"
-					onchange="update_required_new_session_fields(this);" required>
+					onchange="update_required_new_session_fields(this); toggle_button(this);" required>
 					<option></option>
 					<option value="Backsight">Backsight</option>
 					<option value="Azimuth">Azimuth</option>
@@ -293,20 +295,22 @@
 				<label for="startNewSessionFormBacksightStationMenu" id="startNewSessionFormBacksightStationMenuLabel"
 					hidden>Backsight Station:</label>
 				<select id="startNewSessionFormBacksightStationMenu" name="backsight_station_id"
-					onchange="update_description(this, 'startNewSessionFormBacksightStationDescription');" hidden>
+					onchange="update_description(this, 'startNewSessionFormBacksightStationDescription'); toggle_button(this);"
+					hidden>
 				</select>
 				<img class="infobutton" id="startNewSessionFormBacksightStationDescription" src="img/info.svg" hidden>
 				<label for="startNewSessionFormPrismHeight" id="startNewSessionFormPrismHeightLabel" hidden>Prism
 					Height:</label>
 				<input type="text" id="startNewSessionFormPrismHeight" name="prism_height" pattern="\d\.?(\.\d{1,2})?"
-					hidden />
+					oninput="toggle_button(this);" hidden />
 				<label for="startNewSessionFormInstrumentHeight" id="startNewSessionFormInstrumentHeightLabel"
 					hidden>Instrument Height:</label>
 				<input type="text" id="startNewSessionFormInstrumentHeight" name="instrument_height"
-					pattern="\d\.?(\.\d{1,2})?" hidden />
+					pattern="\d\.?(\.\d{1,2})?" oninput="toggle_button(this);" hidden />
 				<label for="startNewSessionFormAzimuth" id="startNewSessionFormAzimuthLabel" hidden>Azimuth
 					(ddd.mmss):</label>
-				<input type="text" id="startNewSessionFormAzimuth" name="azimuth" pattern="\d{1,3}\.\d{4}" hidden />
+				<input type="text" id="startNewSessionFormAzimuth" name="azimuth" pattern="\d{1,3}\.\d{4}"
+					oninput="toggle_button(this);" hidden />
 			</form>
 
 			<form id="startNewGroupingForm">
