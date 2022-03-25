@@ -17,6 +17,34 @@ async function load_classes_menus() {
 	});
 }
 
+async function load_current_grouping_info() {
+	let template = "<b>Current Grouping:</b> {{ label }} ({{ geometry_name }})"
+	let details = null;
+	let response = await fetch("/grouping/");
+	let json = await response.json();
+	if (json.label === null) {
+		document.getElementById("currentGroupingInfo").innerHTML = "<b>Current Grouping:</b> <i>(no current grouping)</i>";
+	} else {
+		document.getElementById("currentGroupingInfo").innerHTML = Mustache.render(template, json);
+		details = "Class: " + json.classes_name + "||Subclass: " + json.subclasses_name + "||Description: " + json.description + "||Number of Shots: " + json.num_shots;
+	}
+	update_details(details, "currentGroupingInfoDetails");
+}
+
+async function load_current_session_info() {
+	let template = "<b>Current Session:</b> {{ label }} (started {{ started }})"
+	let details = null;
+	let response = await fetch("/session/");
+	let json = await response.json();
+	if (json.label === null) {
+		document.getElementById("currentSessionInfo").innerHTML = "<b>Current Session:</b> <i>(no current session)</i>";
+	} else {
+		document.getElementById("currentSessionInfo").innerHTML = Mustache.render(template, json);
+		details = "Site: " + json.sites_name + "||Station: " + json.stations_name + "||Instrument Height: " + json.instrumentheight + "m";
+	}
+	update_details(details, "currentSessionInfoDetails");
+}
+
 async function load_date_and_time() {
 	let now = new Date();
 	document.getElementById("dateAndTime").innerHTML = now.toString();
@@ -49,7 +77,7 @@ async function load_setup_errors() {
 		'{{#setup_errors}}' +
 		'<b style="color: red;">ERROR:</b> {{.}}' +
 		'{{/setup_errors}}';
-	let response = await fetch("/summary/");
+	let response = await fetch("/setuperrors/");
 	let json = await response.json();
 	target.innerHTML = Mustache.render(template, json);
 }
@@ -192,6 +220,7 @@ async function start_new_grouping() {
 		document.getElementById("startNewGroupingFormClassDescription").removeAttribute("onclick");
 		document.getElementById("startNewGroupingFormSubclassesMenu").innerHTML = "";
 		document.getElementById("startNewGroupingFormSubclassDescription").removeAttribute("onclick");
+		load_current_grouping_info();
 	}
 }
 
@@ -206,6 +235,7 @@ async function start_new_session() {
 			document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = "";
 			document.getElementById("startNewSessionFormBacksightStationDescription").removeAttribute("onclick");
 			update_required_new_session_fields(document.getElementById("startNewSessionFormSessionTypeMenu"));
+			load_current_session_info();
 		}
 	}
 }
@@ -245,6 +275,12 @@ function collapse_grouping(thegrouping) {
 	collapser.hidden = !collapser.hidden;
 	let expander = thegrouping.parentNode.querySelector(".expander");
 	expander.hidden = !expander.hidden;
+}
+
+function details_popup(details) {
+	details = details.replaceAll("||", "\n");
+	details = details.replaceAll(null, "");
+	alert(details);
 }
 
 function show_on_the_fly_adjustments_popup() {
@@ -362,6 +398,18 @@ async function update_dependent_subclass_menu(theclass, themenu) {
 		}
 	}
 }
+
+function update_details(details, target) {
+	if (details === null) {
+		document.getElementById(target).hidden = true;
+	} else {
+		details = details.replaceAll("\\", "\\\\");
+		details = details.replaceAll("\'", "\\\'");
+		details = details.replaceAll("\"", "\\\"");
+		document.getElementById(target).setAttribute("onclick", "details_popup('" + details + "')");
+		document.getElementById(target).hidden = false;
+	}
+};
 
 function update_description(source, target) {
 	let thedescription = source.options[source.selectedIndex].getAttribute("description");

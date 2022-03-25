@@ -19,6 +19,8 @@
 	load_sites_menus();
 	load_classes_menus();
 	load_geometries_menus();
+	load_current_session_info();
+	load_current_grouping_info();
 	">
 
 	<div id="onTheFlyAdjustmentsPopup" hidden>
@@ -176,7 +178,8 @@
 				<input type="text" id="saveNewStationElevation" name="elevation" oninput="toggle_button(this);"
 					hidden />
 				<label for="saveNewStationUTMZone" id="saveNewStationUTMZoneLabel" hidden>UTMZone:</label>
-				<input type="text" id="saveNewStationUTMZone" name="utmzone" oninput="toggle_button(this);" hidden />
+				<input type="text" id="saveNewStationUTMZone" name="utmzone" oninput="toggle_button(this);"
+					pattern="([1-5]\d?|[6-9]|60)[cCdDeEfFgGhHjJkKlLmMnNpPqQrRsStTuUvVwWxX]" hidden />
 
 			</form>
 
@@ -259,6 +262,9 @@
 
 		<div class="formcollection" hidden>
 			<form id="startNewSessionForm">
+				<span id="currentSessionInfo" class="currentSurveyingInfo"><b>Current Session:</b></span>
+				<img class="infobutton" id="currentSessionInfoDetails" src="img/info.svg">
+				<hr>
 				<input type="button" id="startNewSessionFormButton" value="Start New Session"
 					onclick="start_new_session();">
 				<img id="startNewSessionFormIndicator" class="htmx-indicator" src="img/cylon.svg" hidden /><br>
@@ -304,8 +310,13 @@
 			</form>
 
 			<form id="startNewGroupingForm">
+				<span id="currentGroupingInfo" class="currentSurveyingInfo"><b>Current Grouping:</b></span>
+				<img class="infobutton" id="currentGroupingInfoDetails" src="img/info.svg">
+				<hr>
 				<input type="button" id="startNewGroupingFormButton" value="Start New Grouping"
 					onclick="start_new_grouping();" /><br>
+				<label for="startNewGroupingFormLabel">Label:</label>
+				<input type="text" id="startNewGroupingFormLabel" name="label" required />
 				<label for="startNewGroupingFormGeometriesMenu">Geometry:</label>
 				<select id="startNewGroupingFormGeometriesMenu" class="geometriesmenu" name="geometry_id"
 					onchange="update_description(this, 'startNewGroupingFormGeometryDescription');" required>
@@ -322,8 +333,6 @@
 					onchange="update_description(this, 'startNewGroupingFormSubclassDescription');" required>
 				</select>
 				<img class="infobutton" id="startNewGroupingFormSubclassDescription" src="img/info.svg">
-				<label for="startNewGroupingFormLabel">Label:</label>
-				<input type="text" id="startNewGroupingFormLabel" name="label" required />
 				<label for="startNewGroupingFormDescription">Description:</label>
 				<input type="text" id="startNewGroupingFormDescription" name="description" />
 			</form>
