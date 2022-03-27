@@ -17,18 +17,23 @@ async function load_classes_menus() {
 
 async function load_current_grouping_info() {
 	let template = "<b>Current Grouping:</b> {{label}} ({{geometry_name}})"
-	let details = null;
 	let response = await fetch("/grouping/");
 	let json = await response.json();
 	if (json.label === null) {
 		document.getElementById("currentGroupingInfo").innerHTML = "<b>Current Grouping:</b> <i>(no current grouping)</i>";
+		document.getElementById("currentGroupingDetails").removeAttribute("onClick");
 		document.getElementById("takeShotFormButton").disabled = true;
 	} else {
 		document.getElementById("currentGroupingInfo").innerHTML = Mustache.render(template, json);
-		details = "Class: " + json.classes_name + "||Subclass: " + json.subclasses_name + "||Description: " + json.description + "||Number of Shots: " + json.num_shots;
+		document.getElementById("currentGroupingLabel").innerText = json.label;
+		document.getElementById("currentGroupingGeometry").innerText = json.geometry;
+		document.getElementById("currentGroupingClass").innerText = json.classes_name;
+		document.getElementById("currentGroupingSubclass").innerText = json.subclasses_name;
+		document.getElementById("currentGroupingDescription").innerText = json.description;
+		document.getElementById("currentGroupingNumberOfShots").innerText = json.num_shots;
+		document.getElementById("currentGroupingDetails").setAttribute("onClick", "show_current_grouping_details();");
 		document.getElementById("takeShotFormButton").disabled = false;
 	}
-	update_details(details, "currentGroupingInfoDetails");
 }
 
 async function load_current_session_info() {
@@ -38,11 +43,16 @@ async function load_current_session_info() {
 	let json = await response.json();
 	if (json.label === null) {
 		document.getElementById("currentSessionInfo").innerHTML = "<b>Current Session:</b> <i>(no current session)</i>";
+		document.getElementById("currentSessionDetails").removeAttribute("onClick");
 	} else {
 		document.getElementById("currentSessionInfo").innerHTML = Mustache.render(template, json);
-		details = "Site: " + json.sites_name + "||Station: " + json.stations_name + "||Instrument Height: " + json.instrumentheight + "m";
+		document.getElementById("currentSessionLabel").innerText = json.label;
+		document.getElementById("currentSessionStarted").innerText = json.started;
+		document.getElementById("currentSessionSite").innerText = json.sites_name;
+		document.getElementById("currentSessionOccupiedPoint").innerText = json.stations_name;
+		document.getElementById("currentSessionInstrumentHeight").innerText = json.instrumentheight;
+		document.getElementById("currentSessionDetails").setAttribute("onClick", "show_current_session_details();");
 	}
-	update_details(details, "currentSessionInfoDetails");
 }
 
 async function load_date_and_time() {
@@ -217,12 +227,14 @@ async function start_new_grouping() {
 		document.getElementById("startNewGroupingFormClassDescription").removeAttribute("onclick");
 		document.getElementById("startNewGroupingFormSubclassesMenu").innerHTML = "";
 		document.getElementById("startNewGroupingFormSubclassDescription").removeAttribute("onclick");
+		document.getElementById("saveLastShotFormLabel").value = "";
+		document.getElementById("saveLastShotFormComment").value = "";
 		load_current_grouping_info();
 	}
 }
 
 async function start_new_session() {
-	if (confirm("Please verify that the date, time, and atmospheric conditions are set correctly. Press “Ok” to proceed or “Cancel” to go back.") === true) {
+	if (confirm("Please verify that the date, time, and atmospheric conditions are set correctly.\n\nPress “Ok” to proceed or “Cancel” to go back.") === true) {
 		document.getElementById("startNewSessionFormIndicator").hidden = false;
 		let status = await _update_data_via_api("/session/", "POST", startNewSessionForm);
 		if (status >= 200 && status <= 299) {
@@ -238,6 +250,7 @@ async function start_new_session() {
 			load_current_grouping_info();
 		}
 		document.getElementById("startNewSessionFormIndicator").hidden = true;
+		load_prism_offsets();
 	}
 }
 
@@ -255,6 +268,12 @@ async function take_shot() {
 		'<tr><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
 		'</table>' +
 		'{{/result}}';
+	if (document.getElementById("currentGroupingSubclass").innerText === "Survey Station") {
+		document.getElementById("saveLastShotFormLabel").value = document.getElementById("currentGroupingLabel").innerText;
+		document.getElementById("saveLastShotFormLabel").disabled = true;
+	} else {
+		document.getElementById("saveLastShotFormLabel").disabled = false;
+	}
 	show_and_hide_shot_forms("take");
 	document.getElementById("outputBox").innerHTML = "";
 	let response = await fetch("/shot/");
@@ -278,6 +297,7 @@ async function cancel_shot() {
 async function save_last_shot() {
 	show_and_hide_shot_forms("cancel");
 	document.getElementById("outputBox").innerHTML = "";
+	document.getElementById("saveLastShotFormLabel").disabled = false;
 	await _update_data_via_api("/shot/", "POST", saveLastShotForm);
 	load_current_grouping_info();
 }
@@ -324,6 +344,13 @@ function details_popup(details) {
 	alert(details);
 }
 
+function handle_survey_station_subclass(themenu) {
+	if (themenu.value === "1" && document.getElementById("startNewGroupingFormGeometriesMenu").value != "1") {
+		document.getElementById("startNewGroupingFormGeometriesMenu").value = "1";
+		alert("The geometry for this survey station will be changed to “Isolated Point.”");
+	}
+}
+
 function show_and_hide_shot_forms(theaction) {
 	switch (theaction) {
 		case "take":
@@ -342,6 +369,21 @@ function show_and_hide_shot_forms(theaction) {
 			document.getElementById("saveLastShotForm").hidden = false;
 			break;
 	}
+}
+
+function show_current_grouping_details() {
+	let details = "Class: " + document.getElementById("currentGroupingClass").innerText +
+		"\nSubclass: " + document.getElementById("currentGroupingSubclass").innerText +
+		"\nDescription: " + document.getElementById("currentGroupingDescription").innerText +
+		"\nNumber of Shots in Grouping: " + document.getElementById("currentGroupingNumberOfShots").innerText;
+	alert(details);
+}
+
+function show_current_session_details() {
+	let details = "Site: " + document.getElementById("currentSessionSite").innerText +
+		"\nOccupied Point: " + document.getElementById("currentSessionOccupiedPoint").innerText +
+		"\nInstrument Height: " + document.getElementById("currentSessionInstrumentHeight").innerText + "m";
+	alert(details);
 }
 
 function show_on_the_fly_adjustments_popup() {
@@ -384,7 +426,7 @@ function show_on_the_fly_adjustments_popup() {
 }
 
 function show_utilities_popup() {
-	alert('Coming soon: data download, date/time set, and RPi shutdown.');
+	alert('Coming soon:\n - data download\n - date/time set\n - RPi shutdown.');
 }
 
 function toggle_button(thetrigger) {
@@ -434,24 +476,11 @@ async function update_dependent_subclass_menu(theclass, themenu) {
 		let response = await fetch("/subclass/" + theclass.value);
 		let json = await response.json();
 		target.innerHTML = Mustache.render(menu_template('subclasses'), json);
-		alert(JSON.stringify(json));
 		if (json.subclasses.length === 0) {
 			document.getElementById(targetdescription).removeAttribute("onclick");
 		}
 	}
 }
-
-function update_details(details, target) {
-	if (details === null) {
-		document.getElementById(target).hidden = true;
-	} else {
-		details = details.replaceAll("\\", "\\\\");
-		details = details.replaceAll("\'", "\\\'");
-		details = details.replaceAll("\"", "\\\"");
-		document.getElementById(target).setAttribute("onclick", "details_popup('" + details + "')");
-		document.getElementById(target).hidden = false;
-	}
-};
 
 function update_description(source, target) {
 	let thedescription = source.options[source.selectedIndex].getAttribute("description");
