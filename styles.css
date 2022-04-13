@@ -111,6 +111,10 @@ input:disabled {
 	background-color: lightblue;
 }
 
+.usage #saveLastShotForm {
+	background-color: lightgreen;
+}
+
 .infobutton {
 	vertical-align: -0.25em;
 	margin-right: 1ex;
