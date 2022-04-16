@@ -363,12 +363,12 @@
 				<img id="takeShotFormIndicator" src="img/cylon.svg" /><br>
 			</form>
 			<form id="saveLastShotForm" hidden>
-				<input type="button" value="Retake Shot" onclick="take_shot();" />
 				<input type="button" id="saveLastShotFormButton" value="Save Last Shot" onclick="save_last_shot();" />
 				<label for="saveLastShotFormLabel">Label:</label>
 				<input type="text" id="saveLastShotFormLabel" name="label" />
 				<label for="saveLastShotFormComment">Comment:</label>
 				<input type="text" id="saveLastShotFormComment" name="comment" />
+				<input type="button" value="Discard Last Shot" onclick="discard_last_shot();" />
 			</form>
 		</div>
 	</div>

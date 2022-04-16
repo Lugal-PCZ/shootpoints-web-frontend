@@ -302,6 +302,13 @@ async function save_last_shot() {
 	load_current_grouping_info();
 }
 
+function discard_last_shot() {
+	if (confirm("Discard this shot without saving?")) {
+		show_and_hide_shot_forms("cancel");
+		document.getElementById("outputBox").innerHTML = "Last shot discarded.";
+	}
+}
+
 // UI manipulators
 
 function _hide_required_field(thefield) {

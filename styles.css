@@ -14,7 +14,7 @@ div {
 
 form {
 	width: calc(100% - 2em);
-	margin : 0.5em;
+	margin: 0.5em;
 	float: left;
 	clear: left;
 	border: rgba(0, 0, 0, 0.15) thin solid;
@@ -32,7 +32,8 @@ input {
 	margin-right: 1ex;
 }
 
-input:invalid, select:invalid{
+input:invalid,
+select:invalid {
 	background-color: pink;
 }
 
@@ -76,7 +77,7 @@ input:disabled {
 .info {
 	display: flex;
 	justify-content: space-between;
-	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	font-size: small;
 	color: white;
 	padding-bottom: 6px;
@@ -101,7 +102,7 @@ input:disabled {
 	border-style: none;
 	padding: 0.5em;
 	margin: 0em;
-}	
+}
 
 .setup {
 	background-color: linen;
@@ -112,7 +113,7 @@ input:disabled {
 }
 
 .usage #saveLastShotForm {
-	background-color: lightgreen;
+	background-color: moccasin;
 }
 
 .infobutton {
