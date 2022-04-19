@@ -92,6 +92,33 @@
 		</form>
 	</div>
 
+	<div id="utilitiesPopup" hidden>
+		<div class="formcollectionheader">
+			Utilities
+			<span style="float: right;" onclick="document.getElementById('utilitiesPopup').hidden=true">×&nbsp;</span>
+		</div>
+		<form id="downloadDatabaseForm">
+			<a href="/database/" id="databaseDownloadTrigger" download hidden></a>
+			<input type="button" value="Download the Entire ShootPoints Database" onclick="download_database();" />
+		</form>
+		<form id="exportSessionDataForm">
+			<a href="" id="sessionDataExportTrigger" download hidden></a>
+			<input type="button" value="Export Surveying Session Data" onclick="export_session_data();" disabled />
+			<label for="exportSessionDataFormSessionsMenu">Session:</label>
+			<select id="exportSessionDataFormSessionsMenu" name="sessions_id"
+				onchange="update_description(this, 'exportSessionDataFormSessionDescription'); toggle_button(this);"
+				required>
+			</select>
+			<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg">
+		</form>
+		<form id="setClockForm">
+			<input type="button" value="Set the Clock" onclick="alert('Coming Soon!');" />
+		</form>
+		<form id="shutDownForm">
+			<input type="button" value="Shut Down the Raspberry Pi" onclick="alert('Coming Soon!');" />
+		</form>
+	</div>
+
 	<img id="editAtmosphereAndPrismOffsetsIcon" src="img/arrows.svg" onclick="show_on_the_fly_adjustments_popup();">
 	<img id="showUtilitiesIcon" src="img/gear.svg" onclick="show_utilities_popup();">
 	<span class="info">

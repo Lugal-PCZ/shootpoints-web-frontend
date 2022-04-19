@@ -1,5 +1,16 @@
 // Data getters
 
+async function download_database() {
+	document.getElementById("databaseDownloadTrigger").click();
+}
+
+async function export_session_data() {
+	let sessions_id = document.getElementById("exportSessionDataFormSessionsMenu").value;
+	let thetrigger = document.getElementById("sessionDataExportTrigger");
+	thetrigger.setAttribute("href", "/export/" + sessions_id);
+	thetrigger.click();
+}
+
 async function load_atmospheric_conditions() {
 	let template = "Atmosphere: {{temperature}}°C, {{pressure}}mmHg";
 	let response = await fetch("/atmosphere/");
@@ -393,7 +404,7 @@ function show_current_session_details() {
 	alert(details);
 }
 
-function show_on_the_fly_adjustments_popup() {
+async function show_on_the_fly_adjustments_popup() {
 	fetch("/atmosphere/")
 		.then(response => response.json())
 		.then(data => {
@@ -432,8 +443,12 @@ function show_on_the_fly_adjustments_popup() {
 	thepopup.hidden = false;
 }
 
-function show_utilities_popup() {
-	alert('Coming soon:\n - data download\n - date/time set\n - RPi shutdown.');
+async function show_utilities_popup() {
+	let response = await fetch("/sessions/");
+	let json = await response.json();
+	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
+	let thepopup = document.getElementById("utilitiesPopup");
+	thepopup.hidden = false;
 }
 
 function toggle_button(thetrigger) {

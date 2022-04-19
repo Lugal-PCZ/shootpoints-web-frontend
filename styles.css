@@ -43,6 +43,15 @@ input:disabled {
 
 #onTheFlyAdjustmentsPopup {
 	z-index: 10;
+	background-color: silver;
+	position: absolute;
+	top: 20ex;
+	width: 50%;
+	left: 25%;
+}
+
+#utilitiesPopup {
+	z-index: 10;
 	background-color: cornsilk;
 	position: absolute;
 	top: 20ex;
