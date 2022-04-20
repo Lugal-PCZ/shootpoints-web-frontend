@@ -111,11 +111,12 @@
 			</select>
 			<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg">
 		</form>
-		<form id="setClockForm">
-			<input type="button" value="Set the Clock" onclick="alert('Coming Soon!');" />
+		<form id="setClockForm" hidden>
+			<input type="button" value="Set the Clock" onclick="set_rpi_clock();" />
+			<input type="text" id="setClockFormDateTimeString" name="datetimestring" hidden />
 		</form>
-		<form id="shutDownForm">
-			<input type="button" value="Shut Down the Raspberry Pi" onclick="alert('Coming Soon!');" />
+		<form id="shutDownForm" hidden>
+			<input type="button" value="Shut Down the Raspberry Pi" onclick="shut_rpi_down();" />
 		</form>
 	</div>
 

@@ -444,9 +444,15 @@ async function show_on_the_fly_adjustments_popup() {
 }
 
 async function show_utilities_popup() {
-	let response = await fetch("/sessions/");
-	let json = await response.json();
+	let sessions = await fetch("/sessions/");
+	let json = await sessions.json();
 	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
+	let oscheck = await fetch("/raspbian/");
+	let raspbian = await oscheck.text();
+	if (raspbian === "true") {
+		document.getElementById("setClockForm").hidden = false;
+		document.getElementById("shutDownForm").hidden = false;
+	}
 	let thepopup = document.getElementById("utilitiesPopup");
 	thepopup.hidden = false;
 }
@@ -599,4 +605,24 @@ function output_template() {
 		'{{.}}<br>\n' +
 		'{{/result}}';
 	return template
+}
+
+
+// Raspberry Pi Hardware Interfaces
+
+async function set_rpi_clock() {
+	alert("This will set the Raspberry Pi’s clock to the date and time displayed in the browser. If that is incorrect or you need to change the timezone, please do so through the command line instead.")
+	let now = new Date();
+	document.getElementById("setClockFormDateTimeString").value = now.toString();
+	_update_data_via_api("/raspbian/clock/", "PUT", setClockForm);
+}
+
+
+async function shut_rpi_down() {
+	if (confirm("Press “Ok” to safely shut down the Raspberry Pi.")) {
+		await fetch("/raspbian/shutdown/");
+		setTimeout(function () {
+			confirm("Shutdown complete. You can now unplug the Raspberry Pi.");
+		}, 10000);
+	}
 }
