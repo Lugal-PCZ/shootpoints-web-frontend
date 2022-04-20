@@ -618,9 +618,9 @@ async function set_rpi_clock() {
 }
 
 
-async function shut_rpi_down() {
+function shut_rpi_down() {
 	if (confirm("Press “Ok” to safely shut down the Raspberry Pi.")) {
-		await fetch("/raspbian/shutdown/");
+		fetch("/raspbian/shutdown/");
 		setTimeout(function () {
 			confirm("Shutdown complete. You can now unplug the Raspberry Pi.");
 		}, 10000);
