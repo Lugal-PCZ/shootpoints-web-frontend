@@ -30,7 +30,7 @@ async function load_current_grouping_info() {
 	let template = "<b>Current Grouping:</b> {{label}} ({{geometry_name}})"
 	let response = await fetch("/grouping/");
 	let json = await response.json();
-	if (json.label === null) {
+	if (json.result === "" || json.label === null) {
 		document.getElementById("currentGroupingInfo").innerHTML = "<b>Current Grouping:</b> <i>(no current grouping)</i>";
 		document.getElementById("currentGroupingDetails").removeAttribute("onClick");
 		document.getElementById("takeShotFormButton").disabled = true;
@@ -52,7 +52,7 @@ async function load_current_session_info() {
 	let details = null;
 	let response = await fetch("/session/");
 	let json = await response.json();
-	if (json.label === null) {
+	if (json.result === "" || json.label === null) {
 		document.getElementById("currentSessionInfo").innerHTML = "<b>Current Session:</b> <i>(no current session)</i>";
 		document.getElementById("currentSessionDetails").removeAttribute("onClick");
 	} else {
