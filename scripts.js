@@ -219,7 +219,7 @@ async function set_atmospheric_conditions() {
 }
 
 async function set_configs() {
-	let status = await _update_data_via_api("/config/", "PUT", setConfigsForm);
+	let status = await _update_data_via_api("/configs/", "PUT", setConfigsForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("setConfigsForm").reset();
 	}
@@ -620,6 +620,7 @@ async function set_rpi_clock() {
 
 function shut_rpi_down() {
 	if (confirm("Press “Ok” to safely shut down the Raspberry Pi.")) {
+		document.getElementById("utilitiesPopup").hidden = true;
 		fetch("/raspbian/shutdown/");
 		setTimeout(function () {
 			confirm("Shutdown complete. You can now unplug the Raspberry Pi.");
