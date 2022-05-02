@@ -26,6 +26,20 @@ async function load_classes_menus() {
 	});
 }
 
+async function load_configs_menus() {
+	let response = await fetch("/configs/");
+	let json = await response.json();
+	let menutemplate = '{{#.}}<option value="{{.}}">{{.}}</option>\n{{/.}}';
+	document.getElementById("setConfigsFormPortMenu").innerHTML = Mustache.render(menutemplate, json.options.ports);
+	document.getElementById("setConfigsFormPortMenu").value = json.current.port;
+	toggle_total_station_menus(json.current.port);
+	document.getElementById("setConfigsFormMakeMenu").innerHTML = Mustache.render(menutemplate, Object.keys(json.options.total_stations));
+	document.getElementById("setConfigsFormMakeMenu").value = json.current.make;
+	document.getElementById("setConfigsFormModelMenu").innerHTML = Mustache.render(menutemplate, json.options.total_stations[json.current.make]);
+	document.getElementById("setConfigsFormModelMenu").value = json.current.model;
+	document.getElementById("setConfigsFormLimit").value = json.current.limit;
+}
+
 async function load_current_grouping_info() {
 	let template = "<b>Current Grouping:</b> {{label}} ({{geometry_name}})"
 	let response = await fetch("/grouping/");
@@ -467,6 +481,16 @@ function toggle_button(thetrigger) {
 	thetrigger.parentNode.querySelector("input[type=button]").disabled = !allfieldsarevalid;
 }
 
+function toggle_total_station_menus(theport) {
+	if (theport === "demo") {
+		document.getElementById("setConfigsFormMakeMenu").disabled = true;
+		document.getElementById("setConfigsFormModelMenu").disabled = true;
+	} else {
+		document.getElementById("setConfigsFormMakeMenu").disabled = false;
+		document.getElementById("setConfigsFormModelMenu").disabled = false;
+	}
+}
+
 function update_backsight_station_menu(occupiedstationmenu) {
 	let options = occupiedstationmenu.innerHTML.split("\n");
 	let newoptions = Array();
@@ -476,6 +500,14 @@ function update_backsight_station_menu(occupiedstationmenu) {
 		}
 	});
 	document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = newoptions.join("\n");
+}
+
+async function update_dependent_model_menu(themake) {
+	let response = await fetch("/configs/");
+	let json = await response.json();
+	let menutemplate = '{{#.}}<option value="{{.}}">{{.}}</option>\n{{/.}}';
+	document.getElementById("setConfigsFormModelMenu").innerHTML = Mustache.render(menutemplate, json.options.total_stations[themake]);
+	document.getElementById("setConfigsFormModelMenu").value = json.options.total_stations[themake];
 }
 
 async function update_dependent_station_menu(thesite, themenu) {

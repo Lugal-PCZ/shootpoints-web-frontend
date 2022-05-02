@@ -16,6 +16,7 @@
 	load_atmospheric_conditions();
 	load_prism_offsets();
 	load_date_and_time();
+	load_configs_menus();
 	load_sites_menus();
 	load_classes_menus();
 	load_geometries_menus();
@@ -143,13 +144,14 @@
 		<div class="formcollection" hidden>
 			<form id="setConfigsForm">
 				<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" /><br>
-				<!-- TODO: Figure out how to pre-populate these fields with the current values -->
-				<label for="setConfigsFormPort">Port:</label>
-				<input type="text" id="setConfigsFormPort" name="port" />
-				<label for="setConfigsFormMake">Make:</label>
-				<input type="text" id="setConfigsFormMake" name="make" />
-				<label for="setConfigsFormModel">Model:</label>
-				<input type="text" id="setConfigsFormModel" name="model" />
+				<label for="setConfigsFormPortMenu">Port:</label>
+				<select id="setConfigsFormPortMenu" name="port"
+					onchange="toggle_total_station_menus(this.value);"></select>
+				<label for="setConfigsFormMakeMenu">Make:</label>
+				<select id="setConfigsFormMakeMenu" name="make"
+					onchange="update_dependent_model_menu(this.value);"></select>
+				<label for="setConfigsFormModelMenu">Model:</label>
+				<select id="setConfigsFormModelMenu" name="model"></select>
 				<label for="setConfigsFormLimit">Backsight Error Limit (cm):</label>
 				<input type="text" id="setConfigsFormLimit" name="limit" pattern="\d{1,2}" />
 			</form>
