@@ -69,6 +69,8 @@ async function load_current_session_info() {
 	if (json.result === "" || json.label === null) {
 		document.getElementById("currentSessionInfo").innerHTML = "<b>Current Session:</b> <i>(no current session)</i>";
 		document.getElementById("currentSessionDetails").removeAttribute("onClick");
+		document.getElementById("startNewGroupingForm").hidden = true;
+		document.getElementById("takeShotForm").hidden = true;
 	} else {
 		document.getElementById("currentSessionInfo").innerHTML = Mustache.render(template, json);
 		document.getElementById("currentSessionLabel").innerText = json.label;
@@ -77,6 +79,8 @@ async function load_current_session_info() {
 		document.getElementById("currentSessionOccupiedPoint").innerText = json.stations_name;
 		document.getElementById("currentSessionInstrumentHeight").innerText = json.instrumentheight;
 		document.getElementById("currentSessionDetails").setAttribute("onClick", "show_current_session_details();");
+		document.getElementById("startNewGroupingForm").hidden = false;
+		document.getElementById("takeShotForm").hidden = false;
 	}
 }
 
@@ -234,9 +238,6 @@ async function set_atmospheric_conditions() {
 
 async function set_configs() {
 	let status = await _update_data_via_api("/configs/", "PUT", setConfigsForm);
-	if (status >= 200 && status <= 299) {
-		document.getElementById("setConfigsForm").reset();
-	}
 }
 
 async function set_prism_offsets() {
