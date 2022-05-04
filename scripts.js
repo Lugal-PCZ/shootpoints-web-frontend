@@ -644,10 +644,11 @@ function output_template() {
 // Raspberry Pi Hardware Interfaces
 
 async function set_rpi_clock() {
-	alert("This will set the Raspberry Pi’s clock to the date and time displayed in the browser. If that is incorrect or you need to change the timezone, please do so through the command line instead.")
-	let now = new Date();
-	document.getElementById("setClockFormDateTimeString").value = now.toString();
-	_update_data_via_api("/raspbian/clock/", "PUT", setClockForm);
+	if (confirm("This will set the Raspberry Pi’s clock to the date and time displayed in the browser. If that is incorrect or you need to change the timezone, please do so through the command line instead.")) {
+		let now = new Date();
+		document.getElementById("setClockFormDateTimeString").value = now.toString();
+		_update_data_via_api("/raspbian/clock/", "PUT", setClockForm);
+	}
 }
 
 
