@@ -654,12 +654,11 @@ async function set_rpi_clock() {
 
 function shut_rpi_down() {
 	if (confirm("Press “Ok” to safely shut down the Raspberry Pi.")) {
+		fetch("/raspbian/shutdown/");
 		document.getElementById("shutDownFormIndicator").hidden = false;
 		setTimeout(function () {
-			fetch("/raspbian/shutdown/");
+			document.getElementById("utilitiesPopup").hidden = true;
 			confirm("Shutdown complete. You can now unplug the Raspberry Pi.");
 		}, 10000);
-		document.getElementById("utilitiesPopup").hidden = true;
-		document.getElementById("shutDownFormIndicator").hidden = true;
 	}
 }
