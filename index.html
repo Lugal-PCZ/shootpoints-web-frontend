@@ -112,6 +112,15 @@
 			</select>
 			<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg">
 		</form>
+		<form id="deleteSessionForm">
+			<input type="button" value="Delete Session" onclick="delete_session();" disabled />
+			<label for="deleteSessionFormSessionsMenu">Session:</label>
+			<select id="deleteSessionFormSessionsMenu" name="sessions_id"
+				onchange="update_description(this, 'deleteSessionFormSessionDescription'); toggle_button(this);"
+				required>
+			</select>
+			<img class="infobutton" id="deleteSessionFormSessionDescription" src="img/info.svg">
+		</form>
 		<form id="setClockForm" hidden>
 			<input type="button" value="Set the Clock" onclick="set_rpi_clock();" />
 			<input type="text" id="setClockFormDateTimeString" name="datetimestring" hidden />

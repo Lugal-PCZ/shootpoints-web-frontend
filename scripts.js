@@ -167,6 +167,21 @@ async function delete_site() {
 	}
 }
 
+async function delete_session() {
+	let sessionlabel = document.getElementById("deleteSessionFormSessionsMenu");
+	if (confirm("Delete session “" + sessionlabel.options[sessionlabel.selectedIndex].text + ",” including all its shots and groupings?\n\nThis cannot be undone, so download any important data before proceeding.")) {
+		let status = await _update_data_via_api("/session/", "DELETE", deleteSessionForm)
+		if (status >= 200 && status <= 299) {
+			document.getElementById("deleteSessionForm").reset();
+			toggle_button(document.getElementById("deleteSessionForm").children[0]);
+			let sessions = await fetch("/sessions/");
+			let json = await sessions.json();
+			document.getElementById("deleteSessionFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
+			document.getElementById("deleteSessionFormSessionDescription").removeAttribute("onclick");
+		}
+	}
+}
+
 async function delete_station() {
 	let stationname = document.getElementById("deleteStationFormStationsMenu");
 	if (confirm("Delete station “" + stationname.options[stationname.selectedIndex].text + "?”")) {
@@ -462,6 +477,7 @@ async function show_utilities_popup() {
 	let sessions = await fetch("/sessions/");
 	let json = await sessions.json();
 	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
+	document.getElementById("deleteSessionFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
 	let oscheck = await fetch("/raspbian/");
 	let raspbian = await oscheck.text();
 	if (raspbian === "true") {
