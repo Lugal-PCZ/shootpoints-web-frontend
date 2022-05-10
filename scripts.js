@@ -51,7 +51,7 @@ async function load_current_grouping_info() {
 	} else {
 		document.getElementById("currentGroupingInfo").innerHTML = Mustache.render(template, json);
 		document.getElementById("currentGroupingLabel").innerText = json.label;
-		document.getElementById("currentGroupingGeometry").innerText = json.geometry;
+		document.getElementById("currentGroupingGeometry").innerText = json.geometry_name;
 		document.getElementById("currentGroupingClass").innerText = json.classes_name;
 		document.getElementById("currentGroupingSubclass").innerText = json.subclasses_name;
 		document.getElementById("currentGroupingDescription").innerText = json.description;
@@ -309,7 +309,8 @@ async function take_shot() {
 		'<tr><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
 		'</table>' +
 		'{{/result}}';
-	if (document.getElementById("currentGroupingSubclass").innerText === "Survey Station") {
+	if (document.getElementById("currentGroupingGeometry").innerText === "Isolated Point") {
+		// This is an isolated point, so it will always take the label of its grouping.
 		document.getElementById("saveLastShotFormLabel").value = document.getElementById("currentGroupingLabel").innerText;
 		document.getElementById("saveLastShotFormLabel").disabled = true;
 	} else {
