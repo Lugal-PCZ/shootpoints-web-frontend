@@ -41,7 +41,7 @@ async function load_configs_menus() {
 }
 
 async function load_current_grouping_info() {
-	let template = "<b>Current Grouping:</b> {{label}} ({{geometry_name}})"
+	let template = "<b>Current Grouping:</b> {{label}} ({{geometries_name}})"
 	let response = await fetch("/grouping/");
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
@@ -51,7 +51,7 @@ async function load_current_grouping_info() {
 	} else {
 		document.getElementById("currentGroupingInfo").innerHTML = Mustache.render(template, json);
 		document.getElementById("currentGroupingLabel").innerText = json.label;
-		document.getElementById("currentGroupingGeometry").innerText = json.geometry_name;
+		document.getElementById("currentGroupingGeometry").innerText = json.geometries_name;
 		document.getElementById("currentGroupingClass").innerText = json.classes_name;
 		document.getElementById("currentGroupingSubclass").innerText = json.subclasses_name;
 		document.getElementById("currentGroupingDescription").innerText = json.description;
