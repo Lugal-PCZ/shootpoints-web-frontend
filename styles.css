@@ -46,8 +46,8 @@ input:disabled {
 	background-color: silver;
 	position: absolute;
 	top: 20ex;
-	width: 50%;
-	left: 25%;
+	width: 80%;
+	left: 10%;
 }
 
 #utilitiesPopup {
@@ -55,8 +55,8 @@ input:disabled {
 	background-color: cornsilk;
 	position: absolute;
 	top: 20ex;
-	width: 50%;
-	left: 25%;
+	width: 80%;
+	left: 10%;
 }
 
 #editAtmosphereAndPrismOffsetsIcon {

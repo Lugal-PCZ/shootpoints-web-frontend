@@ -42,21 +42,21 @@
 		</form>
 		<form id="setPrismOffsetsForm">
 			<input type="button" id="setPrismOffsetsFormButton" value="Set Prism Offsets"
-				onclick="set_prism_offsets();" />
-			<span style="font-size: small"> (direction is from prism to point, as seen from the total
+				onclick="set_prism_offsets();" /><br>
+			<span style="font-size: small">(direction is in meters from prism to point, as seen from the total
 				station)</span>
 			<label for="setPrismOffsetsVerticalDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsVerticalDistance');">×&nbsp;</span>Vertical Offset:</label>
-			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance"
-				pattern="\d\.?(\.\d{1,3})?" />
+			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance" pattern="\d\.?(\.\d{1,3})?"
+				size="5" />
 			<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
 				<option value="-1">Down</option>
 				<option value="1">Up</option>
 			</select>
 			<label for="setPrismOffsetsLatitudeDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsLatitudeDistance');">×&nbsp;</span>Latitude Offset:</label>
-			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance"
-				pattern="\d\.?(\.\d{1,3})?" />
+			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance" pattern="\d\.?(\.\d{1,3})?"
+				size="5" />
 			<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
 				<option value="1">North</option>
 				<option value="-1">South</option>
@@ -64,29 +64,31 @@
 			<label for="setPrismOffsetsLongitudeDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsLongitudeDistance');">×&nbsp;</span>Longitude Offset:</label>
 			<input type="text" id="setPrismOffsetsLongitudeDistance" name="longitude_distance"
-				pattern="\d\.?(\.\d{1,3})?" />
+				pattern="\d\.?(\.\d{1,3})?" size="5" />
 			<select id="setPrismOffsetsLongitudeDirection" name="longitude_direction">
 				<option value="1">East</option>
 				<option value="-1">West</option>
 			</select>
 			<label for="setPrismOffsetsRadialDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsRadialDistance');">×&nbsp;</span>Radial Offset:</label>
-			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance" pattern="\d\.?(\.\d{1,3})?" />
+			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance" pattern="\d\.?(\.\d{1,3})?"
+				size="5" />
 			<select id="setPrismOffsetsRadialDirection" name="radial_direction">
 				<option value="1">Away</option>
 				<option value="-1">Toward</option>
 			</select>
 			<label for="setPrismOffsetsTangentDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsTangentDistance');">×&nbsp;</span>Tangent Offset:</label>
-			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance"
-				pattern="\d\.?(\.\d{1,3})?" />
+			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance" pattern="\d\.?(\.\d{1,3})?"
+				size="5" />
 			<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
 				<option value="1">Right</option>
 				<option value="-1">Left</option>
 			</select>
 			<label for="setPrismOffsetsWedgeDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsWedgeDistance');">×&nbsp;</span>Wedge Offset:</label>
-			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance" pattern="\d\.?(\.\d{1,3})?" />
+			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance" pattern="\d\.?(\.\d{1,3})?"
+				size="5" />
 			<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
 				<option value="1">Clockwise</option>
 				<option value="-1">Counter-Clockwise</option>

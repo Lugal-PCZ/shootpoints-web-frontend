@@ -436,6 +436,7 @@ function show_current_session_details() {
 }
 
 async function show_on_the_fly_adjustments_popup() {
+	document.getElementById("utilitiesPopup").hidden = true;
 	fetch("/atmosphere/")
 		.then(response => response.json())
 		.then(data => {
@@ -475,6 +476,7 @@ async function show_on_the_fly_adjustments_popup() {
 }
 
 async function show_utilities_popup() {
+	document.getElementById("onTheFlyAdjustmentsPopup").hidden = true;
 	let sessions = await fetch("/sessions/");
 	let json = await sessions.json();
 	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
