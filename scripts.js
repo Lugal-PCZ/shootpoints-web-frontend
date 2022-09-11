@@ -400,6 +400,24 @@ function handle_survey_station_subclass(themenu) {
 	}
 }
 
+
+async function os_check() {
+	let oscheck = await fetch("/raspbian/");
+	let raspbian = await oscheck.text();
+	if (raspbian === "true") {
+		document.getElementById("setClockForm").hidden = false;
+		document.getElementById("shutDownForm").hidden = false;
+		// Warn the user if the Raspberry Pi clock time and browser time are off by greater than 10 minutes
+		let clockcheck = await fetch("/raspbian/clock/");
+		let rpiclock = await clockcheck.text();
+		rpiclock = new Date(rpiclock.replace(/\"/g, ""));
+		let jsclock = new Date();
+		if (Math.abs(rpiclock - jsclock) > 600000) {
+			alert("The difference between the clock on the data collector and the clock on the Raspberry Pi is greater than 10 minutes. Please use the ShootPoints utilities (gears) menu to update the hardware clock on the Raspberry Pi before continuing.");
+		};
+	};
+}
+
 function show_and_hide_shot_forms(theaction) {
 	switch (theaction) {
 		case "take":
@@ -481,12 +499,6 @@ async function show_utilities_popup() {
 	let json = await sessions.json();
 	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
 	document.getElementById("deleteSessionFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
-	let oscheck = await fetch("/raspbian/");
-	let raspbian = await oscheck.text();
-	if (raspbian === "true") {
-		document.getElementById("setClockForm").hidden = false;
-		document.getElementById("shutDownForm").hidden = false;
-	}
 	let thepopup = document.getElementById("utilitiesPopup");
 	thepopup.hidden = false;
 }
