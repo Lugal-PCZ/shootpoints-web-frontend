@@ -24,6 +24,7 @@
 	load_geometries_menus();
 	load_current_session_info();
 	load_current_grouping_info();
+	livemap_recenter();
 	">
 
 	<div id="onTheFlyAdjustmentsPopup" hidden>
@@ -133,6 +134,67 @@
 			<input type="button" value="Shut Down the Raspberry Pi" onclick="shut_rpi_down();" />
 			<img id="shutDownFormIndicator" src="img/cylon.svg" hidden /><br>
 		</form>
+	</div>
+
+	<div id="liveMapPopup" hidden>
+		<div class="formcollectionheader">
+			Live Map
+			<span style="float: right;" onclick="document.getElementById('liveMapPopup').hidden=true">×&nbsp;</span>
+		</div>
+		<svg id="liveMap" preserveAspectRatio="xMinYMin slice" xmlns="http://www.w3.org/2000/svg">
+			<defs>
+				<marker id="surveyStationSymbol" markerWidth="10" markerHeight="10" refX="4" refY="4.3">
+					<path d="M 4,1 L 7,6 L 1,6 Z" stroke="white" stroke-width="1" fill="white" opacity="0.7" />
+					<g fill="none" stroke="black" stroke-width="0.5">
+						<path d="M 4,1 L 7,6 L 1,6 Z" />
+						<circle cx="4" cy="4.3" r="0.6" fill="black" stroke="none" />
+					</g>
+				</marker>
+				<marker id="surveyPointSymbol" markerWidth="10" markerHeight="10" refX="2.5" refY="2.5">
+					<g fill="none" stroke="white" stroke-width="1" stroke-linecap="butt" opacity="0.7">
+						<path d="M 0.8,0.8 L 4.2,4.2" />
+						<path d="M 4.2,0.8 L 0.8,4.2" />
+					</g>
+					<g fill="none" stroke="black" stroke-width="0.5">
+						<path d="M 1,1 L 4,4" />
+						<path d="M 4,1 L 1,4" />
+					</g>
+				</marker>
+				<marker id="savedSurveyPointSymbol">
+					<!-- container for the surveyPointSymbol innerHTML when it's empty -->
+				</marker>
+			</defs>
+			<style type="text/css">
+				polyline,
+				polygon {
+					marker: url(#surveyPointSymbol);
+				}
+
+			</style>
+			<polyline class="surveyStation surveyData" points="14826.706,-17659.494"
+				style="marker:url(#surveyStationSymbol)" />
+			<polygon class="surveyData"
+				points="14829.515,-17667.713 14829.312,-17669.291 14829.313,-17669.337 14829.23,-17669.378 14829.123,-17669.346 14829.119,-17669.272" />
+			<polyline class="surveyData"
+				points="14828.323,-17669.127 14828.33,-17669.392 14828.195,-17669.382 14828.125,-17669.341 14828.069,-17669.185 14828.092,-17669.124" />
+			<polyline class="surveyData"
+				points="14806.678,-17658.043 14806.886,-17658.026 14806.887,-17658.168 14806.687,-17658.15" />
+			<polyline class="surveyData"
+				points="14765.287,-17645.624 14764.979,-17648.853 14765.582,-17649.124 14765.301,-17649.888 14765.145,-17649.81 14763.996,-17653.096 14765.028,-17653.591 14765.335,-17658.145 14765.677,-17658.828" />
+			<circle id="unsavedShot" cx="14775.287" cy="-17655.624">
+		</svg>
+		<span onclick="livemap_zoom_in();"><br>Zoom In</span>
+		<span onclick="livemap_zoom_out();"><br>Zoom Out</span>
+		<br>
+		<span onclick="livemap_pan('N');"><br>Pan North</span>
+		<span onclick="livemap_pan('S');"><br>Pan South</span>
+		<span onclick="livemap_pan('E');"><br>Pan East</span>
+		<span onclick="livemap_pan('W');"><br>Pan West</span>
+		<br>
+		<span onclick="livemap_recenter();"><br>Re-Center Map</span>
+		<br>
+		<span onclick="livemap_hide_points();"><br>Hide Points</span>
+		<span onclick="livemap_show_points();"><br>Show Points</span>
 	</div>
 
 	<img id="editAtmosphereAndPrismOffsetsIcon" src="img/arrows.svg" onclick="show_on_the_fly_adjustments_popup();">
@@ -301,6 +363,10 @@
 	<div class="usage">
 		<div class="formcollectionheader" onclick="collapse_grouping(this);">
 			Surveying <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+			<span style="float: right; margin-right: 10px; margin-bottom: -5px; filter: invert(25%);"
+				onclick="document.getElementById('liveMapPopup').hidden=false; event.stopPropagation();"><img
+					height="20px" src="img/map.svg">
+			</span>
 		</div>
 
 		<div class="formcollection" hidden>
@@ -346,7 +412,7 @@
 				<input type="text" id="startNewSessionFormPrismHeight" name="prism_height" pattern="\d\.?(\.\d{1,3})?"
 					oninput="toggle_button(this);" hidden />
 				<label for="startNewSessionFormInstrumentHeight" id="startNewSessionFormInstrumentHeightLabel"
-					hidden><br>Instrument Height:</label>
+					hidden><br>Instrument Height (m):</label>
 				<input type="text" id="startNewSessionFormInstrumentHeight" name="instrument_height"
 					pattern="\d\.?(\.\d{1,3})?" oninput="toggle_button(this);" hidden />
 				<label for="startNewSessionFormAzimuth" id="startNewSessionFormAzimuthLabel" hidden><br>Azimuth

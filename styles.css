@@ -41,8 +41,36 @@ input:disabled {
 	background: silver;
 }
 
-#onTheFlyAdjustmentsPopup {
+#liveMapPopup {
 	z-index: 10;
+	background-color: burlywood;
+	position: absolute;
+	top: 20ex;
+	width: 326px;
+	left: 10%;
+}
+
+#liveMap {
+	width: 300px;
+	height: 300px;
+	margin: 10px;
+	border-style: solid;
+	border-color: peru;
+	background-color: antiquewhite;
+}
+
+#liveMap>.surveyData {
+	stroke: blue;
+	fill: none;
+}
+
+#liveMap>#unsavedShot {
+	stroke: none;
+	fill: red;
+}
+
+#onTheFlyAdjustmentsPopup {
+	z-index: 20;
 	background-color: silver;
 	position: absolute;
 	top: 20ex;
@@ -51,7 +79,7 @@ input:disabled {
 }
 
 #utilitiesPopup {
-	z-index: 10;
+	z-index: 20;
 	background-color: cornsilk;
 	position: absolute;
 	top: 20ex;
