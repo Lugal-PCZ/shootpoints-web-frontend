@@ -652,11 +652,18 @@ function update_required_new_site_fields(coordinatesystemmenu) {
 // Mustache templates
 
 function menu_template(theoptions) {
-	let template = '' +
-		'<option></option>\n' +
+	let template = ''
+	if (theoptions === "stations") {
+		template += '<option></option>\n' +
+			'{{#' + theoptions + '}}' +
+			'<option value="{{id}}" description="{{description}} ({{northing}}N, {{easting}}E, {{elevation}}Z)">{{name}}</option>\n' +
+			'{{/' + theoptions + '}}';
+	} else {
+		template += '<option></option>\n' +
 		'{{#' + theoptions + '}}' +
 		'<option value="{{id}}" description="{{description}}">{{name}}</option>\n' +
 		'{{/' + theoptions + '}}';
+	}
 	return template
 }
 
