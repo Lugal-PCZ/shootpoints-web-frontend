@@ -379,11 +379,11 @@ function clear_field(thefield) {
 	document.getElementById(thefield).value = 0;
 }
 
-function collapse_grouping(thegrouping) {
-	thegrouping.parentNode.querySelector(".formcollection").hidden = !thegrouping.parentNode.querySelector(".formcollection").hidden;
-	let collapser = thegrouping.parentNode.querySelector(".collapser");
+function collapse(theelement) {
+	theelement.parentNode.querySelector(".collapsible").hidden = !theelement.parentNode.querySelector(".collapsible").hidden;
+	let collapser = theelement.parentNode.querySelector(".collapser");
 	collapser.hidden = !collapser.hidden;
-	let expander = thegrouping.parentNode.querySelector(".expander");
+	let expander = theelement.parentNode.querySelector(".expander");
 	expander.hidden = !expander.hidden;
 }
 
@@ -659,9 +659,9 @@ function menu_template(theoptions) {
 			'{{/' + theoptions + '}}';
 	} else {
 		template += '<option></option>\n' +
-		'{{#' + theoptions + '}}' +
-		'<option value="{{id}}" description="{{description}}">{{name}}</option>\n' +
-		'{{/' + theoptions + '}}';
+			'{{#' + theoptions + '}}' +
+			'<option value="{{id}}" description="{{description}}">{{name}}</option>\n' +
+			'{{/' + theoptions + '}}';
 	}
 	return template
 }
@@ -679,6 +679,11 @@ function output_template() {
 
 
 // Live Map Manipulation
+
+function show_livemap_popup() {
+	document.getElementById("liveMapPopup").hidden = false;
+	event.stopPropagation();
+}
 
 function livemap_save_survey_point_symbol() {
 	document.getElementById("savedSurveyPointSymbol").innerHTML = document.getElementById("surveyPointSymbol").innerHTML;

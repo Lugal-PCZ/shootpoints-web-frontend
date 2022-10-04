@@ -103,6 +103,14 @@ input:disabled {
 	padding-right: 1px;
 }
 
+#showLiveMapIcon {
+	float: right;
+	height: 30px;
+	filter: invert(25%);
+	padding-top: 5px;
+	padding-right: 15px;
+}
+
 #outputBox {
 	width: calc(100% - 1em);
 	height: 3em;
@@ -120,6 +128,10 @@ input:disabled {
 	padding-bottom: 6px;
 	padding-left: 6px;
 	padding-right: 6px;
+}
+
+.currentSurveyingInfo {
+	margin-left: 12px;
 }
 
 .formcollectionheader {
