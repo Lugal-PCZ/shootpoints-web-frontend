@@ -95,6 +95,11 @@ input:disabled {
 	padding-left: 1px;
 }
 
+#dateAndTime {
+	display: inline-block;
+	text-align: right;
+}
+
 #showUtilitiesIcon {
 	float: right;
 	height: 30px;
@@ -131,6 +136,7 @@ input:disabled {
 }
 
 .currentSurveyingInfo {
+	display: inline-block;
 	margin-left: 12px;
 }
 

@@ -241,7 +241,7 @@
 		</span>
 	</span>
 
-	<div class="setup">
+	<div class=" setup">
 		<div class="formcollectionheader" onclick="collapse(this);">
 			Setup <span class="collapser">‣</span><span class="expander" hidden>▾</span>
 		</div>
@@ -498,7 +498,8 @@
 						<option value="Azimuth">Azimuth</option>
 					</select>
 					<label for="startNewSessionFormBacksightStationMenu"
-						id="startNewSessionFormBacksightStationMenuLabel" hidden><br>Backsight Station:</label>
+						id="startNewSessionFormBacksightStationMenuLabel" hidden><br>Backsight
+						Station:</label>
 					<select id="startNewSessionFormBacksightStationMenu" name="backsight_station_id"
 						onchange="update_description(this, 'startNewSessionFormBacksightStationDescription'); toggle_button(this);"
 						hidden>
@@ -511,7 +512,8 @@
 					<input type="text" id="startNewSessionFormPrismHeight" name="prism_height"
 						pattern="\d\.?(\.\d{1,3})?" oninput="toggle_button(this);" hidden />
 					<label for="startNewSessionFormInstrumentHeight" id="startNewSessionFormInstrumentHeightLabel"
-						hidden><br>Instrument Height (m):</label>
+						hidden><br>Instrument Height
+						(m):</label>
 					<input type="text" id="startNewSessionFormInstrumentHeight" name="instrument_height"
 						pattern="\d\.?(\.\d{1,3})?" oninput="toggle_button(this);" hidden />
 					<label for="startNewSessionFormAzimuth" id="startNewSessionFormAzimuthLabel" hidden><br>Azimuth
@@ -572,10 +574,10 @@
 			</form>
 
 			<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();">
-			<span id="currentSessionInfo" class="currentSurveyingInfo"><b>Current Session:</b></span>
+			<span id="currentSessionInfo" class="currentSurveyingInfo"><b>Current Session:</b><br></span>
 			<img class="infobutton" id="currentSessionDetails" src="img/info.svg">
 			<br>
-			<span id="currentGroupingInfo" class="currentSurveyingInfo"><b>Current Grouping:</b></span>
+			<span id="currentGroupingInfo" class="currentSurveyingInfo"><b>Current Grouping:</b><br></span>
 			<img class="infobutton" id="currentGroupingDetails" src="img/info.svg">
 
 			<form id="takeShotForm">
