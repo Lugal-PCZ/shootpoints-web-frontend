@@ -110,10 +110,9 @@ input:disabled {
 
 #showLiveMapIcon {
 	float: right;
-	height: 30px;
+	height: 70px;
 	filter: invert(25%);
-	padding-top: 5px;
-	padding-right: 15px;
+	padding-right: 10px;
 }
 
 #outputBox {
