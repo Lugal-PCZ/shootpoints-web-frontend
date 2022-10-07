@@ -45,7 +45,7 @@ async function load_current_grouping_info() {
 	let response = await fetch("/grouping/");
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
-		document.getElementById("currentGroupingInfo").innerHTML = "<b>Current Grouping:</b><br><i>(no current grouping)</i>";
+		document.getElementById("currentGroupingInfo").innerHTML = "<i>(no current grouping)</i>";
 		document.getElementById("currentGroupingDetails").removeAttribute("onClick");
 		document.getElementById("takeShotFormButton").disabled = true;
 	} else {
@@ -67,7 +67,7 @@ async function load_current_session_info() {
 	let response = await fetch("/session/");
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
-		document.getElementById("currentSessionInfo").innerHTML = "<b>Current Session:</b><br><i>(no current session)</i>";
+		document.getElementById("currentSessionInfo").innerHTML = "<i>(no current session)</i>";
 		document.getElementById("currentSessionDetails").removeAttribute("onClick");
 		document.getElementById("startNewGroupingForm").hidden = true;
 		document.getElementById("takeShotForm").hidden = true;
