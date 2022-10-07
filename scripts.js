@@ -41,7 +41,7 @@ async function load_configs_menus() {
 }
 
 async function load_current_grouping_info() {
-	let template = "<b>Current Grouping:</b><br>{{label}} ({{geometries_name}})"
+	let template = "{{label}} ({{geometries_name}})"
 	let response = await fetch("/grouping/");
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
@@ -62,7 +62,7 @@ async function load_current_grouping_info() {
 }
 
 async function load_current_session_info() {
-	let template = "<b>Current Session:</b><br>{{label}} (started {{started}})"
+	let template = "{{label}}"
 	let details = null;
 	let response = await fetch("/session/");
 	let json = await response.json();

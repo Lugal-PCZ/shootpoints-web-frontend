@@ -41,6 +41,12 @@ input:disabled {
 	background: silver;
 }
 
+input[type=button] {
+	background-color: gainsboro;
+	font-weight: bold;
+	padding: 10px;
+}
+
 #liveMapPopup {
 	z-index: 10;
 	background-color: burlywood;
@@ -112,6 +118,7 @@ input:disabled {
 	float: right;
 	height: 70px;
 	filter: invert(25%);
+	padding-top: 8px;
 	padding-right: 10px;
 }
 
@@ -121,6 +128,16 @@ input:disabled {
 	padding: 0.5em;
 	background-color: rgb(230, 230, 230);
 	overflow: auto;
+}
+
+#takeShotFormButton,
+#saveLastShotFormButton {
+	background-color: mediumseagreen;
+}
+
+#cancelShotFormButton,
+#discardLastShotFormButton {
+	background-color: lightcoral;
 }
 
 .info {
@@ -136,7 +153,8 @@ input:disabled {
 
 .currentSurveyingInfo {
 	display: inline-block;
-	margin-left: 12px;
+	margin-top: 5px;
+	margin-left: 17px;
 }
 
 .formcollectionheader {
@@ -164,10 +182,6 @@ input:disabled {
 
 .usage {
 	background-color: lightblue;
-}
-
-.usage #saveLastShotForm {
-	background-color: moccasin;
 }
 
 .infobutton {

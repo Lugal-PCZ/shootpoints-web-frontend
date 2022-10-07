@@ -574,11 +574,16 @@
 			</form>
 
 			<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();">
-			<span id="currentSessionInfo" class="currentSurveyingInfo"><b>Current Session:</b><br></span>
-			<img class="infobutton" id="currentSessionDetails" src="img/info.svg">
-			<br>
-			<span id="currentGroupingInfo" class="currentSurveyingInfo"><b>Current Grouping:</b><br></span>
-			<img class="infobutton" id="currentGroupingDetails" src="img/info.svg">
+			<span class="currentSurveyingInfo">
+				<b>Current Session:</b><br>
+				<span id="currentSessionInfo"><b>Current Session:</b><br></span>
+				<img class="infobutton" id="currentSessionDetails" src="img/info.svg">
+			</span><br>
+			<span class="currentSurveyingInfo">
+				<b>Current Grouping:</b><br>
+				<span id="currentGroupingInfo"></span>
+				<img class="infobutton" id="currentGroupingDetails" src="img/info.svg">
+			</span>
 
 			<form id="takeShotForm">
 				<input type="button" id="takeShotFormButton" value="Take Shot" onclick="take_shot();" disabled />
@@ -588,12 +593,13 @@
 				<img id="takeShotFormIndicator" src="img/cylon.svg" /><br>
 			</form>
 			<form id="saveLastShotForm" hidden>
-				<input type="button" id="saveLastShotFormButton" value="Save Last Shot" onclick="save_last_shot();" />
-				<label for="saveLastShotFormLabel"><br>Label:</label>
+				<label for="saveLastShotFormLabel">Label:</label>
 				<input type="text" id="saveLastShotFormLabel" name="label" />
 				<label for="saveLastShotFormComment"><br>Comment:</label>
 				<input type="text" id="saveLastShotFormComment" name="comment" /><br>
-				<input type="button" value="Discard Last Shot" onclick="discard_last_shot();" />
+				<input type="button" id="saveLastShotFormButton" value="Save Last Shot" onclick="save_last_shot();" />
+				<input type="button" id="discardLastShotFormButton" value="Discard Last Shot"
+					onclick="discard_last_shot();" />
 			</form>
 		</div>
 	</div>
