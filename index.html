@@ -3,8 +3,8 @@
 
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<title>ShootPoints</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- <script src="https://unpkg.com/mustache@latest/mustache.min.js"></script> -->
 	<script src="lib/mustache.min.js"></script>
 	<script type="text/javascript" src="scripts.js"></script>
@@ -120,7 +120,8 @@
 			</select>
 			<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg">
 			<br>
-			<input type="button" value="Export" onclick="export_session_data();" disabled />
+			<input type="button" id="exportSessionDataFormButton" value="Export" onclick="export_session_data();"
+				disabled />
 		</form>
 		<form id="downloadDatabaseForm">
 			<span><b>Download the Entire ShootPoints Database</b></span>
@@ -138,19 +139,20 @@
 			</select>
 			<img class="infobutton" id="deleteSessionFormSessionDescription" src="img/info.svg">
 			<br>
-			<input type="button" value="Delete Session" onclick="delete_session();" disabled />
-		</form>
-		<form id="setClockForm" hidden>
-			<span><b>Set the Raspberry Pi Clock</b></span>
-			<hr>
-			<input type="text" id="setClockFormDateTimeString" name="datetimestring" hidden />
-			<input type="button" value="Set the Clock" onclick="set_rpi_clock();" />
+			<input type="button" id="deleteSessionFormButton" value="Delete Session" onclick="delete_session();"
+				disabled />
 		</form>
 		<form id="shutDownForm" hidden>
 			<span><b>Shut Down the Raspberry Pi</b></span>
 			<hr>
 			<input type="button" value="Shut Down" onclick="shut_rpi_down();" />
 			<img id="shutDownFormIndicator" src="img/cylon.svg" hidden /><br>
+		</form>
+		<form id="setClockForm" hidden>
+			<span><b>Set the Raspberry Pi Clock</b></span>
+			<hr>
+			<input type="text" id="setClockFormDateTimeString" name="datetimestring" hidden />
+			<input type="button" value="Set the Clock" onclick="set_rpi_clock();" />
 		</form>
 	</div>
 
@@ -241,7 +243,7 @@
 		</span>
 	</span>
 
-	<div class=" setup">
+	<div class="setup">
 		<div class="formcollectionheader" onclick="collapse(this);">
 			Setup <span class="collapser">‣</span><span class="expander" hidden>▾</span>
 		</div>
@@ -277,7 +279,7 @@
 					<label for="saveNewSiteFormSiteName">Name:</label>
 					<input type="text" id="saveNewSiteFormSiteName" name="name" oninput="toggle_button(this);"
 						required />
-					<label for=" saveNewSiteFormSiteDescription"><br>Description:</label>
+					<label for="saveNewSiteFormSiteDescription"><br>Description:</label>
 					<input type="text" id="saveNewSiteFormSiteDescription" name="description" />
 					<br>
 					<input type="button" id="saveNewSiteFormButton" value="Save New Site" onclick="save_new_site();"
@@ -406,7 +408,7 @@
 					</select>
 					<img class="infobutton" id="deleteClassFormClassDescription" src="img/info.svg">
 					<br>
-					<input type="button" id=" deleteClassFormButton" value="Delete Class" onclick="delete_class();"
+					<input type="button" id="deleteClassFormButton" value="Delete Class" onclick="delete_class();"
 						disabled />
 				</span>
 			</form>
@@ -453,7 +455,7 @@
 					</select>
 					<img class="infobutton" id="deleteSubclassFormSubclassDescription" src="img/info.svg">
 					<br>
-					<input type="button" id=" deleteSubclassFormButton" value="Delete Subclass"
+					<input type="button" id="deleteSubclassFormButton" value="Delete Subclass"
 						onclick="delete_subclass();" disabled />
 				</span>
 			</form>

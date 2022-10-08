@@ -147,8 +147,8 @@ async function delete_class() {
 		let status = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteClassForm").reset();
-			toggle_button(document.getElementById("deleteClassForm").children[0]);
 			document.getElementById("deleteClassFormClassDescription").removeAttribute("onclick");
+			document.getElementById("deleteClassFormButton").disabled = true;
 			load_classes_menus();
 		}
 	}
@@ -160,9 +160,9 @@ async function delete_site() {
 		let status = await _update_data_via_api("/site/", "DELETE", deleteSiteForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSiteForm").reset();
-			toggle_button(document.getElementById("deleteSiteForm").children[0]);
-			load_sites_menus();
 			document.getElementById("deleteSiteFormSiteDescription").removeAttribute("onclick");
+			document.getElementById("deleteSiteFormButton").disabled = true;
+			load_sites_menus();
 		}
 	}
 }
@@ -173,7 +173,7 @@ async function delete_session() {
 		let status = await _update_data_via_api("/session/", "DELETE", deleteSessionForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSessionForm").reset();
-			toggle_button(document.getElementById("deleteSessionForm").children[0]);
+			document.getElementById("deleteSessionFormButton").disabled = true;
 			let sessions = await fetch("/sessions/");
 			let json = await sessions.json();
 			document.getElementById("deleteSessionFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
@@ -188,10 +188,10 @@ async function delete_station() {
 		let status = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteStationForm").reset();
-			toggle_button(document.getElementById("deleteStationForm").children[0]);
 			document.getElementById("deleteStationFormSiteDescription").removeAttribute("onclick");
 			document.getElementById("deleteStationFormStationsMenu").innerHTML = "";
 			document.getElementById("deleteStationFormStationDescription").removeAttribute("onclick");
+			document.getElementById("deleteStationFormButton").disabled = true;
 		}
 	}
 }
@@ -202,10 +202,10 @@ async function delete_subclass() {
 		let status = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSubclassForm").reset();
-			toggle_button(document.getElementById("deleteSubclassForm").children[0]);
 			document.getElementById("deleteSubclassFormClassDescription").removeAttribute("onclick");
 			document.getElementById("deleteSubclassFormSubclassesMenu").innerHTML = "";
 			document.getElementById("deleteSubclassFormSubclassDescription").removeAttribute("onclick");
+			document.getElementById("deleteSubclassFormButton").disabled = true;
 		}
 	}
 }
@@ -214,7 +214,7 @@ async function save_new_class() {
 	let status = await _update_data_via_api("/class/", "POST", saveNewClassForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewClassForm").reset();
-		toggle_button(document.getElementById("saveNewClassForm").children[0]);
+		document.getElementById("saveNewClassFormButton").disabled = true;
 		load_classes_menus();
 	}
 }
@@ -223,7 +223,7 @@ async function save_new_site() {
 	let status = await _update_data_via_api("/site/", "POST", saveNewSiteForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewSiteForm").reset();
-		toggle_button(document.getElementById("saveNewSiteForm").children[0]);
+		document.getElementById("saveNewSiteFormButton").disabled = true;
 		load_sites_menus();
 	}
 }
@@ -232,8 +232,8 @@ async function save_new_station() {
 	let status = await _update_data_via_api("/station/", "POST", saveNewStationForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewStationForm").reset();
-		toggle_button(document.getElementById("saveNewStationForm").children[0]);
 		document.getElementById("saveNewStationFormSiteDescription").removeAttribute("onclick");
+		document.getElementById("saveNewStationFormButton").disabled = true;
 	}
 }
 
@@ -241,13 +241,14 @@ async function save_new_subclass() {
 	let status = await _update_data_via_api("/subclass/", "POST", saveNewSubclassForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewSubclassForm").reset();
-		toggle_button(document.getElementById("saveNewSubclassForm").children[0]);
 		document.getElementById("saveNewSubclassFormClassDescription").removeAttribute("onclick");
+		document.getElementById("saveNewSubclassFormButton").disabled = true;
 	}
 }
 
 async function set_atmospheric_conditions() {
 	await _update_data_via_api("/atmosphere/", "PUT", setAtmosphericConditionsForm);
+	document.getElementById("onTheFlyAdjustmentsPopup").hidden = true;
 	load_atmospheric_conditions();
 }
 
@@ -257,6 +258,7 @@ async function set_configs() {
 
 async function set_prism_offsets() {
 	await _update_data_via_api("/prism/", "PUT", setPrismOffsetsForm);
+	document.getElementById("onTheFlyAdjustmentsPopup").hidden = true;
 	load_prism_offsets();
 }
 
@@ -268,6 +270,7 @@ async function start_new_grouping() {
 		document.getElementById("startNewGroupingFormClassDescription").removeAttribute("onclick");
 		document.getElementById("startNewGroupingFormSubclassesMenu").innerHTML = "";
 		document.getElementById("startNewGroupingFormSubclassDescription").removeAttribute("onclick");
+		document.getElementById("startNewGroupingFormButton").disabled = true;
 		document.getElementById("saveLastShotFormLabel").value = "";
 		document.getElementById("saveLastShotFormComment").value = "";
 		load_current_grouping_info();
@@ -596,18 +599,21 @@ function update_required_new_session_fields(sessiontypemenu) {
 			_show_required_field("startNewSessionFormPrismHeight");
 			_hide_required_field("startNewSessionFormInstrumentHeight");
 			_hide_required_field("startNewSessionFormAzimuth");
+			document.getElementById("startNewSessionFormButton").value = "Shoot Backsight";
 			break;
 		case "Azimuth":
 			_hide_required_field("startNewSessionFormBacksightStationMenu");
 			_hide_required_field("startNewSessionFormPrismHeight");
 			_show_required_field("startNewSessionFormInstrumentHeight");
 			_show_required_field("startNewSessionFormAzimuth");
+			document.getElementById("startNewSessionFormButton").value = "Set Instrument Azimuth";
 			break;
 		default:
 			_hide_required_field("startNewSessionFormBacksightStationMenu");
 			_hide_required_field("startNewSessionFormPrismHeight");
 			_hide_required_field("startNewSessionFormInstrumentHeight");
 			_hide_required_field("startNewSessionFormAzimuth");
+			document.getElementById("startNewSessionFormButton").value = "Start New Session";
 	}
 }
 
