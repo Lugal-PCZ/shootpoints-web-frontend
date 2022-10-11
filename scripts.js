@@ -273,7 +273,6 @@ async function start_new_grouping() {
 		document.getElementById("startNewGroupingFormSubclassesMenu").innerHTML = "";
 		document.getElementById("startNewGroupingFormSubclassDescription").removeAttribute("onclick");
 		document.getElementById("startNewGroupingFormButton").disabled = true;
-		document.getElementById("saveLastShotFormLabel").value = "";
 		document.getElementById("saveLastShotFormComment").value = "";
 		load_current_grouping_info();
 	}
@@ -314,13 +313,6 @@ async function take_shot() {
 		'<tr><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
 		'</table>' +
 		'{{/result}}';
-	if (document.getElementById("currentGroupingGeometry").innerText === "Isolated Point") {
-		// This is an isolated point, so it will always take the label of its grouping.
-		document.getElementById("saveLastShotFormLabel").value = document.getElementById("currentGroupingLabel").innerText;
-		document.getElementById("saveLastShotFormLabel").disabled = true;
-	} else {
-		document.getElementById("saveLastShotFormLabel").disabled = false;
-	}
 	show_and_hide_shot_forms("take");
 	document.getElementById("outputBox").innerHTML = "";
 	let response = await fetch("/shot/");
@@ -344,7 +336,6 @@ async function cancel_shot() {
 async function save_last_shot() {
 	show_and_hide_shot_forms("cancel");
 	document.getElementById("outputBox").innerHTML = "";
-	document.getElementById("saveLastShotFormLabel").disabled = false;
 	await _update_data_via_api("/shot/", "POST", saveLastShotForm);
 	load_current_grouping_info();
 }
