@@ -9,6 +9,8 @@ async function export_session_data() {
 	let thetrigger = document.getElementById("sessionDataExportTrigger");
 	thetrigger.setAttribute("href", "/export/" + sessions_id);
 	thetrigger.click();
+	document.getElementById("exportSessionDataForm").reset();
+	document.getElementById("exportSessionDataFormButton").disabled = true;
 }
 
 async function load_atmospheric_conditions() {
