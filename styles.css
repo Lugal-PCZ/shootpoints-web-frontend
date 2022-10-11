@@ -48,6 +48,10 @@ input[type=button] {
 	padding: 10px;
 }
 
+input[type=button]:disabled {
+	color: grey;
+}
+
 #liveMapPopup {
 	z-index: 10;
 	background-color: burlywood;
