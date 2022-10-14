@@ -49,6 +49,7 @@ async function load_current_grouping_info() {
 	if (json.result === "" || json.label === null) {
 		document.getElementById("currentGroupingInfo").innerHTML = "<i>(no current grouping)</i>";
 		document.getElementById("currentGroupingDetails").removeAttribute("onClick");
+		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = true;
 		document.getElementById("takeShotFormButton").disabled = true;
 	} else {
 		document.getElementById("currentGroupingInfo").innerHTML = Mustache.render(template, json);
@@ -59,6 +60,7 @@ async function load_current_grouping_info() {
 		document.getElementById("currentGroupingDescription").innerText = json.description;
 		document.getElementById("currentGroupingNumberOfShots").innerText = json.num_shots;
 		document.getElementById("currentGroupingDetails").setAttribute("onClick", "show_current_grouping_details();");
+		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = false;
 		document.getElementById("takeShotFormButton").disabled = false;
 	}
 }
@@ -71,7 +73,8 @@ async function load_current_session_info() {
 	if (json.result === "" || json.label === null) {
 		document.getElementById("currentSessionInfo").innerHTML = "<i>(no current session)</i>";
 		document.getElementById("currentSessionDetails").removeAttribute("onClick");
-		document.getElementById("startNewGroupingForm").hidden = true;
+		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
+		document.getElementById("groupingForm").hidden = true;
 		document.getElementById("takeShotForm").hidden = true;
 	} else {
 		document.getElementById("currentSessionInfo").innerHTML = Mustache.render(template, json);
@@ -81,7 +84,8 @@ async function load_current_session_info() {
 		document.getElementById("currentSessionOccupiedPoint").innerText = json.stations_name;
 		document.getElementById("currentSessionInstrumentHeight").innerText = json.instrumentheight;
 		document.getElementById("currentSessionDetails").setAttribute("onClick", "show_current_session_details();");
-		document.getElementById("startNewGroupingForm").hidden = false;
+		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
+		document.getElementById("groupingForm").hidden = false;
 		document.getElementById("takeShotForm").hidden = false;
 	}
 }
@@ -171,7 +175,16 @@ async function delete_site() {
 
 async function delete_session() {
 	let sessionlabel = document.getElementById("deleteSessionFormSessionsMenu");
-	if (confirm("Delete session “" + sessionlabel.options[sessionlabel.selectedIndex].text + ",” including all its shots and groupings?\n\nThis cannot be undone, so download any important data before proceeding.")) {
+	let themessage = "Delete session “" + sessionlabel.options[sessionlabel.selectedIndex].text + ",” including all its shots and groupings?\n\nThis cannot be undone, so download any important data before proceeding.";
+	// get the current session and check if it's the one selected
+	let currentsession = false
+	let response = await fetch("/session/");
+	let json = await response.json();
+	if (Number(json.id) === Number(sessionlabel.options[sessionlabel.selectedIndex].value)) {
+		currentsession = true
+		themessage = "Delete the current session, including all its shots and groupings?\n\nThis cannot be undone, so download any important data before proceeding.";
+	}
+	if (confirm(themessage)) {
 		let status = await _update_data_via_api("/session/", "DELETE", deleteSessionForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSessionForm").reset();
@@ -180,6 +193,10 @@ async function delete_session() {
 			let json = await sessions.json();
 			document.getElementById("deleteSessionFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
 			document.getElementById("deleteSessionFormSessionDescription").removeAttribute("onclick");
+			document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
+			if (currentsession === true) {
+				end_current_session(prompt = false);
+			}
 		}
 	}
 }
@@ -209,6 +226,53 @@ async function delete_subclass() {
 			document.getElementById("deleteSubclassFormSubclassDescription").removeAttribute("onclick");
 			document.getElementById("deleteSubclassFormButton").disabled = true;
 		}
+	}
+}
+
+async function end_current_grouping() {
+	let themessage = "This will end the current grouping.\n\nPress “Ok” to proceed or “Cancel” to go back.";
+	if (document.getElementById("outputBox").innerHTML.substring(0, 24) === '<table class="shotdata">') {
+		themessage = "This will end the current grouping and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back."
+	}
+	if (confirm(themessage)) {
+		let status = await _update_data_via_api("/grouping/", "PUT", groupingForm);
+		if (status >= 200 && status <= 299) {
+			document.getElementById("groupingForm").reset();
+			document.getElementById("groupingFormGeometryDescription").removeAttribute("onclick");
+			document.getElementById("groupingFormClassDescription").removeAttribute("onclick");
+			document.getElementById("groupingFormSubclassesMenu").innerHTML = "";
+			document.getElementById("groupingFormSubclassDescription").removeAttribute("onclick");
+			document.getElementById("groupingFormStartGroupingButton").disabled = true;
+			document.getElementById("saveLastShotFormComment").value = "";
+			show_and_hide_shot_forms("cancel");
+			load_current_grouping_info();
+		}
+	}
+}
+
+async function end_current_session(prompt = true) {
+	let themessage = "This will end the current session.\n\nPress “Ok” to proceed or “Cancel” to go back.";
+	if (document.getElementById("outputBox").innerHTML.substring(0, 24) === '<table class="shotdata">') {
+		themessage = "This will end the current session and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back.";
+	}
+	if (prompt === true) {
+		if (!confirm(themessage)) {
+			return;
+		}
+	}
+	let status = await _update_data_via_api("/session/", "PUT", sessionForm);
+	if (status >= 200 && status <= 299) {
+		document.getElementById("sessionForm").reset();
+		document.getElementById("sessionFormSiteDescription").removeAttribute("onclick");
+		document.getElementById("sessionFormOccupiedPointMenu").innerHTML = "";
+		document.getElementById("sessionFormOccupiedPointDescription").removeAttribute("onclick");
+		document.getElementById("sessionFormBacksightStationMenu").innerHTML = "";
+		document.getElementById("sessionFormBacksightStationDescription").removeAttribute("onclick");
+		update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
+		document.getElementById("sessionFormStartSessionButton").disabled = true;
+		show_and_hide_shot_forms("cancel");
+		load_current_session_info();
+		load_current_grouping_info();
 	}
 }
 
@@ -265,39 +329,53 @@ async function set_prism_offsets() {
 }
 
 async function start_new_grouping() {
-	let status = await _update_data_via_api("/grouping/", "POST", startNewGroupingForm);
+	if (document.getElementById("outputBox").innerHTML.substring(0, 24) === '<table class="shotdata">') {
+		if (!confirm("You have an unsaved shot. Creating a new grouping now will put it in the new grouping when it’s saved. Do you wish to do this?\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
+			return;
+		}
+	}
+	let status = await _update_data_via_api("/grouping/", "POST", groupingForm);
 	if (status >= 200 && status <= 299) {
-		document.getElementById("startNewGroupingForm").reset();
-		document.getElementById("startNewGroupingFormGeometryDescription").removeAttribute("onclick");
-		document.getElementById("startNewGroupingFormClassDescription").removeAttribute("onclick");
-		document.getElementById("startNewGroupingFormSubclassesMenu").innerHTML = "";
-		document.getElementById("startNewGroupingFormSubclassDescription").removeAttribute("onclick");
-		document.getElementById("startNewGroupingFormButton").disabled = true;
-		document.getElementById("saveLastShotFormComment").value = "";
+		document.getElementById("groupingForm").reset();
+		document.getElementById("groupingFormGeometryDescription").removeAttribute("onclick");
+		document.getElementById("groupingFormClassDescription").removeAttribute("onclick");
+		document.getElementById("groupingFormSubclassesMenu").innerHTML = "";
+		document.getElementById("groupingFormSubclassDescription").removeAttribute("onclick");
+		document.getElementById("groupingFormStartGroupingButton").disabled = true;
+		document.getElementById("saveLastShotForm").reset();
+		show_and_hide_shot_forms("cancel");
 		load_current_grouping_info();
 	}
 }
 
 async function start_new_session() {
+	if (document.getElementById("outputBox").innerHTML.substring(0, 24) === '<table class="shotdata">') {
+		if (!confirm("You have an unsaved shot that will be deleted if you continue.\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
+			return;
+		}
+	}
 	if (confirm("Please verify that the date, time, and atmospheric conditions are set correctly.\n\nPress “Ok” to proceed or “Cancel” to go back.") === true) {
-		document.getElementById("startNewSessionFormIndicator").hidden = false;
-		let status = await _update_data_via_api("/session/", "POST", startNewSessionForm);
+		document.getElementById("sessionFormIndicator").hidden = false;
+		let status = await _update_data_via_api("/session/", "POST", sessionForm);
 		if (status >= 200 && status <= 299) {
-			document.getElementById("startNewSessionForm").reset();
-			document.getElementById("startNewSessionFormSiteDescription").removeAttribute("onclick");
-			document.getElementById("startNewSessionFormOccupiedPointMenu").innerHTML = "";
-			document.getElementById("startNewSessionFormOccupiedPointDescription").removeAttribute("onclick");
-			document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = "";
-			document.getElementById("startNewSessionFormBacksightStationDescription").removeAttribute("onclick");
-			update_required_new_session_fields(document.getElementById("startNewSessionFormSessionTypeMenu"));
-			document.getElementById("startNewSessionFormButton").disabled = true;
+			document.getElementById("sessionForm").reset();
+			document.getElementById("sessionFormSiteDescription").removeAttribute("onclick");
+			document.getElementById("sessionFormOccupiedPointMenu").innerHTML = "";
+			document.getElementById("sessionFormOccupiedPointDescription").removeAttribute("onclick");
+			document.getElementById("sessionFormBacksightStationMenu").innerHTML = "";
+			document.getElementById("sessionFormBacksightStationDescription").removeAttribute("onclick");
+			update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
+			document.getElementById("sessionFormStartSessionButton").disabled = true;
+			show_and_hide_shot_forms("cancel");
 			load_current_session_info();
 			load_current_grouping_info();
+			collapse(document.getElementById("sessionFormHeader"));
 		}
-		document.getElementById("startNewSessionFormIndicator").hidden = true;
+		document.getElementById("sessionFormIndicator").hidden = true;
 		load_prism_offsets();
 	}
 }
+
 
 // Shot Handling
 
@@ -308,9 +386,9 @@ async function take_shot() {
 		'{{/errors}}' +
 		'{{#result}}' +
 		'<table class="shotdata">' +
-		'<tr><td>delta_n = {{delta_n}}</td><td>calculated_n = {{calculated_n}}</td></tr>' +
-		'<tr><td>delta_e = {{delta_e}}</td><td>calculated_e = {{calculated_e}}</td></tr>' +
-		'<tr><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
+		'<tr><td><b>Last Shot:</b></td><td>delta_n = {{delta_n}}</td><td>calculated_n = {{calculated_n}}</td></tr>' +
+		'<tr><td></td><td>delta_e = {{delta_e}}</td><td>calculated_e = {{calculated_e}}</td></tr>' +
+		'<tr><td></td><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
 		'</table>' +
 		'{{/result}}';
 	show_and_hide_shot_forms("take");
@@ -346,6 +424,7 @@ function discard_last_shot() {
 		document.getElementById("outputBox").innerHTML = "Last shot discarded.";
 	}
 }
+
 
 // UI manipulators
 
@@ -390,8 +469,8 @@ function details_popup(details) {
 }
 
 function handle_survey_station_subclass(themenu) {
-	if (themenu.value === "1" && document.getElementById("startNewGroupingFormGeometriesMenu").value != "1") {
-		document.getElementById("startNewGroupingFormGeometriesMenu").value = "1";
+	if (themenu.value === "1" && document.getElementById("groupingFormGeometriesMenu").value != "1") {
+		document.getElementById("groupingFormGeometriesMenu").value = "1";
 		alert("The geometry for this survey station will be changed to “Isolated Point.”");
 	}
 }
@@ -526,7 +605,7 @@ function update_backsight_station_menu(occupiedstationmenu) {
 			newoptions.push(option);
 		}
 	});
-	document.getElementById("startNewSessionFormBacksightStationMenu").innerHTML = newoptions.join("\n");
+	document.getElementById("sessionFormBacksightStationMenu").innerHTML = newoptions.join("\n");
 }
 
 async function update_dependent_model_menu(themake) {
@@ -588,25 +667,25 @@ function update_description(source, target) {
 function update_required_new_session_fields(sessiontypemenu) {
 	switch (sessiontypemenu.value) {
 		case "Backsight":
-			_show_required_field("startNewSessionFormBacksightStationMenu");
-			_show_required_field("startNewSessionFormPrismHeight");
-			_hide_required_field("startNewSessionFormInstrumentHeight");
-			_hide_required_field("startNewSessionFormAzimuth");
-			document.getElementById("startNewSessionFormButton").value = "Shoot Backsight";
+			_show_required_field("sessionFormBacksightStationMenu");
+			_show_required_field("sessionFormPrismHeight");
+			_hide_required_field("sessionFormInstrumentHeight");
+			_hide_required_field("sessionFormAzimuth");
+			document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight";
 			break;
 		case "Azimuth":
-			_hide_required_field("startNewSessionFormBacksightStationMenu");
-			_hide_required_field("startNewSessionFormPrismHeight");
-			_show_required_field("startNewSessionFormInstrumentHeight");
-			_show_required_field("startNewSessionFormAzimuth");
-			document.getElementById("startNewSessionFormButton").value = "Set Instrument Azimuth";
+			_hide_required_field("sessionFormBacksightStationMenu");
+			_hide_required_field("sessionFormPrismHeight");
+			_show_required_field("sessionFormInstrumentHeight");
+			_show_required_field("sessionFormAzimuth");
+			document.getElementById("sessionFormStartSessionButton").value = "Set Instrument Azimuth";
 			break;
 		default:
-			_hide_required_field("startNewSessionFormBacksightStationMenu");
-			_hide_required_field("startNewSessionFormPrismHeight");
-			_hide_required_field("startNewSessionFormInstrumentHeight");
-			_hide_required_field("startNewSessionFormAzimuth");
-			document.getElementById("startNewSessionFormButton").value = "Start New Session";
+			_hide_required_field("sessionFormBacksightStationMenu");
+			_hide_required_field("sessionFormPrismHeight");
+			_hide_required_field("sessionFormInstrumentHeight");
+			_hide_required_field("sessionFormAzimuth");
+			document.getElementById("sessionFormStartSessionButton").value = "Start New Session";
 	}
 }
 
@@ -681,7 +760,6 @@ function output_template() {
 
 function show_livemap_popup() {
 	document.getElementById("liveMapPopup").hidden = false;
-	event.stopPropagation();
 }
 
 function livemap_save_survey_point_symbol() {
@@ -795,7 +873,15 @@ async function set_rpi_clock() {
 
 
 function shut_rpi_down() {
-	if (confirm("Press “Ok” to safely shut down the Raspberry Pi.")) {
+	let themessage = "Press “Ok” to safely shut down the Raspberry Pi."
+	let endcurrentsession = document.getElementById('shutDownFormEndCurrentSessionCheckbox').checked;
+	if (endcurrentsession === true) {
+		themessage = "Press “Ok” to end the current session and safely shut down the Raspberry Pi."
+	}
+	if (confirm(themessage)) {
+		if (endcurrentsession === true) {
+			end_current_session(prompt = false);
+		}
 		fetch("/raspbian/shutdown/");
 		document.getElementById("shutDownFormIndicator").hidden = false;
 		setTimeout(function () {

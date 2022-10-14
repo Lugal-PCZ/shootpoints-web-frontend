@@ -145,8 +145,10 @@
 		<form id="shutDownForm" hidden>
 			<span><b>Shut Down the Raspberry Pi</b></span>
 			<hr>
+			<input type="checkbox" id="shutDownFormEndCurrentSessionCheckbox" checked />
+			<label for="shutDownFormEndCurrentSessionCheckbox">End Current Session</label><br>
 			<input type="button" value="Shut Down" onclick="shut_rpi_down();" />
-			<img id="shutDownFormIndicator" src="img/cylon.svg" hidden /><br>
+			<img id="shutDownFormIndicator" src="img/cylon.svg" hidden />
 		</form>
 		<form id="setClockForm" hidden>
 			<span><b>Set the Raspberry Pi Clock</b></span>
@@ -468,101 +470,107 @@
 		</div>
 
 		<div class="formcollection collapsible" hidden>
-			<form id="startNewSessionForm">
-				<span onclick="collapse(this);">
-					<b>Start New Session</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+			<form id="sessionForm">
+				<span id="sessionFormHeader" onclick="collapse(this);">
+					<b>Session</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+				</span><br>
+				<span class="currentSurveyingInfo">
+					<span id="currentSessionInfo"></span>
+					<img class="infobutton" id="currentSessionDetails" src="img/info.svg">
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
-					<img id="startNewSessionFormIndicator" src="img/cylon.svg" hidden />
-					<label for="startNewSessionFormLabel">Label:</label>
-					<input type="text" id="startNewSessionFormLabel" name="label" oninput="toggle_button(this);"
+					<img id="sessionFormIndicator" src="img/cylon.svg" hidden />
+					<label for="sessionFormLabel">Label:</label>
+					<input type="text" id="sessionFormLabel" name="label" oninput="toggle_button(this);" required />
+					<label for="sessionFormSurveyor"><br>Surveyor:</label>
+					<input type="text" id="sessionFormSurveyor" name="surveyor" oninput="toggle_button(this);"
 						required />
-					<label for="startNewSessionFormSurveyor"><br>Surveyor:</label>
-					<input type="text" id="startNewSessionFormSurveyor" name="surveyor" oninput="toggle_button(this);"
-						required />
-					<label for="startNewSessionFormSitesMenu"><br>Site:</label>
-					<select id="startNewSessionFormSitesMenu" class="sitesmenu" name="sites_id"
-						onchange="update_description(this, 'startNewSessionFormSiteDescription'); update_dependent_station_menu(this, 'startNewSessionFormOccupiedPointMenu'); toggle_button(this);"
+					<label for="sessionFormSitesMenu"><br>Site:</label>
+					<select id="sessionFormSitesMenu" class="sitesmenu" name="sites_id"
+						onchange="update_description(this, 'sessionFormSiteDescription'); update_dependent_station_menu(this, 'sessionFormOccupiedPointMenu'); toggle_button(this);"
 						required>
 					</select>
-					<img class="infobutton" id="startNewSessionFormSiteDescription" src="img/info.svg">
-					<label for="startNewSessionFormOccupiedPointMenu"><br>Occupied Point:</label>
-					<select id="startNewSessionFormOccupiedPointMenu" name="occupied_point_id" onchange="update_description(this, 'startNewSessionFormOccupiedPointDescription');
+					<img class="infobutton" id="sessionFormSiteDescription" src="img/info.svg">
+					<label for="sessionFormOccupiedPointMenu"><br>Occupied Point:</label>
+					<select id="sessionFormOccupiedPointMenu" name="occupied_point_id" onchange="update_description(this, 'sessionFormOccupiedPointDescription');
 					update_backsight_station_menu(this); toggle_button(this);" required>
 					</select>
-					<img class="infobutton" id="startNewSessionFormOccupiedPointDescription" src="img/info.svg">
-					<label for="startNewSessionFormSessionTypeMenu"><br>Session Type:</label>
-					<select id="startNewSessionFormSessionTypeMenu" name="sessiontype"
+					<img class="infobutton" id="sessionFormOccupiedPointDescription" src="img/info.svg">
+					<label for="sessionFormSessionTypeMenu"><br>Session Type:</label>
+					<select id="sessionFormSessionTypeMenu" name="sessiontype"
 						onchange="update_required_new_session_fields(this); toggle_button(this);" required>
 						<option></option>
 						<option value="Backsight">Backsight</option>
 						<option value="Azimuth">Azimuth</option>
 					</select>
-					<label for="startNewSessionFormBacksightStationMenu"
-						id="startNewSessionFormBacksightStationMenuLabel" hidden><br>Backsight
+					<label for="sessionFormBacksightStationMenu" id="sessionFormBacksightStationMenuLabel"
+						hidden><br>Backsight
 						Station:</label>
-					<select id="startNewSessionFormBacksightStationMenu" name="backsight_station_id"
-						onchange="update_description(this, 'startNewSessionFormBacksightStationDescription'); toggle_button(this);"
+					<select id="sessionFormBacksightStationMenu" name="backsight_station_id"
+						onchange="update_description(this, 'sessionFormBacksightStationDescription'); toggle_button(this);"
 						hidden>
 					</select>
-					<img class="infobutton" id="startNewSessionFormBacksightStationDescription" src="img/info.svg"
-						hidden>
-					<label for="startNewSessionFormPrismHeight" id="startNewSessionFormPrismHeightLabel"
-						hidden><br>Prism
+					<img class="infobutton" id="sessionFormBacksightStationDescription" src="img/info.svg" hidden>
+					<label for="sessionFormPrismHeight" id="sessionFormPrismHeightLabel" hidden><br>Prism
 						Height:</label>
-					<input type="text" id="startNewSessionFormPrismHeight" name="prism_height"
-						pattern="\d\.?(\.\d{1,3})?" oninput="toggle_button(this);" hidden />
-					<label for="startNewSessionFormInstrumentHeight" id="startNewSessionFormInstrumentHeightLabel"
-						hidden><br>Instrument Height
-						(m):</label>
-					<input type="text" id="startNewSessionFormInstrumentHeight" name="instrument_height"
-						pattern="\d\.?(\.\d{1,3})?" oninput="toggle_button(this);" hidden />
-					<label for="startNewSessionFormAzimuth" id="startNewSessionFormAzimuthLabel" hidden><br>Azimuth
+					<input type="text" id="sessionFormPrismHeight" name="prism_height" pattern="\d\.?(\.\d{1,3})?"
+						oninput="toggle_button(this);" hidden />
+					<label for="sessionFormAzimuth" id="sessionFormAzimuthLabel" hidden><br>Azimuth
 						(ddd.mmss):</label>
-					<input type="text" id="startNewSessionFormAzimuth" name="azimuth"
+					<input type="text" id="sessionFormAzimuth" name="azimuth"
 						pattern="(\d|[1-9]\d|[1-2]\d{2}|3[0-5]\d)\.[0-5][0-9][0-5][0-9]" oninput="toggle_button(this);"
 						hidden />
+					<label for="sessionFormInstrumentHeight" id="sessionFormInstrumentHeightLabel" hidden><br>Instrument
+						Height
+						(m):</label>
+					<input type="text" id="sessionFormInstrumentHeight" name="instrument_height"
+						pattern="\d\.?(\.\d{1,3})?" oninput="toggle_button(this);" hidden />
 					<input type="hidden" id="currentSessionLabel" />
 					<input type="hidden" id="currentSessionStarted" />
 					<input type="hidden" id="currentSessionSite" />
 					<input type="hidden" id="currentSessionOccupiedPoint" />
 					<input type="hidden" id="currentSessionInstrumentHeight" />
 					<br>
-					<input type="button" id="startNewSessionFormButton" value="Start New Session"
+					<input type="button" id="sessionFormStartSessionButton" value="Start New Session"
 						onclick="start_new_session();" disabled>
+					<input type="button" id="sessionFormEndCurrentSessionButton" value="End Current Session"
+						onclick="end_current_session();" disabled>
 				</span>
 			</form>
 
-			<form id="startNewGroupingForm">
+			<form id="groupingForm">
 				<span onclick="collapse(this);">
-					<b>Start New Grouping</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Grouping</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+				</span><br>
+				<span class="currentSurveyingInfo">
+					<span id="currentGroupingInfo"></span>
+					<img class="infobutton" id="currentGroupingDetails" src="img/info.svg">
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
-					<label for="startNewGroupingFormLabel">Label:</label>
-					<input type="text" id="startNewGroupingFormLabel" name="label" oninput="toggle_button(this);"
-						required />
-					<label for="startNewGroupingFormGeometriesMenu"><br>Geometry:</label>
-					<select id="startNewGroupingFormGeometriesMenu" class="geometriesmenu" name="geometries_id"
-						onchange="update_description(this, 'startNewGroupingFormGeometryDescription'); toggle_button(this);"
+					<label for="groupingFormLabel">Label:</label>
+					<input type="text" id="groupingFormLabel" name="label" oninput="toggle_button(this);" required />
+					<label for="groupingFormGeometriesMenu"><br>Geometry:</label>
+					<select id="groupingFormGeometriesMenu" class="geometriesmenu" name="geometries_id"
+						onchange="update_description(this, 'groupingFormGeometryDescription'); toggle_button(this);"
 						required>
 					</select>
-					<img class="infobutton" id="startNewGroupingFormGeometryDescription" src="img/info.svg">
-					<label for="startNewGroupingFormClassesMenu"><br>Class:</label>
-					<select id="startNewGroupingFormClassesMenu" class="classesmenu" name="classes_id"
-						onchange="update_description(this, 'startNewGroupingFormClassDescription'); update_dependent_subclass_menu(this, 'startNewGroupingFormSubclassesMenu'); toggle_button(this);"
+					<img class="infobutton" id="groupingFormGeometryDescription" src="img/info.svg">
+					<label for="groupingFormClassesMenu"><br>Class:</label>
+					<select id="groupingFormClassesMenu" class="classesmenu" name="classes_id"
+						onchange="update_description(this, 'groupingFormClassDescription');update_dependent_subclass_menu(this, 'groupingFormSubclassesMenu'); toggle_button(this);"
 						required>
 					</select>
-					<img class="infobutton" id="startNewGroupingFormClassDescription" src="img/info.svg">
-					<label for="startNewGroupingFormSubclassesMenu"><br>Subclass:</label>
-					<select id="startNewGroupingFormSubclassesMenu" name="subclasses_id"
-						onchange="handle_survey_station_subclass(this); update_description(this, 'startNewGroupingFormSubclassDescription'); toggle_button(this);"
+					<img class="infobutton" id="groupingFormClassDescription" src="img/info.svg">
+					<label for="groupingFormSubclassesMenu"><br>Subclass:</label>
+					<select id="groupingFormSubclassesMenu" name="subclasses_id"
+						onchange="handle_survey_station_subclass(this); update_description(this, 'groupingFormSubclassDescription'); toggle_button(this);"
 						required>
 					</select>
-					<img class="infobutton" id="startNewGroupingFormSubclassDescription" src="img/info.svg">
-					<label for="startNewGroupingFormDescription"><br>Description:</label>
-					<input type="text" id="startNewGroupingFormDescription" name="description" />
+					<img class="infobutton" id="groupingFormSubclassDescription" src="img/info.svg">
+					<label for="groupingFormDescription"><br>Description:</label>
+					<input type="text" id="groupingFormDescription" name="description" />
 					<input type="hidden" id="currentGroupingLabel" />
 					<input type="hidden" id="currentGroupingGeometry" />
 					<input type="hidden" id="currentGroupingClass" />
@@ -570,22 +578,12 @@
 					<input type="hidden" id="currentGroupingDescription" />
 					<input type="hidden" id="currentGroupingNumberOfShots" />
 					<br>
-					<input type="button" id="startNewGroupingFormButton" value="Start New Grouping"
+					<input type="button" id="groupingFormStartGroupingButton" value="Start New Grouping"
 						onclick="start_new_grouping();" disabled />
+					<input type="button" id="groupingFormEndCurrentGroupingButton" value="End Current Grouping"
+						onclick="end_current_grouping();" disabled>
 				</span>
 			</form>
-
-			<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();">
-			<span class="currentSurveyingInfo">
-				<b>Current Session:</b><br>
-				<span id="currentSessionInfo"><b>Current Session:</b><br></span>
-				<img class="infobutton" id="currentSessionDetails" src="img/info.svg">
-			</span><br>
-			<span class="currentSurveyingInfo">
-				<b>Current Grouping:</b><br>
-				<span id="currentGroupingInfo"></span>
-				<img class="infobutton" id="currentGroupingDetails" src="img/info.svg">
-			</span>
 
 			<form id="takeShotForm">
 				<input type="button" id="takeShotFormButton" value="Take Shot" onclick="take_shot();" disabled />
@@ -595,7 +593,7 @@
 				<img id="takeShotFormIndicator" src="img/cylon.svg" /><br>
 			</form>
 			<form id="saveLastShotForm" hidden>
-				<label for="saveLastShotFormComment"><br>Comment:</label>
+				<label for="saveLastShotFormComment">Comment:</label>
 				<input type="text" id="saveLastShotFormComment" name="comment" /><br>
 				<input type="button" id="saveLastShotFormButton" value="Save Last Shot" onclick="save_last_shot();" />
 				<input type="button" id="discardLastShotFormButton" value="Discard Last Shot"
@@ -605,4 +603,5 @@
 	</div>
 
 	<div id="outputBox"></div>
+	<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();">
 </body>
