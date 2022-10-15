@@ -122,14 +122,13 @@ input[type=button]:disabled {
 
 #showLiveMapIcon {
 	float: right;
-	width: 75px;
+	width: 93px;
 	filter: invert(60%);
 }
 
 #outputBox {
-	/* width: calc(100% - 1em); */
-	width: calc(100% - 105px);
-	height: 7ex;
+	width: calc(100% - 123px);
+	height: 9ex;
 	padding: 0.5em;
 	background-color: rgb(230, 230, 230);
 	overflow: auto;
@@ -209,6 +208,11 @@ input[type=button]:disabled {
 .clearfield {
 	color: red;
 	font-weight: bold;
+}
+
+.shotdata {
+	font-family: monospace;
+	font-size: small;
 }
 
 .shotdata tr {

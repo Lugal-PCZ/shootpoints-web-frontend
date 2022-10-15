@@ -145,8 +145,9 @@
 		<form id="shutDownForm" hidden>
 			<span><b>Shut Down the Raspberry Pi</b></span>
 			<hr>
-			<input type="checkbox" id="shutDownFormEndCurrentSessionCheckbox" checked />
-			<label for="shutDownFormEndCurrentSessionCheckbox">End Current Session</label><br>
+			<input type="checkbox" id="shutDownFormEndCurrentSessionCheckbox" />
+			<label id="shutDownFormEndCurrentSessionCheckboxLabel" for="shutDownFormEndCurrentSessionCheckbox">End
+				Current Session<br></label>
 			<input type="button" value="Shut Down" onclick="shut_rpi_down();" />
 			<img id="shutDownFormIndicator" src="img/cylon.svg" hidden />
 		</form>
@@ -472,12 +473,12 @@
 		<div class="formcollection collapsible" hidden>
 			<form id="sessionForm">
 				<span id="sessionFormHeader" onclick="collapse(this);">
-					<b>Session</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
-				</span><br>
-				<span class="currentSurveyingInfo">
-					<span id="currentSessionInfo"></span>
-					<img class="infobutton" id="currentSessionDetails" src="img/info.svg">
+					<b>Session</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span><br>
+					<span class="currentSurveyingInfo">
+						<span id="currentSessionInfo"></span>
+					</span>
 				</span>
+				<img class="infobutton" id="currentSessionDetails" src="img/info.svg">
 				<span class="collapsible" hidden>
 					<hr>
 					<img id="sessionFormIndicator" src="img/cylon.svg" hidden />
@@ -541,10 +542,10 @@
 
 			<form id="groupingForm">
 				<span onclick="collapse(this);">
-					<b>Grouping</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
-				</span><br>
-				<span class="currentSurveyingInfo">
-					<span id="currentGroupingInfo"></span>
+					<b>Grouping</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span><br>
+					<span class="currentSurveyingInfo">
+						<span id="currentGroupingInfo"></span>
+					</span>
 					<img class="infobutton" id="currentGroupingDetails" src="img/info.svg">
 				</span>
 				<span class="collapsible" hidden>

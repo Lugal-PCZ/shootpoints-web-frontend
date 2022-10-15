@@ -270,9 +270,7 @@ async function end_current_session(prompt = true) {
 		document.getElementById("sessionFormBacksightStationDescription").removeAttribute("onclick");
 		update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
 		document.getElementById("sessionFormStartSessionButton").disabled = true;
-		show_and_hide_shot_forms("cancel");
 		load_current_session_info();
-		load_current_grouping_info();
 	}
 }
 
@@ -385,10 +383,11 @@ async function take_shot() {
 		'<b style="color: red; ">ERROR:</b> {{.}}<br>' +
 		'{{/errors}}' +
 		'{{#result}}' +
+		'<b>Last Shot:</b>' +
 		'<table class="shotdata">' +
-		'<tr><td><b>Last Shot:</b></td><td>delta_n = {{delta_n}}</td><td>calculated_n = {{calculated_n}}</td></tr>' +
-		'<tr><td></td><td>delta_e = {{delta_e}}</td><td>calculated_e = {{calculated_e}}</td></tr>' +
-		'<tr><td></td><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
+		'<tr><td>delta_n = {{delta_n}}</td><td>calculated_n = {{calculated_n}}</td></tr>' +
+		'<tr><td>delta_e = {{delta_e}}</td><td>calculated_e = {{calculated_e}}</td></tr>' +
+		'<tr><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
 		'</table>' +
 		'{{/result}}';
 	show_and_hide_shot_forms("take");
@@ -569,6 +568,15 @@ async function show_on_the_fly_adjustments_popup() {
 
 async function show_utilities_popup() {
 	document.getElementById("onTheFlyAdjustmentsPopup").hidden = true;
+	if (document.getElementById("currentSessionInfo").innerText === "(no current session)") {
+		document.getElementById("shutDownFormEndCurrentSessionCheckbox").checked = false;
+		document.getElementById("shutDownFormEndCurrentSessionCheckbox").hidden = true;
+		document.getElementById("shutDownFormEndCurrentSessionCheckboxLabel").hidden = true;
+	} else {
+		document.getElementById("shutDownFormEndCurrentSessionCheckbox").checked = true;
+		document.getElementById("shutDownFormEndCurrentSessionCheckbox").hidden = false;
+		document.getElementById("shutDownFormEndCurrentSessionCheckboxLabel").hidden = false;
+	}
 	let sessions = await fetch("/sessions/");
 	let json = await sessions.json();
 	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
@@ -874,7 +882,7 @@ async function set_rpi_clock() {
 
 function shut_rpi_down() {
 	let themessage = "Press “Ok” to safely shut down the Raspberry Pi."
-	let endcurrentsession = document.getElementById('shutDownFormEndCurrentSessionCheckbox').checked;
+	let endcurrentsession = document.getElementById("shutDownFormEndCurrentSessionCheckbox").checked;
 	if (endcurrentsession === true) {
 		themessage = "Press “Ok” to end the current session and safely shut down the Raspberry Pi."
 	}
