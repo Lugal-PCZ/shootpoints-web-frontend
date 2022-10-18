@@ -122,7 +122,7 @@ input[type=button]:disabled {
 
 #showLiveMapIcon {
 	float: right;
-	width: 93px;
+	height: calc(9ex + 1em);
 	filter: invert(60%);
 }
 

@@ -109,6 +109,21 @@
 			Utilities
 			<span style="float: right;" onclick="document.getElementById('utilitiesPopup').hidden=true">×&nbsp;</span>
 		</div>
+		<form id="shutDownForm" hidden>
+			<span><b>Shut Down the Raspberry Pi</b></span>
+			<hr>
+			<input type="checkbox" id="shutDownFormEndCurrentSessionCheckbox" />
+			<label id="shutDownFormEndCurrentSessionCheckboxLabel" for="shutDownFormEndCurrentSessionCheckbox">End
+				Current Session<br></label>
+			<input type="button" value="Shut Down" onclick="shut_rpi_down();" />
+			<img id="shutDownFormIndicator" src="img/cylon.svg" hidden />
+		</form>
+		<form id="setClockForm" hidden>
+			<span><b>Set the Raspberry Pi Clock</b></span>
+			<hr>
+			<input type="text" id="setClockFormDateTimeString" name="datetimestring" hidden />
+			<input type="button" value="Set the Clock" onclick="set_rpi_clock();" />
+		</form>
 		<form id="exportSessionDataForm">
 			<span><b>Export Surveying Session Data</b></span>
 			<hr>
@@ -141,21 +156,6 @@
 			<br>
 			<input type="button" id="deleteSessionFormButton" value="Delete Session" onclick="delete_session();"
 				disabled />
-		</form>
-		<form id="shutDownForm" hidden>
-			<span><b>Shut Down the Raspberry Pi</b></span>
-			<hr>
-			<input type="checkbox" id="shutDownFormEndCurrentSessionCheckbox" />
-			<label id="shutDownFormEndCurrentSessionCheckboxLabel" for="shutDownFormEndCurrentSessionCheckbox">End
-				Current Session<br></label>
-			<input type="button" value="Shut Down" onclick="shut_rpi_down();" />
-			<img id="shutDownFormIndicator" src="img/cylon.svg" hidden />
-		</form>
-		<form id="setClockForm" hidden>
-			<span><b>Set the Raspberry Pi Clock</b></span>
-			<hr>
-			<input type="text" id="setClockFormDateTimeString" name="datetimestring" hidden />
-			<input type="button" value="Set the Clock" onclick="set_rpi_clock();" />
 		</form>
 	</div>
 
