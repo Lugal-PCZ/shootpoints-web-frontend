@@ -48,7 +48,7 @@ async function load_current_grouping_info() {
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
 		document.getElementById("currentGroupingInfo").innerHTML = "<i>(no current grouping)</i>";
-		document.getElementById("currentGroupingDetails").removeAttribute("onClick");
+		document.getElementById("currentGroupingDetails").hidden = true;
 		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = true;
 		document.getElementById("takeShotFormButton").disabled = true;
 	} else {
@@ -60,6 +60,7 @@ async function load_current_grouping_info() {
 		document.getElementById("currentGroupingDescription").innerText = json.description;
 		document.getElementById("currentGroupingNumberOfShots").innerText = json.num_shots;
 		document.getElementById("currentGroupingDetails").setAttribute("onClick", "show_current_grouping_details();");
+		document.getElementById("currentGroupingDetails").hidden = false;
 		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = false;
 		document.getElementById("takeShotFormButton").disabled = false;
 	}
@@ -72,7 +73,7 @@ async function load_current_session_info() {
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
 		document.getElementById("currentSessionInfo").innerHTML = "<i>(no current session)</i>";
-		document.getElementById("currentSessionDetails").removeAttribute("onClick");
+		document.getElementById("currentSessionDetails").hidden = true;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
 		document.getElementById("groupingForm").hidden = true;
 		document.getElementById("takeShotForm").hidden = true;
@@ -84,6 +85,7 @@ async function load_current_session_info() {
 		document.getElementById("currentSessionOccupiedPoint").innerText = json.stations_name;
 		document.getElementById("currentSessionInstrumentHeight").innerText = json.instrumentheight;
 		document.getElementById("currentSessionDetails").setAttribute("onClick", "show_current_session_details();");
+		document.getElementById("currentSessionDetails").hidden = false;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
 		document.getElementById("groupingForm").hidden = false;
 		document.getElementById("takeShotForm").hidden = false;
@@ -153,7 +155,7 @@ async function delete_class() {
 		let status = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteClassForm").reset();
-			document.getElementById("deleteClassFormClassDescription").removeAttribute("onclick");
+			document.getElementById("deleteClassFormClassDescription").hidden = true;
 			document.getElementById("deleteClassFormButton").disabled = true;
 			load_classes_menus();
 		}
@@ -166,7 +168,7 @@ async function delete_site() {
 		let status = await _update_data_via_api("/site/", "DELETE", deleteSiteForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSiteForm").reset();
-			document.getElementById("deleteSiteFormSiteDescription").removeAttribute("onclick");
+			document.getElementById("deleteSiteFormSiteDescription").hidden = true;
 			document.getElementById("deleteSiteFormButton").disabled = true;
 			load_sites_menus();
 		}
@@ -192,7 +194,7 @@ async function delete_session() {
 			let sessions = await fetch("/sessions/");
 			let json = await sessions.json();
 			document.getElementById("deleteSessionFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
-			document.getElementById("deleteSessionFormSessionDescription").removeAttribute("onclick");
+			document.getElementById("deleteSessionFormSessionDescription").hidden = true;
 			document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
 			if (currentsession === true) {
 				end_current_session(prompt = false);
@@ -207,9 +209,9 @@ async function delete_station() {
 		let status = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteStationForm").reset();
-			document.getElementById("deleteStationFormSiteDescription").removeAttribute("onclick");
+			document.getElementById("deleteStationFormSiteDescription").hidden = true;
 			document.getElementById("deleteStationFormStationsMenu").innerHTML = "";
-			document.getElementById("deleteStationFormStationDescription").removeAttribute("onclick");
+			document.getElementById("deleteStationFormStationDescription").hidden = true;
 			document.getElementById("deleteStationFormButton").disabled = true;
 		}
 	}
@@ -221,9 +223,9 @@ async function delete_subclass() {
 		let status = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSubclassForm").reset();
-			document.getElementById("deleteSubclassFormClassDescription").removeAttribute("onclick");
+			document.getElementById("deleteSubclassFormClassDescription").hidden = true;
 			document.getElementById("deleteSubclassFormSubclassesMenu").innerHTML = "";
-			document.getElementById("deleteSubclassFormSubclassDescription").removeAttribute("onclick");
+			document.getElementById("deleteSubclassFormSubclassDescription").hidden = true;
 			document.getElementById("deleteSubclassFormButton").disabled = true;
 		}
 	}
@@ -238,10 +240,10 @@ async function end_current_grouping() {
 		let status = await _update_data_via_api("/grouping/", "PUT", groupingForm);
 		if (status >= 200 && status <= 299) {
 			document.getElementById("groupingForm").reset();
-			document.getElementById("groupingFormGeometryDescription").removeAttribute("onclick");
-			document.getElementById("groupingFormClassDescription").removeAttribute("onclick");
+			document.getElementById("groupingFormGeometryDescription").hidden = true;
+			document.getElementById("groupingFormClassDescription").hidden = true;
 			document.getElementById("groupingFormSubclassesMenu").innerHTML = "";
-			document.getElementById("groupingFormSubclassDescription").removeAttribute("onclick");
+			document.getElementById("groupingFormSubclassDescription").hidden = true;
 			document.getElementById("groupingFormStartGroupingButton").disabled = true;
 			document.getElementById("saveLastShotFormComment").value = "";
 			show_and_hide_shot_forms("cancel");
@@ -263,11 +265,11 @@ async function end_current_session(prompt = true) {
 	let status = await _update_data_via_api("/session/", "PUT", sessionForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("sessionForm").reset();
-		document.getElementById("sessionFormSiteDescription").removeAttribute("onclick");
+		document.getElementById("sessionFormSiteDescription").hidden = true;
 		document.getElementById("sessionFormOccupiedPointMenu").innerHTML = "";
-		document.getElementById("sessionFormOccupiedPointDescription").removeAttribute("onclick");
+		document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
 		document.getElementById("sessionFormBacksightStationMenu").innerHTML = "";
-		document.getElementById("sessionFormBacksightStationDescription").removeAttribute("onclick");
+		document.getElementById("sessionFormBacksightStationDescription").hidden = true;
 		update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
 		document.getElementById("sessionFormStartSessionButton").disabled = true;
 		load_current_session_info();
@@ -296,7 +298,7 @@ async function save_new_station() {
 	let status = await _update_data_via_api("/station/", "POST", saveNewStationForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewStationForm").reset();
-		document.getElementById("saveNewStationFormSiteDescription").removeAttribute("onclick");
+		document.getElementById("saveNewStationFormSiteDescription").hidden = true;
 		document.getElementById("saveNewStationFormButton").disabled = true;
 	}
 }
@@ -305,7 +307,7 @@ async function save_new_subclass() {
 	let status = await _update_data_via_api("/subclass/", "POST", saveNewSubclassForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("saveNewSubclassForm").reset();
-		document.getElementById("saveNewSubclassFormClassDescription").removeAttribute("onclick");
+		document.getElementById("saveNewSubclassFormClassDescription").hidden = true;
 		document.getElementById("saveNewSubclassFormButton").disabled = true;
 	}
 }
@@ -335,10 +337,10 @@ async function start_new_grouping() {
 	let status = await _update_data_via_api("/grouping/", "POST", groupingForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("groupingForm").reset();
-		document.getElementById("groupingFormGeometryDescription").removeAttribute("onclick");
-		document.getElementById("groupingFormClassDescription").removeAttribute("onclick");
+		document.getElementById("groupingFormGeometryDescription").hidden = true;
+		document.getElementById("groupingFormClassDescription").hidden = true;
 		document.getElementById("groupingFormSubclassesMenu").innerHTML = "";
-		document.getElementById("groupingFormSubclassDescription").removeAttribute("onclick");
+		document.getElementById("groupingFormSubclassDescription").hidden = true;
 		document.getElementById("groupingFormStartGroupingButton").disabled = true;
 		document.getElementById("saveLastShotForm").reset();
 		show_and_hide_shot_forms("cancel");
@@ -357,17 +359,19 @@ async function start_new_session() {
 		let status = await _update_data_via_api("/session/", "POST", sessionForm);
 		if (status >= 200 && status <= 299) {
 			document.getElementById("sessionForm").reset();
-			document.getElementById("sessionFormSiteDescription").removeAttribute("onclick");
+			document.getElementById("sessionFormSiteDescription").hidden = true;
 			document.getElementById("sessionFormOccupiedPointMenu").innerHTML = "";
-			document.getElementById("sessionFormOccupiedPointDescription").removeAttribute("onclick");
+			document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
 			document.getElementById("sessionFormBacksightStationMenu").innerHTML = "";
-			document.getElementById("sessionFormBacksightStationDescription").removeAttribute("onclick");
+			document.getElementById("sessionFormBacksightStationDescription").hidden = true;
 			update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
 			document.getElementById("sessionFormStartSessionButton").disabled = true;
 			show_and_hide_shot_forms("cancel");
 			load_current_session_info();
 			load_current_grouping_info();
 			collapse(document.getElementById("sessionFormHeader"));
+		} else {
+			alert("The backsight shot failed. See the output box for details.");
 		}
 		document.getElementById("sessionFormIndicator").hidden = true;
 		load_prism_offsets();
@@ -629,13 +633,13 @@ async function update_dependent_station_menu(thesite, themenu) {
 	let targetdescription = target.id.replace(/e?sMenu/, "Description");
 	if (thesite.value === "") {
 		target.innerHTML = "";
-		document.getElementById(targetdescription).removeAttribute("onclick");
+		document.getElementById(targetdescription).hidden = true;
 	} else {
 		let response = await fetch("/station/" + thesite.value);
 		let json = await response.json();
 		target.innerHTML = Mustache.render(menu_template('stations'), json);
 		if (json.stations.length === 0) {
-			document.getElementById(targetdescription).removeAttribute("onclick");
+			document.getElementById(targetdescription).hidden = true;
 		}
 	}
 }
@@ -645,13 +649,13 @@ async function update_dependent_subclass_menu(theclass, themenu) {
 	let targetdescription = target.id.replace(/e?sMenu/, "Description");
 	if (theclass.value === "") {
 		target.innerHTML = "";
-		document.getElementById(targetdescription).removeAttribute("onclick");
+		document.getElementById(targetdescription).hidden = true;
 	} else {
 		let response = await fetch("/subclass/" + theclass.value);
 		let json = await response.json();
 		target.innerHTML = Mustache.render(menu_template('subclasses'), json);
 		if (json.subclasses.length === 0) {
-			document.getElementById(targetdescription).removeAttribute("onclick");
+			document.getElementById(targetdescription).hidden = true;
 		}
 	}
 }
@@ -659,7 +663,7 @@ async function update_dependent_subclass_menu(theclass, themenu) {
 function update_description(source, target) {
 	let thedescription = source.options[source.selectedIndex].getAttribute("description");
 	if (thedescription === null) {
-		document.getElementById(target).removeAttribute("onclick");
+		document.getElementById(target).hidden = true;
 	} else {
 		if (thedescription === "") {
 			thedescription = "(no description recorded)"
@@ -668,7 +672,8 @@ function update_description(source, target) {
 			thedescription = thedescription.replaceAll("\'", "\\\'");
 			thedescription = thedescription.replaceAll("\"", "\\\"");
 		}
-		document.getElementById(target).setAttribute("onclick", "alert('" + thedescription + "')");
+		document.getElementById(target).setAttribute("onClick", "alert('" + thedescription + "')");
+		document.getElementById(target).hidden = false;
 	}
 }
 

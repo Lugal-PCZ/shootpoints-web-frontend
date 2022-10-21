@@ -123,12 +123,14 @@ input[type=button]:disabled {
 #showLiveMapIcon {
 	float: right;
 	height: calc(9ex + 1em);
+	margin-top: 3px;
 	filter: invert(60%);
 }
 
 #outputBox {
 	width: calc(100% - 123px);
 	height: 9ex;
+	margin-top: 3px;
 	padding: 0.5em;
 	background-color: rgb(230, 230, 230);
 	overflow: auto;
