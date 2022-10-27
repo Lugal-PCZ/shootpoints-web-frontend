@@ -297,8 +297,13 @@ async function save_new_site() {
 async function save_new_station() {
 	let status = await _update_data_via_api("/station/", "POST", saveNewStationForm);
 	if (status >= 200 && status <= 299) {
-		document.getElementById("saveNewStationForm").reset();
-		document.getElementById("saveNewStationFormSiteDescription").hidden = true;
+		document.getElementById("saveNewStationFormStationName").value = "";
+		document.getElementById("saveNewStationFormStationDescription").value = "";
+		document.getElementById("saveNewStationFormStationNorthing").value = "";
+		document.getElementById("saveNewStationFormStationEasting").value = "";
+		document.getElementById("saveNewStationFormStationLatitude").value = "";
+		document.getElementById("saveNewStationFormStationLongitude").value = "";
+		document.getElementById("saveNewStationFormStationElevation").value = "";
 		document.getElementById("saveNewStationFormButton").disabled = true;
 	}
 }
@@ -705,36 +710,36 @@ function update_required_new_session_fields(sessiontypemenu) {
 function update_required_new_site_fields(coordinatesystemmenu) {
 	switch (coordinatesystemmenu.value) {
 		case "Site":
-			_show_required_field("saveNewStationNorthing");
-			_show_required_field("saveNewStationEasting");
-			_show_required_field("saveNewStationElevation");
-			_hide_required_field("saveNewStationUTMZone");
-			_hide_required_field("saveNewStationLatitude");
-			_hide_required_field("saveNewStationLongitude");
+			_show_required_field("saveNewStationFormStationNorthing");
+			_show_required_field("saveNewStationFormStationEasting");
+			_show_required_field("saveNewStationFormStationElevation");
+			_hide_required_field("saveNewStationFormStationUTMZone");
+			_hide_required_field("saveNewStationFormStationLatitude");
+			_hide_required_field("saveNewStationFormStationLongitude");
 			break;
 		case "UTM":
-			_show_required_field("saveNewStationNorthing");
-			_show_required_field("saveNewStationEasting");
-			_show_required_field("saveNewStationElevation");
-			_show_required_field("saveNewStationUTMZone");
-			_hide_required_field("saveNewStationLatitude");
-			_hide_required_field("saveNewStationLongitude");
+			_show_required_field("saveNewStationFormStationNorthing");
+			_show_required_field("saveNewStationFormStationEasting");
+			_show_required_field("saveNewStationFormStationElevation");
+			_show_required_field("saveNewStationFormStationUTMZone");
+			_hide_required_field("saveNewStationFormStationLatitude");
+			_hide_required_field("saveNewStationFormStationLongitude");
 			break;
 		case "Lat/Lon":
-			_hide_required_field("saveNewStationNorthing");
-			_hide_required_field("saveNewStationEasting");
-			_hide_required_field("saveNewStationUTMZone");
-			_show_required_field("saveNewStationLatitude");
-			_show_required_field("saveNewStationLongitude");
-			_show_required_field("saveNewStationElevation");
+			_hide_required_field("saveNewStationFormStationNorthing");
+			_hide_required_field("saveNewStationFormStationEasting");
+			_hide_required_field("saveNewStationFormStationUTMZone");
+			_show_required_field("saveNewStationFormStationLatitude");
+			_show_required_field("saveNewStationFormStationLongitude");
+			_show_required_field("saveNewStationFormStationElevation");
 			break;
 		default:
-			_hide_required_field("saveNewStationNorthing");
-			_hide_required_field("saveNewStationEasting");
-			_hide_required_field("saveNewStationElevation");
-			_hide_required_field("saveNewStationUTMZone");
-			_hide_required_field("saveNewStationLatitude");
-			_hide_required_field("saveNewStationLongitude");
+			_hide_required_field("saveNewStationFormStationNorthing");
+			_hide_required_field("saveNewStationFormStationEasting");
+			_hide_required_field("saveNewStationFormStationElevation");
+			_hide_required_field("saveNewStationFormStationUTMZone");
+			_hide_required_field("saveNewStationFormStationLatitude");
+			_hide_required_field("saveNewStationFormStationLongitude");
 	}
 }
 

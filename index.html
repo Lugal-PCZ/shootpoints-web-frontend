@@ -52,7 +52,7 @@
 				station)</span>
 			<label for="setPrismOffsetsVerticalDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsVerticalDistance');">×&nbsp;</span>Vertical Offset:</label>
-			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance" pattern="\d\.?(\.\d{1,3})?"
+			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance" pattern="[0-4](\.\d{1,3})?"
 				size="5" />
 			<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
 				<option value="-1">Down</option>
@@ -60,7 +60,7 @@
 			</select>
 			<label for="setPrismOffsetsLatitudeDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsLatitudeDistance');">×&nbsp;</span>Latitude Offset:</label>
-			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance" pattern="\d\.?(\.\d{1,3})?"
+			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance" pattern="[0-4](\.\d{1,3})?"
 				size="5" />
 			<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
 				<option value="1">North</option>
@@ -69,14 +69,14 @@
 			<label for="setPrismOffsetsLongitudeDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsLongitudeDistance');">×&nbsp;</span>Longitude Offset:</label>
 			<input type="text" id="setPrismOffsetsLongitudeDistance" name="longitude_distance"
-				pattern="\d\.?(\.\d{1,3})?" size="5" />
+				pattern="[0-4](\.\d{1,3})?" size="5" />
 			<select id="setPrismOffsetsLongitudeDirection" name="longitude_direction">
 				<option value="1">East</option>
 				<option value="-1">West</option>
 			</select>
 			<label for="setPrismOffsetsRadialDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsRadialDistance');">×&nbsp;</span>Radial Offset:</label>
-			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance" pattern="\d\.?(\.\d{1,3})?"
+			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance" pattern="[0-4](\.\d{1,3})?"
 				size="5" />
 			<select id="setPrismOffsetsRadialDirection" name="radial_direction">
 				<option value="1">Away</option>
@@ -84,7 +84,7 @@
 			</select>
 			<label for="setPrismOffsetsTangentDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsTangentDistance');">×&nbsp;</span>Tangent Offset:</label>
-			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance" pattern="\d\.?(\.\d{1,3})?"
+			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance" pattern="[0-4](\.\d{1,3})?"
 				size="5" />
 			<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
 				<option value="1">Right</option>
@@ -92,7 +92,7 @@
 			</select>
 			<label for="setPrismOffsetsWedgeDistance"><br><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsWedgeDistance');">×&nbsp;</span>Wedge Offset:</label>
-			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance" pattern="\d\.?(\.\d{1,3})?"
+			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance" pattern="[0-4](\.\d{1,3})?"
 				size="5" />
 			<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
 				<option value="1">Clockwise</option>
@@ -299,7 +299,7 @@
 					<img class="infobutton" id="sessionFormBacksightStationDescription" src="img/info.svg" hidden>
 					<label for="sessionFormPrismHeight" id="sessionFormPrismHeightLabel" hidden><br>Prism
 						Height:</label>
-					<input type="text" id="sessionFormPrismHeight" name="prism_height" pattern="\d\.?(\.\d{1,3})?"
+					<input type="text" id="sessionFormPrismHeight" name="prism_height" pattern="[0-4](\.\d{1,3})?"
 						oninput="toggle_button(this);" hidden />
 					<label for="sessionFormAzimuth" id="sessionFormAzimuthLabel" hidden><br>Azimuth
 						(ddd.mmss):</label>
@@ -310,7 +310,7 @@
 						Height
 						(m):</label>
 					<input type="text" id="sessionFormInstrumentHeight" name="instrument_height"
-						pattern="\d\.?(\.\d{1,3})?" oninput="toggle_button(this);" hidden />
+						pattern="[1-2](\.\d{1,3})?" oninput="toggle_button(this);" hidden />
 					<input type="hidden" id="currentSessionLabel" />
 					<input type="hidden" id="currentSessionStarted" />
 					<input type="hidden" id="currentSessionSite" />
@@ -461,36 +461,43 @@
 						required>
 					</select>
 					<img class="infobutton" id="saveNewStationFormSiteDescription" src="img/info.svg" hidden>
-					<label for="saveNewStationFormName"><br>Name:</label>
-					<input type="text" id="saveNewStationFormName" name="name" oninput="toggle_button(this);"
+					<label for="saveNewStationFormStationName"><br>Name:</label>
+					<input type="text" id="saveNewStationFormStationName" name="name" oninput="toggle_button(this);"
 						required />
-					<label for="saveNewStationDescription"><br>Description:</label>
-					<input type="text" id="saveNewStationDescription" name="description" />
-					<label for="saveNewStationCoordinateSystem"><br>Coordinate System:</label>
-					<select id="saveNewStationCoordinateSystem" name="coordinatesystem"
+					<label for="saveNewStationFormStationDescription"><br>Description:</label>
+					<input type="text" id="saveNewStationFormStationDescription" name="description" />
+					<label for="saveNewStationFormStationCoordinateSystem"><br>Coordinate System:</label>
+					<select id="saveNewStationFormStationCoordinateSystem" name="coordinatesystem"
 						onchange="update_required_new_site_fields(this); toggle_button(this);" required>
 						<option></option>
 						<option value='Site'>Site</option>
 						<option value='UTM'>UTM</option>
 						<option value='Lat/Lon'>Lat/Lon</option>
 					</select>
-					<label for="saveNewStationNorthing" id="saveNewStationNorthingLabel" hidden><br>Northing:</label>
-					<input type="text" id="saveNewStationNorthing" name="northing" oninput="toggle_button(this);"
-						hidden />
-					<label for="saveNewStationEasting" id="saveNewStationEastingLabel" hidden><br>Easting:</label>
-					<input type="text" id="saveNewStationEasting" name="easting" oninput="toggle_button(this);"
-						hidden />
-					<label for="saveNewStationLatitude" id="saveNewStationLatitudeLabel" hidden><br>Latitude:</label>
-					<input type="text" id="saveNewStationLatitude" name="latitude" oninput="toggle_button(this);"
-						hidden />
-					<label for="saveNewStationLongitude" id="saveNewStationLongitudeLabel" hidden><br>Longitude:</label>
-					<input type="text" id="saveNewStationLongitude" name="longitude" oninput="toggle_button(this);"
-						hidden />
-					<label for="saveNewStationElevation" id="saveNewStationElevationLabel" hidden><br>Elevation:</label>
-					<input type="text" id="saveNewStationElevation" name="elevation" oninput="toggle_button(this);"
-						hidden />
-					<label for="saveNewStationUTMZone" id="saveNewStationUTMZoneLabel" hidden><br>UTMZone:</label>
-					<input type="text" id="saveNewStationUTMZone" name="utmzone" oninput="toggle_button(this);"
+					<label for="saveNewStationFormStationNorthing" id="saveNewStationFormStationNorthingLabel"
+						hidden><br>Northing:</label>
+					<input type="text" id="saveNewStationFormStationNorthing" name="northing"
+						oninput="toggle_button(this);" pattern="\d+(\.?\d{1,3})?" hidden />
+					<label for="saveNewStationFormStationEasting" id="saveNewStationFormStationEastingLabel"
+						hidden><br>Easting:</label>
+					<input type="text" id="saveNewStationFormStationEasting" name="easting"
+						oninput="toggle_button(this);" pattern="\d+(\.?\d{1,3})?" hidden />
+					<label for="saveNewStationFormStationLatitude" id="saveNewStationFormStationLatitudeLabel"
+						hidden><br>Latitude:</label>
+					<input type="text" id="saveNewStationFormStationLatitude" name="latitude"
+						oninput="toggle_button(this);" pattern="-?((\d|[1-8]\d)(\.\d{1,13})?|90)" hidden />
+					<label for="saveNewStationFormStationLongitude" id="saveNewStationFormStationLongitudeLabel"
+						hidden><br>Longitude:</label>
+					<input type="text" id="saveNewStationFormStationLongitude" name="longitude"
+						oninput="toggle_button(this);" pattern="-?((0|[1–9]\d?|1[0-7][0-9])(\.\d{1,13})?|180)" hidden />
+					<label for="saveNewStationFormStationElevation" id="saveNewStationFormStationElevationLabel"
+						hidden><br>Elevation:</label>
+					<input type="text" id="saveNewStationFormStationElevation" name="elevation"
+						oninput="toggle_button(this);" pattern="\d+(\.?\d{1,3})?" hidden />
+					<label for="saveNewStationFormStationUTMZone" id="saveNewStationFormStationUTMZoneLabel"
+						hidden><br>UTMZone:</label>
+					<input type="text" id="saveNewStationFormStationUTMZone" name="utmzone"
+						oninput="toggle_button(this);"
 						pattern="([1-5]\d?|[6-9]|60)[cCdDeEfFgGhHjJkKlLmMnNpPqQrRsStTuUvVwWxX]" hidden />
 					<br>
 					<input type="button" id="saveNewStationFormButton" value="Save New Station"
