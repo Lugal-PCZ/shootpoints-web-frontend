@@ -11,6 +11,7 @@ async function export_session_data() {
 	thetrigger.click();
 	document.getElementById("exportSessionDataForm").reset();
 	document.getElementById("exportSessionDataFormButton").disabled = true;
+	document.getElementById("exportSessionDataFormSessionDescription").hidden = true;
 }
 
 async function load_atmospheric_conditions() {
@@ -68,7 +69,6 @@ async function load_current_grouping_info() {
 
 async function load_current_session_info() {
 	let template = "{{label}}"
-	let details = null;
 	let response = await fetch("/session/");
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
@@ -210,7 +210,6 @@ async function delete_station() {
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteStationForm").reset();
 			document.getElementById("deleteStationFormSiteDescription").hidden = true;
-			document.getElementById("deleteStationFormStationsMenu").innerHTML = "";
 			document.getElementById("deleteStationFormStationDescription").hidden = true;
 			document.getElementById("deleteStationFormButton").disabled = true;
 		}
@@ -224,7 +223,6 @@ async function delete_subclass() {
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSubclassForm").reset();
 			document.getElementById("deleteSubclassFormClassDescription").hidden = true;
-			document.getElementById("deleteSubclassFormSubclassesMenu").innerHTML = "";
 			document.getElementById("deleteSubclassFormSubclassDescription").hidden = true;
 			document.getElementById("deleteSubclassFormButton").disabled = true;
 		}
@@ -242,7 +240,6 @@ async function end_current_grouping() {
 			document.getElementById("groupingForm").reset();
 			document.getElementById("groupingFormGeometryDescription").hidden = true;
 			document.getElementById("groupingFormClassDescription").hidden = true;
-			document.getElementById("groupingFormSubclassesMenu").innerHTML = "";
 			document.getElementById("groupingFormSubclassDescription").hidden = true;
 			document.getElementById("groupingFormStartGroupingButton").disabled = true;
 			document.getElementById("saveLastShotFormComment").value = "";
@@ -266,9 +263,7 @@ async function end_current_session(prompt = true) {
 	if (status >= 200 && status <= 299) {
 		document.getElementById("sessionForm").reset();
 		document.getElementById("sessionFormSiteDescription").hidden = true;
-		document.getElementById("sessionFormOccupiedPointMenu").innerHTML = "";
 		document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
-		document.getElementById("sessionFormBacksightStationMenu").innerHTML = "";
 		document.getElementById("sessionFormBacksightStationDescription").hidden = true;
 		update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
 		document.getElementById("sessionFormStartSessionButton").disabled = true;
@@ -344,7 +339,6 @@ async function start_new_grouping() {
 		document.getElementById("groupingForm").reset();
 		document.getElementById("groupingFormGeometryDescription").hidden = true;
 		document.getElementById("groupingFormClassDescription").hidden = true;
-		document.getElementById("groupingFormSubclassesMenu").innerHTML = "";
 		document.getElementById("groupingFormSubclassDescription").hidden = true;
 		document.getElementById("groupingFormStartGroupingButton").disabled = true;
 		document.getElementById("saveLastShotForm").reset();
@@ -365,9 +359,7 @@ async function start_new_session() {
 		if (status >= 200 && status <= 299) {
 			document.getElementById("sessionForm").reset();
 			document.getElementById("sessionFormSiteDescription").hidden = true;
-			document.getElementById("sessionFormOccupiedPointMenu").innerHTML = "";
 			document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
-			document.getElementById("sessionFormBacksightStationMenu").innerHTML = "";
 			document.getElementById("sessionFormBacksightStationDescription").hidden = true;
 			update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
 			document.getElementById("sessionFormStartSessionButton").disabled = true;
@@ -778,6 +770,7 @@ function output_template() {
 
 function show_livemap_popup() {
 	document.getElementById("liveMapPopup").hidden = false;
+	event.stopPropagation();
 }
 
 function livemap_save_survey_point_symbol() {

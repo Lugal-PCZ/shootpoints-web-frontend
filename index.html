@@ -247,11 +247,11 @@
 	</span>
 
 	<div id="outputBox"></div>
-	<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();">
 
 	<div class="usage">
 		<div class="formcollectionheader" onclick="collapse(this);">
 			Surveying <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+			<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();" hidden>
 		</div>
 
 		<div class="formcollection collapsible" hidden>
@@ -431,24 +431,6 @@
 				</span>
 			</form>
 
-			<form id="deleteSiteForm">
-				<span onclick="collapse(this);">
-					<b>Delete Site</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
-				</span>
-				<span class="collapsible" hidden>
-					<hr>
-					<label for="deleteSiteFormSitesMenu">Site:</label>
-					<select id="deleteSiteFormSitesMenu" class="sitesmenu" name="sites_id"
-						onchange="update_description(this, 'deleteSiteFormSiteDescription'); toggle_button(this);"
-						required>
-					</select>
-					<img class="infobutton" id="deleteSiteFormSiteDescription" src="img/info.svg" hidden hidden>
-					<br>
-					<input type="button" id="deleteSiteFormButton" value="Delete Site" onclick="delete_site();"
-						disabled />
-				</span>
-			</form>
-
 			<form id="saveNewStationForm">
 				<span onclick="collapse(this);">
 					<b>Save New Station</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
@@ -505,30 +487,6 @@
 				</span>
 			</form>
 
-			<form id="deleteStationForm">
-				<span onclick="collapse(this);">
-					<b>Delete Station</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
-				</span>
-				<span class="collapsible" hidden>
-					<hr>
-					<label for="deleteStationFormSitesMenu">Site:</label>
-					<select id="deleteStationFormSitesMenu" class="sitesmenu" name="sites_id"
-						onchange="update_description(this, 'deleteStationFormSiteDescription'); update_dependent_station_menu(this, 'deleteStationFormStationsMenu'); toggle_button(this);"
-						required>
-					</select>
-					<img class="infobutton" id="deleteStationFormSiteDescription" src="img/info.svg" hidden>
-					<label for="deleteStationFormStationsMenu"><br>Station:</label>
-					<select id="deleteStationFormStationsMenu" name="stations_id"
-						onchange="update_description(this, 'deleteStationFormStationDescription'); toggle_button(this);"
-						required>
-					</select>
-					<img class="infobutton" id="deleteStationFormStationDescription" src="img/info.svg" hidden>
-					<br>
-					<input type="button" id="deleteStationFormButton" value="Delete Station" onclick="delete_station();"
-						disabled />
-				</span>
-			</form>
-
 			<form id="saveNewClassForm">
 				<span onclick="collapse(this);">
 					<b>Save New Class</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
@@ -542,24 +500,6 @@
 					<input type="text" id="saveNewClassFormClassDescription" name="description" />
 					<br>
 					<input type="button" id="saveNewClassFormButton" value="Save New Class" onclick="save_new_class();"
-						disabled />
-				</span>
-			</form>
-
-			<form id="deleteClassForm">
-				<span onclick="collapse(this);">
-					<b>Delete Class</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
-				</span>
-				<span class="collapsible" hidden>
-					<hr>
-					<label for="deleteClassFormClassesMenu">Class:</label>
-					<select id="deleteClassFormClassesMenu" class="classesmenu" name="classes_id"
-						onchange="update_description(this, 'deleteClassFormClassDescription'); toggle_button(this);"
-						required>
-					</select>
-					<img class="infobutton" id="deleteClassFormClassDescription" src="img/info.svg" hidden>
-					<br>
-					<input type="button" id="deleteClassFormButton" value="Delete Class" onclick="delete_class();"
 						disabled />
 				</span>
 			</form>
@@ -584,6 +524,66 @@
 					<br>
 					<input type="button" id="saveNewSubclassFormButton" value="Save New Subclass"
 						onclick="save_new_subclass(); update_dependent_subclass_menu(document.getElementById('groupingFormClassesMenu'), 'groupingFormSubclassesMenu');"
+						disabled />
+				</span>
+			</form>
+
+			<form id="deleteSiteForm">
+				<span onclick="collapse(this);">
+					<b>Delete Site</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<label for="deleteSiteFormSitesMenu">Site:</label>
+					<select id="deleteSiteFormSitesMenu" class="sitesmenu" name="sites_id"
+						onchange="update_description(this, 'deleteSiteFormSiteDescription'); toggle_button(this);"
+						required>
+					</select>
+					<img class="infobutton" id="deleteSiteFormSiteDescription" src="img/info.svg" hidden hidden>
+					<br>
+					<input type="button" id="deleteSiteFormButton" value="Delete Site" onclick="delete_site();"
+						disabled />
+				</span>
+			</form>
+
+			<form id="deleteStationForm">
+				<span onclick="collapse(this);">
+					<b>Delete Station</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<label for="deleteStationFormSitesMenu">Site:</label>
+					<select id="deleteStationFormSitesMenu" class="sitesmenu" name="sites_id"
+						onchange="update_description(this, 'deleteStationFormSiteDescription'); update_dependent_station_menu(this, 'deleteStationFormStationsMenu'); toggle_button(this);"
+						required>
+					</select>
+					<img class="infobutton" id="deleteStationFormSiteDescription" src="img/info.svg" hidden>
+					<label for="deleteStationFormStationsMenu"><br>Station:</label>
+					<select id="deleteStationFormStationsMenu" name="stations_id"
+						onchange="update_description(this, 'deleteStationFormStationDescription'); toggle_button(this);"
+						required>
+					</select>
+					<img class="infobutton" id="deleteStationFormStationDescription" src="img/info.svg" hidden>
+					<br>
+					<input type="button" id="deleteStationFormButton" value="Delete Station" onclick="delete_station();"
+						disabled />
+				</span>
+			</form>
+
+			<form id="deleteClassForm">
+				<span onclick="collapse(this);">
+					<b>Delete Class</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<label for="deleteClassFormClassesMenu">Class:</label>
+					<select id="deleteClassFormClassesMenu" class="classesmenu" name="classes_id"
+						onchange="update_description(this, 'deleteClassFormClassDescription'); toggle_button(this);"
+						required>
+					</select>
+					<img class="infobutton" id="deleteClassFormClassDescription" src="img/info.svg" hidden>
+					<br>
+					<input type="button" id="deleteClassFormButton" value="Delete Class" onclick="delete_class();"
 						disabled />
 				</span>
 			</form>

@@ -51,6 +51,7 @@ input[type=button] {
 
 input[type=button]:disabled {
 	color: grey;
+	background-color: silver;
 }
 
 #liveMapPopup {
@@ -122,18 +123,31 @@ input[type=button]:disabled {
 
 #showLiveMapIcon {
 	float: right;
-	height: calc(9ex + 1em);
-	margin-top: 3px;
-	filter: invert(60%);
+	height: 19px;
+	margin-right: 3px;
 }
 
 #outputBox {
-	width: calc(100% - 123px);
+	width: calc(100% - 1em);
 	height: 9ex;
 	margin-top: 3px;
 	padding: 0.5em;
 	background-color: rgb(230, 230, 230);
 	overflow: auto;
+}
+
+#saveNewSiteForm,
+#saveNewStationForm,
+#saveNewClassForm,
+#saveNewSubclassForm {
+	background: rgba(115, 190, 115, 0.10);
+}
+
+#deleteSiteForm,
+#deleteStationForm,
+#deleteClassForm,
+#deleteSubclassForm {
+	background: rgba(190, 115, 115, 0.15);
 }
 
 #sessionFormStartSessionButton,
@@ -148,6 +162,20 @@ input[type=button]:disabled {
 #cancelShotFormButton,
 #discardLastShotFormButton {
 	background-color: rgb(235, 145, 145);
+}
+
+#sessionFormStartSessionButton:disabled,
+#groupingFormStartGroupingButton:disabled,
+#takeShotFormButton:disabled,
+#saveLastShotFormButton:disabled {
+	background-color: silver;
+}
+
+#sessionFormEndCurrentSessionButton:disabled,
+#groupingFormEndCurrentGroupingButton:disabled,
+#cancelShotFormButton:disabled,
+#discardLastShotFormButton:disabled {
+	background-color: silver;
 }
 
 .info {
