@@ -479,15 +479,14 @@ async function os_check() {
 	let oscheck = await fetch("/raspbian/");
 	let raspbian = await oscheck.text();
 	if (raspbian === "true") {
-		document.getElementById("setClockForm").hidden = false;
 		document.getElementById("shutDownForm").hidden = false;
-		// Warn the user if the Raspberry Pi clock time and browser time are off by greater than 10 minutes
+		// Automatically set the Raspberry Pi clock if it is off by greater than 10 minutes from the browser time.
 		let clockcheck = await fetch("/raspbian/clock/");
 		let rpiclock = await clockcheck.text();
 		rpiclock = new Date(rpiclock.replace(/\"/g, ""));
 		let jsclock = new Date();
 		if (Math.abs(rpiclock - jsclock) > 600000) {
-			alert("The Raspberry Pi’s clock is set to " + rpiclock + ". Please use the ShootPoints utilities (gears) menu to update the hardware clock on the Raspberry Pi before continuing.");
+			set_rpi_clock();
 		};
 	};
 }
@@ -875,11 +874,9 @@ function livemap_show_points() {
 // Raspberry Pi Hardware Interfaces
 
 async function set_rpi_clock() {
-	if (confirm("This will set the Raspberry Pi’s clock to the date and time displayed in the browser. If that is incorrect or you need to change the timezone, please do so through the command line instead.")) {
-		let now = new Date();
-		document.getElementById("setClockFormDateTimeString").value = now.toString();
-		_update_data_via_api("/raspbian/clock/", "PUT", setClockForm);
-	}
+	let now = new Date();
+	document.getElementById("setClockFormDateTimeString").value = now.toString();
+	_update_data_via_api("/raspbian/clock/", "PUT", setClockForm);
 }
 
 
