@@ -355,6 +355,8 @@ async function start_new_session() {
 	}
 	if (confirm("Please verify that the date, time, and atmospheric conditions are set correctly.\n\nPress “Ok” to proceed or “Cancel” to go back.") === true) {
 		document.getElementById("sessionFormIndicator").hidden = false;
+		document.getElementById("sessionFormStartSessionButton").disabled = true;
+		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
 		let status = await _update_data_via_api("/session/", "POST", sessionForm);
 		if (status >= 200 && status <= 299) {
 			document.getElementById("sessionForm").reset();
@@ -371,6 +373,8 @@ async function start_new_session() {
 			alert("The backsight shot failed. See the output box for details.");
 		}
 		document.getElementById("sessionFormIndicator").hidden = true;
+		document.getElementById("sessionFormStartSessionButton").disabled = false;
+		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
 		load_prism_offsets();
 	}
 }
@@ -469,9 +473,14 @@ function details_popup(details) {
 }
 
 function handle_survey_station_subclass(themenu) {
-	if (themenu.value === "1" && document.getElementById("groupingFormGeometriesMenu").value != "1") {
-		document.getElementById("groupingFormGeometriesMenu").value = "1";
-		alert("The geometry for this survey station will be changed to “Isolated Point.”");
+	if (themenu.value === "1") {
+		let themessage = "You’ve chosen the “Survey Station” subclass. Provided that it is unique, the next point shot will be automatically added to the list of survey stations for this site.";
+		if (document.getElementById("groupingFormGeometriesMenu").value != "1") {
+			document.getElementById("groupingFormGeometriesMenu").value = "1";
+			themessage += "\n\nMoreover, because a survey station is by definition a single point in space, the geometry for this point has been changed to “Isolated Point.”";
+		}
+		themessage += "\n\nPlease correct the grouping information if you don’t intend to save a new survey station.";
+		alert(themessage);
 	}
 }
 
