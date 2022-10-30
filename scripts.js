@@ -404,6 +404,31 @@ async function take_shot() {
 			template = output_template();
 			show_and_hide_shot_forms("cancel");
 		} else {
+			if (document.getElementById("takeShotFormStakeoutCheckbox").checked) {
+				let themessage = "";
+				if (document.getElementById("takeShotFormStakeoutTargetNorthing").value) {
+					let n_difference = document.getElementById("takeShotFormStakeoutTargetNorthing").value - json.result.calculated_n;
+					let n_direction = "North";
+					if (n_difference < 0) {
+						n_direction = "South";
+					}
+					themessage += "Move " + Math.abs(n_difference).toFixed(2) + "m " + n_direction;
+				}
+				if (document.getElementById("takeShotFormStakeoutTargetEasting").value) {
+					if (themessage) {
+						themessage += "\n";
+					}
+					let e_difference = document.getElementById("takeShotFormStakeoutTargetEasting").value - json.result.calculated_e;
+					let e_direction = "East";
+					if (e_difference < 0) {
+						e_direction = "West";
+					}
+					themessage += "Move " + Math.abs(e_difference).toFixed(2) + "m " + e_direction;
+				}
+				if (themessage) {
+					alert("Distance to target coordinates:\n" + themessage);
+				}
+			}
 			show_and_hide_shot_forms("save");
 		}
 	}
@@ -602,6 +627,14 @@ function toggle_button(thetrigger) {
 		}
 	});
 	thetrigger.parentNode.querySelector("input[type=button]").disabled = !allfieldsarevalid;
+}
+
+function toggle_stakeout_fields() {
+	if (document.getElementById("takeShotFormStakeoutCheckbox").checked) {
+		document.getElementById("takeShotFormStakeoutTarget").hidden = false;
+	} else {
+		document.getElementById("takeShotFormStakeoutTarget").hidden = true;
+	}
 }
 
 function toggle_total_station_menus(theport) {
