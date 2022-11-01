@@ -485,15 +485,23 @@ function details_popup(details) {
 	alert(details);
 }
 
-function handle_survey_station_subclass(themenu) {
-	if (themenu.value === "1") {
+function handle_special_subclasses() {
+	let geometriesmenu = document.getElementById("groupingFormGeometriesMenu");
+	if (document.getElementById("groupingFormSubclassesMenu").value === "1") {
 		let themessage = "You’ve chosen the “Survey Station” subclass. Provided that it is unique, the next point shot will be automatically added to the list of survey stations for this site.";
-		if (document.getElementById("groupingFormGeometriesMenu").value != "1") {
-			document.getElementById("groupingFormGeometriesMenu").value = "1";
+		if (geometriesmenu.value != "1") {
+			geometriesmenu.value = "1";
+			update_description(geometriesmenu, 'groupingFormGeometryDescription');
 			themessage += "\n\nMoreover, because a survey station is by definition a single point in space, the geometry for this point has been changed to “Isolated Point.”";
 		}
-		themessage += "\n\nPlease correct the grouping information if you don’t intend to save a new survey station.";
+		themessage += "\n\nPlease verify the grouping information before continuing.";
 		alert(themessage);
+	} else if (document.getElementById("groupingFormSubclassesMenu").value === "5") {
+		if (geometriesmenu.value != "1" && geometriesmenu.value != "2") {
+			geometriesmenu.value = "1";
+			update_description(geometriesmenu, 'groupingFormGeometryDescription');
+			alert("You’ve chosen the “Survey Station” subclass. These can only have “Isolated Point” or “Point Cloud” geometry, so it has been reset to “Isolated Point.”\n\nPlease verify the grouping information before continuing.");
+		}
 	}
 }
 

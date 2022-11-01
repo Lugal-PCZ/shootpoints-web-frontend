@@ -344,7 +344,7 @@
 						required /><br>
 					<label for="groupingFormGeometriesMenu">Geometry:</label>
 					<select id="groupingFormGeometriesMenu" class="geometriesmenu" name="geometries_id"
-						onchange="update_description(this, 'groupingFormGeometryDescription'); toggle_button('groupingForm');"
+						onchange="update_description(this, 'groupingFormGeometryDescription'); handle_special_subclasses(); toggle_button('groupingForm');"
 						required>
 					</select>
 					<img class="infobutton" id="groupingFormGeometryDescription" src="img/info.svg" hidden><br>
@@ -356,7 +356,7 @@
 					<img class="infobutton" id="groupingFormClassDescription" src="img/info.svg" hidden><br>
 					<label for="groupingFormSubclassesMenu">Subclass:</label>
 					<select id="groupingFormSubclassesMenu" name="subclasses_id"
-						onchange="handle_survey_station_subclass(this); update_description(this, 'groupingFormSubclassDescription'); toggle_button('groupingForm');"
+						onchange="handle_special_subclasses(); update_description(this, 'groupingFormSubclassDescription'); toggle_button('groupingForm');"
 						required>
 					</select>
 					<img class="infobutton" id="groupingFormSubclassDescription" src="img/info.svg" hidden><br>
