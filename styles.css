@@ -51,7 +51,18 @@ input[type=button] {
 
 input[type=button]:disabled {
 	color: grey;
-	background-color: silver;
+}
+
+input[type=button].safe:enabled {
+	background-color: rgb(170, 220, 170);
+}
+
+input[type=button].dangerous:enabled {
+	background-color: rgb(235, 145, 145);
+}
+
+label {
+	display: inline-block;
 }
 
 #liveMapPopup {
@@ -113,6 +124,37 @@ input[type=button]:disabled {
 	text-align: right;
 }
 
+#deleteSiteForm label,
+#deleteClassForm label,
+#deleteStationForm label {
+	width: 3em;
+}
+
+#setAtmosphericConditionsForm>label,
+#setPrismOffsetsForm>label {
+	width: 8em;
+}
+
+#setConfigsForm label:not(#setConfigsFormLimitLabel),
+#deleteSubclassForm label {
+	width: 4em;
+}
+
+#saveNewSiteForm label,
+#saveNewClassForm label,
+#saveNewSubclassForm label,
+#groupingForm label {
+	width: 5em;
+}
+
+#saveNewStationForm label {
+	width: 8em;
+}
+
+#sessionForm label {
+	width: 10em;
+}
+
 #showUtilitiesIcon {
 	float: right;
 	height: 30px;
@@ -148,34 +190,6 @@ input[type=button]:disabled {
 #deleteClassForm,
 #deleteSubclassForm {
 	background: rgba(190, 115, 115, 0.15);
-}
-
-#sessionFormStartSessionButton,
-#groupingFormStartGroupingButton,
-#takeShotFormButton,
-#saveLastShotFormButton {
-	background-color: rgb(170, 220, 170);
-}
-
-#sessionFormEndCurrentSessionButton,
-#groupingFormEndCurrentGroupingButton,
-#cancelShotFormButton,
-#discardLastShotFormButton {
-	background-color: rgb(235, 145, 145);
-}
-
-#sessionFormStartSessionButton:disabled,
-#groupingFormStartGroupingButton:disabled,
-#takeShotFormButton:disabled,
-#saveLastShotFormButton:disabled {
-	background-color: silver;
-}
-
-#sessionFormEndCurrentSessionButton:disabled,
-#groupingFormEndCurrentGroupingButton:disabled,
-#cancelShotFormButton:disabled,
-#discardLastShotFormButton:disabled {
-	background-color: silver;
 }
 
 .info {

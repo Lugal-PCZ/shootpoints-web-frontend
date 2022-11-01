@@ -265,7 +265,7 @@ async function end_current_session(prompt = true) {
 		document.getElementById("sessionFormSiteDescription").hidden = true;
 		document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
 		document.getElementById("sessionFormBacksightStationDescription").hidden = true;
-		update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
+		update_required_new_session_fields();
 		document.getElementById("sessionFormStartSessionButton").disabled = true;
 		load_current_session_info();
 	}
@@ -363,7 +363,7 @@ async function start_new_session() {
 			document.getElementById("sessionFormSiteDescription").hidden = true;
 			document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
 			document.getElementById("sessionFormBacksightStationDescription").hidden = true;
-			update_required_new_session_fields(document.getElementById("sessionFormSessionTypeMenu"));
+			update_required_new_session_fields();
 			document.getElementById("sessionFormStartSessionButton").disabled = true;
 			show_and_hide_shot_forms("cancel");
 			load_current_session_info();
@@ -458,25 +458,13 @@ function discard_last_shot() {
 // UI manipulators
 
 function _hide_required_field(thefield) {
-	document.getElementById(thefield + "Label").hidden = true;
-	document.getElementById(thefield).hidden = true;
-	try {
-		document.getElementById(thefield.replace("Menu", "Description")).hidden = true;
-	} catch {
-		// ignore the error
-	}
 	document.getElementById(thefield).required = false;
+	document.getElementById(thefield + "Block").hidden = true;
 }
 
 function _show_required_field(thefield) {
-	document.getElementById(thefield + "Label").hidden = false;
-	document.getElementById(thefield).hidden = false;
-	try {
-		document.getElementById(thefield.replace("Menu", "Description")).hidden = false;
-	} catch {
-		// ignore the error
-	}
 	document.getElementById(thefield).required = true;
+	document.getElementById(thefield + "Block").hidden = false;
 }
 
 function clear_field(thefield) {
@@ -619,14 +607,15 @@ async function show_utilities_popup() {
 	thepopup.hidden = false;
 }
 
-function toggle_button(thetrigger) {
+function toggle_button(theformid) {
+	let theform = document.getElementById(theformid);
 	let allfieldsarevalid = true;
-	thetrigger.parentNode.childNodes.forEach(element => {
-		if (element.required) {
-			allfieldsarevalid *= element.validity.valid;
+	theform.querySelectorAll("*").forEach(formfield => {
+		if (formfield.required) {
+			allfieldsarevalid *= formfield.validity.valid;
 		}
 	});
-	thetrigger.parentNode.querySelector("input[type=button]").disabled = !allfieldsarevalid;
+	theform.querySelector("input[type=button]").disabled = !allfieldsarevalid;
 }
 
 function toggle_stakeout_fields() {
@@ -668,7 +657,7 @@ async function update_dependent_model_menu(themake) {
 
 async function update_dependent_station_menu(thesite, themenu) {
 	let target = document.getElementById(themenu);
-	let targetdescription = target.id.replace(/e?sMenu/, "Description");
+	let targetdescription = target.id.replace(/e?s?Menu/, "Description");
 	if (thesite.value === "") {
 		target.innerHTML = "";
 		document.getElementById(targetdescription).hidden = true;
@@ -684,7 +673,7 @@ async function update_dependent_station_menu(thesite, themenu) {
 
 async function update_dependent_subclass_menu(theclass, themenu) {
 	let target = document.getElementById(themenu);
-	let targetdescription = target.id.replace(/e?sMenu/, "Description");
+	let targetdescription = target.id.replace(/e?s?Menu/, "Description");
 	if (theclass.value === "") {
 		target.innerHTML = "";
 		document.getElementById(targetdescription).hidden = true;
@@ -715,8 +704,8 @@ function update_description(source, target) {
 	}
 }
 
-function update_required_new_session_fields(sessiontypemenu) {
-	switch (sessiontypemenu.value) {
+function update_required_new_session_fields() {
+	switch (document.getElementById("sessionFormSessionTypeMenu").value) {
 		case "Backsight":
 			_show_required_field("sessionFormBacksightStationMenu");
 			_show_required_field("sessionFormPrismHeight");
@@ -740,8 +729,8 @@ function update_required_new_session_fields(sessiontypemenu) {
 	}
 }
 
-function update_required_new_site_fields(coordinatesystemmenu) {
-	switch (coordinatesystemmenu.value) {
+function update_required_new_site_fields() {
+	switch (document.getElementById("saveNewStationFormStationCoordinateSystemMenu").value) {
 		case "Site":
 			_show_required_field("saveNewStationFormStationNorthing");
 			_show_required_field("saveNewStationFormStationEasting");
