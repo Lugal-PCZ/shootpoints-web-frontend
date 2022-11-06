@@ -338,9 +338,6 @@
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
-					<label for="groupingFormLabel">Label:</label>
-					<input type="text" id="groupingFormLabel" name="label" oninput="toggle_button('groupingForm');"
-						required /><br>
 					<label for="groupingFormGeometriesMenu">Geometry:</label>
 					<select id="groupingFormGeometriesMenu" class="geometriesmenu" name="geometries_id"
 						onchange="update_description(this, 'groupingFormGeometryDescription'); handle_special_subclasses(); toggle_button('groupingForm');"
@@ -359,6 +356,9 @@
 						required>
 					</select>
 					<img class="infobutton" id="groupingFormSubclassDescription" src="img/info.svg" hidden><br>
+					<label for="groupingFormLabel">Label:</label>
+					<input type="text" id="groupingFormLabel" name="label" oninput="toggle_button('groupingForm');"
+						required /><br>
 					<label for="groupingFormDescription">Description:</label>
 					<input type="text" id="groupingFormDescription" name="description" />
 					<input type="hidden" id="currentGroupingLabel" />
