@@ -15,36 +15,51 @@ async function export_session_data() {
 }
 
 async function load_atmospheric_conditions() {
-	let template = "Atmosphere: {{temperature}}°C, {{pressure}}mmHg";
 	let response = await fetch("/atmosphere/");
 	let json = await response.json();
-	document.getElementById("atmosphericConditions").innerHTML = Mustache.render(template, json);
+	document.getElementById("atmosphericConditions").innerHTML = `Atmosphere: ${json.temperature}°C, ${json.pressure}mmHg`;
 }
 
 async function load_classes_menus() {
 	let response = await fetch("/class/");
 	let json = await response.json();
+	let classesmenu = ["<option></option>"];
+	json.classes.forEach(function (theclass) {
+		classesmenu.push(`<option value="${theclass.id}" description="${theclass.description}">${theclass.name}</option>`);
+	});
 	Array.from(document.querySelectorAll('.classesmenu')).forEach(function (target) {
-		target.innerHTML = Mustache.render(menu_template('classes'), json);
+		target.innerHTML = classesmenu.join("\n");
 	});
 }
 
 async function load_configs_menus() {
 	let response = await fetch("/configs/");
 	let json = await response.json();
-	let menutemplate = '{{#.}}<option value="{{.}}">{{.}}</option>\n{{/.}}';
-	document.getElementById("setConfigsFormPortMenu").innerHTML = Mustache.render(menutemplate, json.options.ports);
+	let portsmenu = [];
+	json.options.ports.forEach(function (theport) {
+		portsmenu.push(`<option value="${theport}">${theport}</option>`);
+	});
+	document.getElementById("setConfigsFormPortMenu").innerHTML = portsmenu.join("\n");
 	document.getElementById("setConfigsFormPortMenu").value = json.current.port;
-	toggle_total_station_menus(json.current.port);
-	document.getElementById("setConfigsFormMakeMenu").innerHTML = Mustache.render(menutemplate, Object.keys(json.options.total_stations));
+	if (json.current.port === "demo") {
+		document.getElementById("setConfigsFormMakeMenu").disabled = true;
+		document.getElementById("setConfigsFormModelMenu").disabled = true;
+	} else {
+		document.getElementById("setConfigsFormMakeMenu").disabled = false;
+		document.getElementById("setConfigsFormModelMenu").disabled = false;
+	};
+	let makesmenu = [];
+	Object.keys(json.options.total_stations).forEach(function (themake) {
+		makesmenu.push(`<option value="${themake}">${themake}</option>`);
+	});
+	document.getElementById("setConfigsFormMakeMenu").innerHTML = makesmenu.join("\n");
 	document.getElementById("setConfigsFormMakeMenu").value = json.current.make;
-	document.getElementById("setConfigsFormModelMenu").innerHTML = Mustache.render(menutemplate, json.options.total_stations[json.current.make]);
+	update_dependent_model_menu(json.options.total_stations[json.current.make]);
 	document.getElementById("setConfigsFormModelMenu").value = json.current.model;
 	document.getElementById("setConfigsFormLimit").value = json.current.limit;
 }
 
 async function load_current_grouping_info() {
-	let template = "{{label}} ({{geometries_name}})"
 	let response = await fetch("/grouping/");
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
@@ -53,7 +68,7 @@ async function load_current_grouping_info() {
 		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = true;
 		document.getElementById("takeShotFormButton").disabled = true;
 	} else {
-		document.getElementById("currentGroupingInfo").innerHTML = Mustache.render(template, json);
+		document.getElementById("currentGroupingInfo").innerHTML = `${json.label} (${json.geometries_name})`;
 		document.getElementById("currentGroupingLabel").innerText = json.label;
 		document.getElementById("currentGroupingGeometry").innerText = json.geometries_name;
 		document.getElementById("currentGroupingClass").innerText = json.classes_name;
@@ -68,7 +83,6 @@ async function load_current_grouping_info() {
 }
 
 async function load_current_session_info() {
-	let template = "{{label}}"
 	let response = await fetch("/session/");
 	let json = await response.json();
 	if (json.result === "" || json.label === null) {
@@ -78,7 +92,7 @@ async function load_current_session_info() {
 		document.getElementById("groupingForm").hidden = true;
 		document.getElementById("takeShotForm").hidden = true;
 	} else {
-		document.getElementById("currentSessionInfo").innerHTML = Mustache.render(template, json);
+		document.getElementById("currentSessionInfo").innerHTML = `${json.label}`;
 		document.getElementById("currentSessionLabel").innerText = json.label;
 		document.getElementById("currentSessionStarted").innerText = json.started;
 		document.getElementById("currentSessionSite").innerText = json.sites_name;
@@ -98,40 +112,57 @@ async function load_date_and_time() {
 	setTimeout(load_date_and_time, 1000);
 }
 
-async function load_geometries_menus() {
+async function load_geometries_menu() {
 	let response = await fetch("/geometry/");
 	let json = await response.json();
-	Array.from(document.querySelectorAll('.geometriesmenu')).forEach(function (target) {
-		target.innerHTML = Mustache.render(menu_template('geometries'), json);
+	let geometriesmenu = ["<option></option>"];
+	json.geometries.forEach(function (thegeometry) {
+		geometriesmenu.push(`<option value="${thegeometry.id}" description="${thegeometry.description}">${thegeometry.name}</option>`);
 	});
+	document.getElementById("groupingFormGeometriesMenu").innerHTML = geometriesmenu.join("\n");
 }
 
 async function load_prism_offsets() {
-	let template = "Prism Offsets: {{.}}";
 	let response = await fetch("/prism/");
 	let json = await response.json();
 	if (Object.keys(json).length === 0) {
 		document.getElementById("prismOffsets").innerHTML = "Prism Offsets: <i>(offsets are 0 in all directions)</i>";
 	} else {
-		document.getElementById("prismOffsets").innerHTML = Mustache.render(template, json);
+		document.getElementById("prismOffsets").innerHTML = `Prism Offsets: ${json}`;
 	}
 }
 
 async function load_setup_errors() {
-	let template = '' +
-		'{{#setup_errors}}' +
-		'<b style="color: red;">ERROR:</b> {{.}}' +
-		'{{/setup_errors}}';
+	let errormessage = [];
 	let response = await fetch("/setuperrors/");
 	let json = await response.json();
-	document.getElementById("outputBox").innerHTML = Mustache.render(template, json);
+	json.forEach(function (theerror) {
+		errormessage.push(`<b style="color: red;">ERROR:</b> ${theerror}`);
+	});
+	document.getElementById("outputBox").innerHTML = errormessage.join("<br>");
+}
+
+async function load_sessions_menus() {
+	let sessions = await fetch("/sessions/");
+	let json = await sessions.json();
+	let sessionsmenu = ["<option></option>"];
+	json.sessions.forEach(function (thesession) {
+		sessionsmenu.push(`<option value="${thesession.id}" description="${thesession.description}">${thesession.name}</option>`)
+	});
+	document.getElementById("deleteSessionFormSessionsMenu").innerHTML = sessionsmenu.join("\n");
+	document.getElementById("deleteSessionFormSessionDescription").hidden = true;
+	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = sessionsmenu.join("\n");
 }
 
 async function load_sites_menus() {
 	let response = await fetch("/site/");
 	let json = await response.json();
+	let sitesmenu = ["<option></option>"];
+	json.sites.forEach(function (thesite) {
+		sitesmenu.push(`<option value="${thesite.id}" description="${thesite.description}">${thesite.name}</option>`);
+	});
 	Array.from(document.querySelectorAll('.sitesmenu')).forEach(function (target) {
-		target.innerHTML = Mustache.render(menu_template('sites'), json);
+		target.innerHTML = sitesmenu.join("\n");
 	});
 }
 
@@ -145,7 +176,16 @@ async function _update_data_via_api(theurl, themethod, theform) {
 		body: new FormData(theform)
 	});
 	let json = await response.json();
-	document.getElementById("outputBox").innerHTML = Mustache.render(output_template(), json);
+	let theoutput = [];
+	if ("errors" in json) {
+		json.errors.forEach(function (theerror) {
+			theoutput.push(`<b style="color: red; ">ERROR:</b> ${theerror}<br>`);
+		});
+	}
+	if ("result" in json) {
+		theoutput.push(`${json.result}<br>`);
+	}
+	document.getElementById("outputBox").innerHTML = theoutput.join("\n");
 	return response.status;
 }
 
@@ -189,13 +229,9 @@ async function delete_session() {
 	if (confirm(themessage)) {
 		let status = await _update_data_via_api("/session/", "DELETE", deleteSessionForm)
 		if (status >= 200 && status <= 299) {
+			load_sessions_menus();
 			document.getElementById("deleteSessionForm").reset();
 			document.getElementById("deleteSessionFormButton").disabled = true;
-			let sessions = await fetch("/sessions/");
-			let json = await sessions.json();
-			document.getElementById("deleteSessionFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
-			document.getElementById("deleteSessionFormSessionDescription").hidden = true;
-			document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
 			if (currentsession === true) {
 				end_current_session(prompt = false);
 			}
@@ -212,6 +248,7 @@ async function delete_station() {
 			document.getElementById("deleteStationFormSiteDescription").hidden = true;
 			document.getElementById("deleteStationFormStationDescription").hidden = true;
 			document.getElementById("deleteStationFormButton").disabled = true;
+			//UPDATE STATIONS MENUS?????????
 		}
 	}
 }
@@ -225,6 +262,7 @@ async function delete_subclass() {
 			document.getElementById("deleteSubclassFormClassDescription").hidden = true;
 			document.getElementById("deleteSubclassFormSubclassDescription").hidden = true;
 			document.getElementById("deleteSubclassFormButton").disabled = true;
+			//UPDATE SUBCLASSES MENUS?????????
 		}
 	}
 }
@@ -300,6 +338,7 @@ async function save_new_station() {
 		document.getElementById("saveNewStationFormStationLongitude").value = "";
 		document.getElementById("saveNewStationFormStationElevation").value = "";
 		document.getElementById("saveNewStationFormButton").disabled = true;
+		//UPDATE STATIONS MENUS?????????
 	}
 }
 
@@ -309,6 +348,7 @@ async function save_new_subclass() {
 		document.getElementById("saveNewSubclassForm").reset();
 		document.getElementById("saveNewSubclassFormClassDescription").hidden = true;
 		document.getElementById("saveNewSubclassFormButton").disabled = true;
+		//UPDATE SUBCLASSES MENUS?????????
 	}
 }
 
@@ -383,25 +423,19 @@ async function start_new_session() {
 // Shot Handling
 
 async function take_shot() {
-	let template = '' +
-		'{{#errors}}' +
-		'<b style="color: red; ">ERROR:</b> {{.}}<br>' +
-		'{{/errors}}' +
-		'{{#result}}' +
-		'<b>Last Shot:</b>' +
-		'<table class="shotdata">' +
-		'<tr><td>delta_n = {{delta_n}}</td><td>calculated_n = {{calculated_n}}</td></tr>' +
-		'<tr><td>delta_e = {{delta_e}}</td><td>calculated_e = {{calculated_e}}</td></tr>' +
-		'<tr><td>delta_z = {{delta_z}}</td><td>calculated_z = {{calculated_z}}</td></tr>' +
-		'</table>' +
-		'{{/result}}';
 	show_and_hide_shot_forms("take");
 	document.getElementById("outputBox").innerHTML = "";
 	let response = await fetch("/shot/");
 	let json = await response.json();
+	let theoutput = [];
+	if ("errors" in json) {
+		json.errors.forEach(function (theerror) {
+			theoutput.push(`<b style="color: red; ">ERROR:</b> ${theerror}<br>`);
+		});
+	}
 	if (response.status >= 200 && response.status <= 299) {
 		if (json.result === "Measurement canceled by user.") {
-			template = output_template();
+			theoutput.push(json.result);
 			show_and_hide_shot_forms("cancel");
 		} else {
 			if (document.getElementById("takeShotFormStakeoutCheckbox").checked) {
@@ -430,9 +464,17 @@ async function take_shot() {
 				}
 			}
 			show_and_hide_shot_forms("save");
+			if ("result" in json) {
+				theoutput.push('<b>Last Shot:</b>');
+				theoutput.push('<table class="shotdata">');
+				theoutput.push(`<tr><td>delta_n = ${json.result.delta_n}</td><td>calculated_n = ${json.result.calculated_n}</td></tr>`);
+				theoutput.push(`<tr><td>delta_e = ${json.result.delta_e}</td><td>calculated_e = ${json.result.calculated_e}</td></tr>`);
+				theoutput.push(`<tr><td>delta_z = ${json.result.delta_z}</td><td>calculated_z = ${json.result.calculated_z}</td></tr>`);
+				theoutput.push('</table>');
+			}
 		}
 	}
-	document.getElementById("outputBox").innerHTML = Mustache.render(template, json);
+	document.getElementById("outputBox").innerHTML = theoutput.join("\n");
 }
 
 async function cancel_shot() {
@@ -479,12 +521,6 @@ function collapse(theelement) {
 	expander.hidden = !expander.hidden;
 }
 
-function details_popup(details) {
-	details = details.replaceAll("||", "\n");
-	details = details.replaceAll(null, "");
-	alert(details);
-}
-
 function handle_special_subclasses() {
 	let geometriesmenu = document.getElementById("groupingFormGeometriesMenu");
 	if (document.getElementById("groupingFormSubclassesMenu").value === "1") {
@@ -500,7 +536,7 @@ function handle_special_subclasses() {
 		if (geometriesmenu.value != "1" && geometriesmenu.value != "2") {
 			geometriesmenu.value = "1";
 			update_description(geometriesmenu, 'groupingFormGeometryDescription');
-			alert("You’ve chosen the “Survey Station” subclass. These can only have “Isolated Point” or “Point Cloud” geometry, so it has been reset to “Isolated Point.”\n\nPlease verify the grouping information before continuing.");
+			alert("You’ve chosen the “GCP” subclass. These can only have “Isolated Point” or “Point Cloud” geometry, so it has been reset to “Isolated Point.”\n\nPlease verify the grouping information before continuing.");
 		}
 	}
 }
@@ -542,11 +578,11 @@ function show_and_hide_shot_forms(theaction) {
 }
 
 function show_current_grouping_details() {
-	let details = "Class: " + document.getElementById("currentGroupingClass").innerText +
-		"\nSubclass: " + document.getElementById("currentGroupingSubclass").innerText +
-		"\nDescription: " + document.getElementById("currentGroupingDescription").innerText +
-		"\nNumber of Shots in Grouping: " + document.getElementById("currentGroupingNumberOfShots").innerText;
-	alert(details);
+	let details = ["Class: " + document.getElementById("currentGroupingClass").innerText];
+	details.push("Subclass: " + document.getElementById("currentGroupingSubclass").innerText);
+	details.push("Description: " + document.getElementById("currentGroupingDescription").innerText);
+	details.push("Number of Shots in Grouping: " + document.getElementById("currentGroupingNumberOfShots").innerText);
+	alert(details.join("\n"));
 }
 
 function show_current_session_details() {
@@ -607,12 +643,8 @@ async function show_utilities_popup() {
 		document.getElementById("shutDownFormEndCurrentSessionCheckbox").hidden = false;
 		document.getElementById("shutDownFormEndCurrentSessionCheckboxLabel").hidden = false;
 	}
-	let sessions = await fetch("/sessions/");
-	let json = await sessions.json();
-	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
-	document.getElementById("deleteSessionFormSessionsMenu").innerHTML = Mustache.render(menu_template('sessions'), json);
-	let thepopup = document.getElementById("utilitiesPopup");
-	thepopup.hidden = false;
+	load_sessions_menus();
+	document.getElementById("utilitiesPopup").hidden = false;
 }
 
 function toggle_button(theformid) {
@@ -634,16 +666,6 @@ function toggle_stakeout_fields() {
 	}
 }
 
-function toggle_total_station_menus(theport) {
-	if (theport === "demo") {
-		document.getElementById("setConfigsFormMakeMenu").disabled = true;
-		document.getElementById("setConfigsFormModelMenu").disabled = true;
-	} else {
-		document.getElementById("setConfigsFormMakeMenu").disabled = false;
-		document.getElementById("setConfigsFormModelMenu").disabled = false;
-	}
-}
-
 function update_backsight_station_menu(occupiedstationmenu) {
 	let options = occupiedstationmenu.innerHTML.split("\n");
 	let newoptions = Array();
@@ -655,12 +677,17 @@ function update_backsight_station_menu(occupiedstationmenu) {
 	document.getElementById("sessionFormBacksightStationMenu").innerHTML = newoptions.join("\n");
 }
 
-async function update_dependent_model_menu(themake) {
-	let response = await fetch("/configs/");
-	let json = await response.json();
-	let menutemplate = '{{#.}}<option value="{{.}}">{{.}}</option>\n{{/.}}';
-	document.getElementById("setConfigsFormModelMenu").innerHTML = Mustache.render(menutemplate, json.options.total_stations[themake]);
-	document.getElementById("setConfigsFormModelMenu").value = json.options.total_stations[themake];
+async function update_dependent_model_menu(themodels = false) {
+	if (!themodels) {
+		let response = await fetch("/configs/");
+		let json = await response.json();
+		themodels = json.options.total_stations[document.getElementById("setConfigsFormMakeMenu").value];
+	};
+	modelsmenu = [];
+	themodels.forEach(function (themodel) {
+		modelsmenu.push(`<option value="${themodel}">${themodel}</option>`);
+	});
+	document.getElementById("setConfigsFormModelMenu").innerHTML = modelsmenu.join("\n");
 }
 
 async function update_dependent_station_menu(thesite, themenu) {
@@ -672,7 +699,11 @@ async function update_dependent_station_menu(thesite, themenu) {
 	} else {
 		let response = await fetch("/station/" + thesite.value);
 		let json = await response.json();
-		target.innerHTML = Mustache.render(menu_template('stations'), json);
+		stationsmenu = ["<option></option>"];
+		json.stations.forEach(function (thestation) {
+			stationsmenu.push(`<option value="${thestation.id}" description="${thestation.description} (${thestation.northing}N, ${thestation.easting}E, ${thestation.elevation}Z)">${thestation.name}</option>`);
+		});
+		target.innerHTML = stationsmenu.join("\n");
 		if (json.stations.length === 0) {
 			document.getElementById(targetdescription).hidden = true;
 		}
@@ -688,8 +719,12 @@ async function update_dependent_subclass_menu(theclass, themenu) {
 	} else {
 		let response = await fetch("/subclass/" + theclass.value);
 		let json = await response.json();
-		target.innerHTML = Mustache.render(menu_template('subclasses'), json);
-		if (json.subclasses.length === 0) {
+		subclassesmenu = ["<option></option>"];
+		json.subclasses.forEach(function (thesubclass) {
+			subclassesmenu.push(`<option value="${thesubclass.id}" description="${thesubclass.description}">${thesubclass.name}</option>`);
+		});
+		target.innerHTML = subclassesmenu.join("\n");
+		if (json.subclasses.value === "") {
 			document.getElementById(targetdescription).hidden = true;
 		}
 	}
@@ -771,36 +806,6 @@ function update_required_new_site_fields() {
 			_hide_required_field("saveNewStationFormStationLatitude");
 			_hide_required_field("saveNewStationFormStationLongitude");
 	}
-}
-
-
-// Mustache templates
-
-function menu_template(theoptions) {
-	let template = ''
-	if (theoptions === "stations") {
-		template += '<option></option>\n' +
-			'{{#' + theoptions + '}}' +
-			'<option value="{{id}}" description="{{description}} ({{northing}}N, {{easting}}E, {{elevation}}Z)">{{name}}</option>\n' +
-			'{{/' + theoptions + '}}';
-	} else {
-		template += '<option></option>\n' +
-			'{{#' + theoptions + '}}' +
-			'<option value="{{id}}" description="{{description}}">{{name}}</option>\n' +
-			'{{/' + theoptions + '}}';
-	}
-	return template
-}
-
-function output_template() {
-	let template = '' +
-		'{{#errors}}' +
-		'<b style="color: red;"> ERROR:</b> {{.}} <br>\n' +
-		'{{/errors}}' +
-		'{{#result}}' +
-		'{{.}}<br>\n' +
-		'{{/result}}';
-	return template
 }
 
 

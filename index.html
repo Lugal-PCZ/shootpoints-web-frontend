@@ -5,8 +5,6 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<title>ShootPoints</title>
-	<!-- <script src="https://unpkg.com/mustache@latest/mustache.min.js"></script> -->
-	<script src="lib/mustache.min.js"></script>
 	<script type="text/javascript" src="scripts.js"></script>
 	<link rel="stylesheet" href="styles.css">
 	<link rel="icon" href="img/favicon.ico">
@@ -21,7 +19,7 @@
 	load_configs_menus();
 	load_sites_menus();
 	load_classes_menus();
-	load_geometries_menus();
+	load_geometries_menu();
 	load_current_session_info();
 	load_current_grouping_info();
 	livemap_recenter();
@@ -329,17 +327,17 @@
 				</span>
 			</form>
 			<form id="groupingForm">
-				<span onclick="collapse(this);">
+				<span id="groupingFormHeader" onclick="collapse(this);">
 					<b>Grouping</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span><br>
 					<span class="currentSurveyingInfo">
 						<span id="currentGroupingInfo"></span>
 					</span>
-					<img class="infobutton" id="currentGroupingDetails" src="img/info.svg" hidden>
 				</span>
+				<img class="infobutton" id="currentGroupingDetails" src="img/info.svg" hidden>
 				<span class="collapsible" hidden>
 					<hr>
 					<label for="groupingFormGeometriesMenu">Geometry:</label>
-					<select id="groupingFormGeometriesMenu" class="geometriesmenu" name="geometries_id"
+					<select id="groupingFormGeometriesMenu" name="geometries_id"
 						onchange="update_description(this, 'groupingFormGeometryDescription'); handle_special_subclasses(); toggle_button('groupingForm');"
 						required>
 					</select>
@@ -421,7 +419,7 @@
 						onchange="toggle_total_station_menus(this.value);"></select><br>
 					<label for="setConfigsFormMakeMenu">Make:</label>
 					<select id="setConfigsFormMakeMenu" name="make"
-						onchange="update_dependent_model_menu(this.value);"></select><br>
+						onchange="update_dependent_model_menu();"></select><br>
 					<label for="setConfigsFormModelMenu">Model:</label>
 					<select id="setConfigsFormModelMenu" name="model"></select><br>
 					<label id="setConfigsFormLimitLabel" for="setConfigsFormLimit">Backsight Error Limit (cm):</label>
