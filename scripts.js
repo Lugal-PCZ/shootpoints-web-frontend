@@ -179,7 +179,7 @@ async function _update_data_via_api(theurl, themethod, theform) {
 	let theoutput = [];
 	if ("errors" in json) {
 		json.errors.forEach(function (theerror) {
-			theoutput.push(`<b style="color: red; ">ERROR:</b> ${theerror}<br>`);
+			theoutput.push(`<b style="color: red;">ERROR:</b> ${theerror}<br>`);
 		});
 	}
 	if ("result" in json) {
@@ -424,7 +424,7 @@ async function take_shot() {
 	let theoutput = [];
 	if ("errors" in json) {
 		json.errors.forEach(function (theerror) {
-			theoutput.push(`<b style="color: red; ">ERROR:</b> ${theerror}<br>`);
+			theoutput.push(`<b style="color: red;">ERROR:</b> ${theerror}<br>`);
 		});
 	}
 	if (response.status >= 200 && response.status <= 299) {
@@ -695,7 +695,11 @@ async function update_dependent_station_menu(thesite, themenu) {
 		let json = await response.json();
 		stationsmenu = ["<option></option>"];
 		json.stations.forEach(function (thestation) {
-			stationsmenu.push(`<option value="${thestation.id}" description="${thestation.description} (${thestation.northing}N, ${thestation.easting}E, ${thestation.elevation}Z)">${thestation.name}</option>`);
+			let thedescription = thestation.description;
+			if (thedescription === null || thedescription === "null" || thedescription === "") {
+				thedescription = "no description recorded";
+			}
+			stationsmenu.push(`<option value="${thestation.id}" description="${thedescription} (${thestation.northing}N, ${thestation.easting}E, ${thestation.elevation}Z)">${thestation.name}</option>`);
 		});
 		target.innerHTML = stationsmenu.join("\n");
 		if (json.stations.length === 0) {
@@ -726,19 +730,15 @@ async function update_dependent_subclass_menu(theclass, themenu) {
 
 function update_description(source, target) {
 	let thedescription = source.options[source.selectedIndex].getAttribute("description");
-	if (thedescription === null) {
-		document.getElementById(target).hidden = true;
+	if (thedescription === null || thedescription === "null" || thedescription === "") {
+		thedescription = "(no description recorded)";
 	} else {
-		if (thedescription === "") {
-			thedescription = "(no description recorded)"
-		} else {
-			thedescription = thedescription.replaceAll("\\", "\\\\");
-			thedescription = thedescription.replaceAll("\'", "\\\'");
-			thedescription = thedescription.replaceAll("\"", "\\\"");
-		}
-		document.getElementById(target).setAttribute("onClick", "alert('" + thedescription + "')");
-		document.getElementById(target).hidden = false;
+		thedescription = thedescription.replaceAll("\\", "\\\\");
+		thedescription = thedescription.replaceAll("\'", "\\\'");
+		thedescription = thedescription.replaceAll("\"", "\\\"");
 	}
+	document.getElementById(target).setAttribute("onClick", "alert('" + thedescription + "')");
+	document.getElementById(target).hidden = false;
 }
 
 function update_required_new_session_fields() {
