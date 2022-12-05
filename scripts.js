@@ -240,29 +240,25 @@ async function delete_session() {
 }
 
 async function delete_station() {
-	let stationname = document.getElementById("deleteStationFormStationsMenu");
-	if (confirm("Delete station “" + stationname.options[stationname.selectedIndex].text + "?”")) {
+	let thestation = document.getElementById("deleteStationFormStationsMenu");
+	if (confirm("Delete station “" + thestation.options[thestation.selectedIndex].text + "?”")) {
 		let status = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
 		if (status >= 200 && status <= 299) {
-			document.getElementById("deleteStationForm").reset();
-			document.getElementById("deleteStationFormSiteDescription").hidden = true;
+			update_dependent_station_menu(document.getElementById("deleteStationFormSitesMenu"), "deleteStationFormStationsMenu");
 			document.getElementById("deleteStationFormStationDescription").hidden = true;
 			document.getElementById("deleteStationFormButton").disabled = true;
-			//UPDATE STATIONS MENUS?????????
 		}
 	}
 }
 
 async function delete_subclass() {
-	let subclassname = document.getElementById("deleteSubclassFormSubclassesMenu");
-	if (confirm("Delete subclass “" + subclassname.options[subclassname.selectedIndex].text + "?”")) {
+	let thesubclass = document.getElementById("deleteSubclassFormSubclassesMenu");
+	if (confirm("Delete subclass “" + thesubclass.options[thesubclass.selectedIndex].text + "?”")) {
 		let status = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
 		if (status >= 200 && status <= 299) {
-			document.getElementById("deleteSubclassForm").reset();
-			document.getElementById("deleteSubclassFormClassDescription").hidden = true;
+			update_dependent_subclass_menu(document.getElementById("deleteSubclassFormClassesMenu"), "deleteSubclassFormSubclassesMenu");
 			document.getElementById("deleteSubclassFormSubclassDescription").hidden = true;
 			document.getElementById("deleteSubclassFormButton").disabled = true;
-			//UPDATE SUBCLASSES MENUS?????????
 		}
 	}
 }
@@ -338,7 +334,6 @@ async function save_new_station() {
 		document.getElementById("saveNewStationFormStationLongitude").value = "";
 		document.getElementById("saveNewStationFormStationElevation").value = "";
 		document.getElementById("saveNewStationFormButton").disabled = true;
-		//UPDATE STATIONS MENUS?????????
 	}
 }
 
@@ -348,7 +343,6 @@ async function save_new_subclass() {
 		document.getElementById("saveNewSubclassForm").reset();
 		document.getElementById("saveNewSubclassFormClassDescription").hidden = true;
 		document.getElementById("saveNewSubclassFormButton").disabled = true;
-		//UPDATE SUBCLASSES MENUS?????????
 	}
 }
 
