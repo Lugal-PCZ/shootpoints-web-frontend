@@ -67,6 +67,7 @@ async function load_current_grouping_info() {
 		document.getElementById("currentGroupingDetails").hidden = true;
 		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = true;
 		document.getElementById("takeShotFormButton").disabled = true;
+		show_take_shot_form();
 	} else {
 		document.getElementById("currentGroupingInfo").innerHTML = `${json.label} (${json.geometries_name})`;
 		document.getElementById("currentGroupingLabel").innerText = json.label;
@@ -79,6 +80,7 @@ async function load_current_grouping_info() {
 		document.getElementById("currentGroupingDetails").hidden = false;
 		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = false;
 		document.getElementById("takeShotFormButton").disabled = false;
+		show_take_shot_form("takeShotForm");
 	}
 }
 
@@ -90,7 +92,7 @@ async function load_current_session_info() {
 		document.getElementById("currentSessionDetails").hidden = true;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
 		document.getElementById("groupingForm").hidden = true;
-		document.getElementById("takeShotForm").hidden = true;
+		show_take_shot_form();
 	} else {
 		document.getElementById("currentSessionInfo").innerHTML = `${json.label}`;
 		document.getElementById("currentSessionLabel").innerText = json.label;
@@ -102,7 +104,7 @@ async function load_current_session_info() {
 		document.getElementById("currentSessionDetails").hidden = false;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
 		document.getElementById("groupingForm").hidden = false;
-		document.getElementById("takeShotForm").hidden = false;
+		show_take_shot_form("takeShotForm");
 	}
 }
 
@@ -276,8 +278,6 @@ async function end_current_grouping() {
 			document.getElementById("groupingFormClassDescription").hidden = true;
 			document.getElementById("groupingFormSubclassDescription").hidden = true;
 			document.getElementById("groupingFormStartGroupingButton").disabled = true;
-			document.getElementById("saveLastShotFormComment").value = "";
-			show_and_hide_shot_forms("cancel");
 			load_current_grouping_info();
 		}
 	}
@@ -353,7 +353,7 @@ async function set_atmospheric_conditions() {
 }
 
 async function set_configs() {
-	let status = await _update_data_via_api("/configs/", "PUT", setConfigsForm);
+	await _update_data_via_api("/configs/", "PUT", setConfigsForm);
 }
 
 async function set_prism_offsets() {
@@ -376,8 +376,9 @@ async function start_new_grouping() {
 		document.getElementById("groupingFormSubclassDescription").hidden = true;
 		document.getElementById("groupingFormStartGroupingButton").disabled = true;
 		document.getElementById("saveLastShotForm").reset();
-		show_and_hide_shot_forms("cancel");
+		show_take_shot_form("takeShotForm");
 		load_current_grouping_info();
+		collapse(document.getElementById("groupingFormHeader"));
 	}
 }
 
@@ -389,26 +390,31 @@ async function start_new_session() {
 	}
 	if (confirm("Please verify that the date, time, and atmospheric conditions are set correctly.\n\nPress “Ok” to proceed or “Cancel” to go back.") === true) {
 		document.getElementById("sessionFormIndicator").hidden = false;
-		document.getElementById("sessionFormStartSessionButton").disabled = true;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
+		if (document.getElementById("sessionFormSessionTypeMenu").value === "Backsight") {
+			document.getElementById("sessionFormStartSessionButton").hidden = true;
+			document.getElementById("sessionFormCancelBacksightButton").hidden = false;
+		}
 		let status = await _update_data_via_api("/session/", "POST", sessionForm);
 		if (status >= 200 && status <= 299) {
-			document.getElementById("sessionForm").reset();
-			document.getElementById("sessionFormSiteDescription").hidden = true;
-			document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
-			document.getElementById("sessionFormBacksightStationDescription").hidden = true;
-			update_required_new_session_fields();
-			document.getElementById("sessionFormStartSessionButton").disabled = true;
-			show_and_hide_shot_forms("cancel");
-			load_current_session_info();
-			load_current_grouping_info();
-			collapse(document.getElementById("sessionFormHeader"));
+			if (document.getElementById("outputBox").innerText !== "Backsight shot canceled by user.\n") {
+				document.getElementById("sessionForm").reset();
+				document.getElementById("sessionFormSiteDescription").hidden = true;
+				document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
+				document.getElementById("sessionFormBacksightStationDescription").hidden = true;
+				document.getElementById("sessionFormStartSessionButton").disabled = true;
+				document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
+				update_required_new_session_fields();
+				load_current_session_info();
+				load_current_grouping_info();
+				collapse(document.getElementById("sessionFormHeader"));
+			}
 		} else {
-			alert("The backsight shot failed. See the output box for details.");
+			alert("An error occurred while starting the session. See the output box for details.");
 		}
 		document.getElementById("sessionFormIndicator").hidden = true;
-		document.getElementById("sessionFormStartSessionButton").disabled = false;
-		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
+		document.getElementById("sessionFormStartSessionButton").hidden = false;
+		document.getElementById("sessionFormCancelBacksightButton").hidden = true;
 		load_prism_offsets();
 	}
 }
@@ -417,7 +423,7 @@ async function start_new_session() {
 // Shot Handling
 
 async function take_shot() {
-	show_and_hide_shot_forms("take");
+	show_take_shot_form("cancelShotForm");
 	document.getElementById("outputBox").innerHTML = "";
 	let response = await fetch("/shot/");
 	let json = await response.json();
@@ -430,7 +436,6 @@ async function take_shot() {
 	if (response.status >= 200 && response.status <= 299) {
 		if (json.result === "Measurement canceled by user.") {
 			theoutput.push(json.result);
-			show_and_hide_shot_forms("cancel");
 		} else {
 			if (document.getElementById("takeShotFormStakeoutCheckbox").checked) {
 				let themessage = "";
@@ -457,7 +462,7 @@ async function take_shot() {
 					alert("Distance to target coordinates:\n" + themessage);
 				}
 			}
-			show_and_hide_shot_forms("save");
+			show_take_shot_form("saveLastShotForm");
 			if ("result" in json) {
 				theoutput.push('<b>Last Shot:</b>');
 				theoutput.push('<table class="shotdata">');
@@ -471,22 +476,25 @@ async function take_shot() {
 	document.getElementById("outputBox").innerHTML = theoutput.join("\n");
 }
 
+async function cancel_backsight() {
+	await fetch("/cancel/");
+}
+
 async function cancel_shot() {
-	show_and_hide_shot_forms("cancel");
+	show_take_shot_form("takeShotForm");
 	await fetch("/cancel/");
 }
 
 async function save_last_shot() {
-	show_and_hide_shot_forms("cancel");
-	document.getElementById("outputBox").innerHTML = "";
 	await _update_data_via_api("/shot/", "POST", saveLastShotForm);
+	show_take_shot_form("takeShotForm");
 	load_current_grouping_info();
 }
 
 function discard_last_shot() {
 	if (confirm("Discard this shot without saving?")) {
-		show_and_hide_shot_forms("cancel");
-		document.getElementById("outputBox").innerHTML = "Last shot discarded.";
+		document.getElementById("outputBox").innerText = "Last shot discarded.";
+		show_take_shot_form("takeShotForm");
 	}
 }
 
@@ -551,23 +559,12 @@ async function os_check() {
 	};
 }
 
-function show_and_hide_shot_forms(theaction) {
-	switch (theaction) {
-		case "take":
-			document.getElementById("takeShotForm").hidden = true;
-			document.getElementById("cancelShotForm").hidden = false;
-			document.getElementById("saveLastShotForm").hidden = true;
-			break;
-		case "cancel":
-			document.getElementById("takeShotForm").hidden = false;
-			document.getElementById("cancelShotForm").hidden = true;
-			document.getElementById("saveLastShotForm").hidden = true;
-			break;
-		case "save":
-			document.getElementById("takeShotForm").hidden = true;
-			document.getElementById("cancelShotForm").hidden = true;
-			document.getElementById("saveLastShotForm").hidden = false;
-			break;
+function show_take_shot_form(theform = null) {
+	document.getElementById("takeShotForm").hidden = true;
+	document.getElementById("cancelShotForm").hidden = true;
+	document.getElementById("saveLastShotForm").hidden = true;
+	if (theform) {
+		document.getElementById(theform).hidden = false;
 	}
 }
 
@@ -914,7 +911,7 @@ function livemap_show_points() {
 async function set_rpi_clock() {
 	let now = new Date();
 	document.getElementById("setClockFormDateTimeString").value = now.toString();
-	_update_data_via_api("/raspbian/clock/", "PUT", setClockForm);
+	await _update_data_via_api("/raspbian/clock/", "PUT", setClockForm);
 }
 
 
