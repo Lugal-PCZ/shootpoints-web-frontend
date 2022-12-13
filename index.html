@@ -110,11 +110,12 @@
 			<span style="float: right;" onclick="document.getElementById('utilitiesPopup').hidden=true">×&nbsp;</span>
 		</div>
 		<form id="shutDownForm" hidden>
-			<span><b>Shut Down the Raspberry Pi</b></span>
+			<span><b>Shut Down/Reboot the Raspberry Pi</b></span>
 			<hr>
 			<input type="checkbox" id="shutDownFormEndCurrentSessionCheckbox" />
-			<span id="shutDownFormEndCurrentSessionCheckboxLabel">End Current Session<br></span>
-			<input type="button" class="dangerous" value="Shut Down" onclick="shut_rpi_down();" />
+			<span id="shutDownFormEndCurrentSessionCheckboxLabel">End the Current Session<br></span>
+			<input type="button" class="dangerous" value="Shut Down" onclick="shut_down_rpi();" />
+			<input type="button" class="dangerous" value="Reboot" onclick="reboot_rpi();" />
 			<img id="shutDownFormIndicator" src="img/cylon.svg" hidden />
 		</form>
 		<form id="setClockForm" hidden>

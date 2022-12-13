@@ -908,6 +908,28 @@ function livemap_show_points() {
 
 // Raspberry Pi Hardware Interfaces
 
+function reboot_rpi() {
+	let themessage = "Press “Ok” to reboot the Raspberry Pi."
+	let endcurrentsession = document.getElementById("shutDownFormEndCurrentSessionCheckbox").checked;
+	if (endcurrentsession === true) {
+		themessage = "Press “Ok” to end the current session and reboot the Raspberry Pi."
+	}
+	if (confirm(themessage)) {
+		if (endcurrentsession === true) {
+			end_current_session(prompt = false);
+		}
+		fetch("/raspbian/reboot/");
+		document.getElementById("shutDownFormIndicator").hidden = false;
+		setTimeout(function () {
+			document.getElementById("shutDownFormIndicator").hidden = true;
+			document.getElementById("utilitiesPopup").hidden = true;
+			confirm("The Raspberry Pi has been rebooted and your browser will now refresh.");
+			window.location.reload();
+		}, 60000);
+	}
+}
+
+
 async function set_rpi_clock() {
 	let now = new Date();
 	document.getElementById("setClockFormDateTimeString").value = now.toString();
@@ -915,7 +937,7 @@ async function set_rpi_clock() {
 }
 
 
-function shut_rpi_down() {
+function shut_down_rpi() {
 	let themessage = "Press “Ok” to safely shut down the Raspberry Pi."
 	let endcurrentsession = document.getElementById("shutDownFormEndCurrentSessionCheckbox").checked;
 	if (endcurrentsession === true) {
@@ -928,6 +950,7 @@ function shut_rpi_down() {
 		fetch("/raspbian/shutdown/");
 		document.getElementById("shutDownFormIndicator").hidden = false;
 		setTimeout(function () {
+			document.getElementById("shutDownFormIndicator").hidden = true;
 			document.getElementById("utilitiesPopup").hidden = true;
 			confirm("Shutdown complete. You can now unplug the Raspberry Pi.");
 		}, 10000);
