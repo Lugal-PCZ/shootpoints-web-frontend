@@ -146,6 +146,10 @@ label {
 	width: 5em;
 }
 
+#takeShotForm label {
+	width: 7em;
+}
+
 #setAtmosphericConditionsForm>label,
 #setPrismOffsetsForm label,
 #saveNewStationForm label {
