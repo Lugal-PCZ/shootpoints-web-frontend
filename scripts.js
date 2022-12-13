@@ -267,7 +267,7 @@ async function delete_subclass() {
 
 async function end_current_grouping() {
 	let themessage = "This will end the current grouping.\n\nPress “Ok” to proceed or “Cancel” to go back.";
-	if (document.getElementById("outputBox").innerHTML.substring(0, 24) === '<table class="shotdata">') {
+	if (document.getElementById("outputBox").innerHTML.substring(0, 17) === "<b>Last Shot:</b>") {
 		themessage = "This will end the current grouping and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back."
 	}
 	if (confirm(themessage)) {
@@ -285,7 +285,7 @@ async function end_current_grouping() {
 
 async function end_current_session(prompt = true) {
 	let themessage = "This will end the current session.\n\nPress “Ok” to proceed or “Cancel” to go back.";
-	if (document.getElementById("outputBox").innerHTML.substring(0, 24) === '<table class="shotdata">') {
+	if (document.getElementById("outputBox").innerHTML.substring(0, 17) === "<b>Last Shot:</b>") {
 		themessage = "This will end the current session and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back.";
 	}
 	if (prompt === true) {
@@ -363,7 +363,7 @@ async function set_prism_offsets() {
 }
 
 async function start_new_grouping() {
-	if (document.getElementById("outputBox").innerHTML.substring(0, 24) === '<table class="shotdata">') {
+	if (document.getElementById("outputBox").innerHTML.substring(0, 17) === "<b>Last Shot:</b>") {
 		if (!confirm("You have an unsaved shot. Creating a new grouping now will put it in the new grouping when it’s saved. Do you wish to do this?\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
 			return;
 		}
@@ -383,7 +383,7 @@ async function start_new_grouping() {
 }
 
 async function start_new_session() {
-	if (document.getElementById("outputBox").innerHTML.substring(0, 24) === '<table class="shotdata">') {
+	if (document.getElementById("outputBox").innerHTML.substring(0, 17) === "<b>Last Shot:</b>") {
 		if (!confirm("You have an unsaved shot that will be deleted if you continue.\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
 			return;
 		}
