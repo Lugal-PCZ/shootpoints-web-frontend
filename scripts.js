@@ -630,10 +630,10 @@ async function show_utilities_popup() {
 		document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = true;
 		document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = true;
 	} else {
-		document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").checked = true;
 		document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = false;
 		document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = false;
 	}
+	toggle_rpi_power_buttons();
 	load_sessions_menus();
 	document.getElementById("utilitiesPopup").hidden = false;
 }
@@ -647,6 +647,16 @@ function toggle_button(theformid) {
 		}
 	});
 	theform.querySelector("input[type=button]").disabled = !allfieldsarevalid;
+}
+
+function toggle_rpi_power_buttons() {
+	if (document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").checked) {
+		document.getElementById("rpiPowerOffFormShutdownButton").classList.add("dangerous");
+		document.getElementById("rpiPowerOffFormRebootButton").classList.add("dangerous");
+	} else {
+		document.getElementById("rpiPowerOffFormShutdownButton").classList.remove("dangerous");
+		document.getElementById("rpiPowerOffFormRebootButton").classList.remove("dangerous");
+	}
 }
 
 function toggle_stakeout_fields() {

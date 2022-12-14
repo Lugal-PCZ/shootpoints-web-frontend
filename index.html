@@ -112,10 +112,13 @@
 		<form id="rpiPowerOffForm" hidden>
 			<span><b>Power Off the Raspberry Pi</b></span>
 			<hr>
-			<input type="checkbox" id="rpiPowerOffFormEndCurrentSessionCheckbox" />
-			<span id="rpiPowerOffFormEndCurrentSessionCheckboxLabel">End the Current Session<br></span>
-			<input type="button" class="dangerous" value="Shut Down" onclick="rpi_power('shutdown');" />
-			<input type="button" class="dangerous" value="Reboot" onclick="rpi_power('reboot');" />
+			<input type="checkbox" id="rpiPowerOffFormEndCurrentSessionCheckbox"
+				onchange="toggle_rpi_power_buttons();" />
+			<span id="rpiPowerOffFormEndCurrentSessionCheckboxLabel">End the Current
+				Session<br></span>
+			<input type="button" id="rpiPowerOffFormShutdownButton" value="Shut Down"
+				onclick="rpi_power('shutdown');" />
+			<input type="button" id="rpiPowerOffFormRebootButton" value="Reboot" onclick="rpi_power('reboot');" />
 			<img id="rpiPowerOffFormIndicator" src="img/cylon.svg" hidden />
 		</form>
 		<form id="setClockForm" hidden>
