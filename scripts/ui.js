@@ -29,15 +29,14 @@ function handle_special_subclasses() {
         if (geometriesmenu.value != "1") {
             geometriesmenu.value = "1";
             update_description(geometriesmenu, 'groupingFormGeometryDescription');
-            themessage += "\n\nMoreover, because a survey station is by definition a single point in space, the geometry for this point has been changed to “Isolated Point.”";
+            themessage += "\n\nMoreover, because a survey station is by definition a single point in space, the geometry for this point has been changed to “Isolated Point.” Please verify the grouping information before continuing.";
         }
-        themessage += "\n\nPlease verify the grouping information before continuing.";
         alert(themessage);
     } else if (document.getElementById("groupingFormSubclassesMenu").value === "5") {
         if (geometriesmenu.value != "1" && geometriesmenu.value != "2") {
             geometriesmenu.value = "1";
             update_description(geometriesmenu, 'groupingFormGeometryDescription');
-            alert("You’ve chosen the “GCP” subclass. These can only have “Isolated Point” or “Point Cloud” geometry, so it has been reset to “Isolated Point.”\n\nPlease verify the grouping information before continuing.");
+            alert("You’ve chosen the “GCP” subclass. These can only have “Isolated Point” or “Point Cloud” geometry, so it has been changed to “Isolated Point.” Please verify the grouping information before continuing.");
         }
     }
 }

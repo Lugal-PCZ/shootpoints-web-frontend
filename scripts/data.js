@@ -388,7 +388,7 @@ async function start_new_session() {
 			return;
 		}
 	}
-	if (confirm("Please verify that the date, time, and atmospheric conditions are set correctly.\n\nPress “Ok” to proceed or “Cancel” to go back.") === true) {
+	if (confirm("Please verify that the atmospheric conditions are set correctly.\n\nPress “Ok” to proceed or “Cancel” to go back.") === true) {
 		document.getElementById("sessionFormIndicator").hidden = false;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
 		if (document.getElementById("sessionFormSessionTypeMenu").value === "Backsight") {
