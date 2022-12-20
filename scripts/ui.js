@@ -169,7 +169,7 @@ function update_backsight_station_menu(occupiedstationmenu) {
     let options = occupiedstationmenu.innerHTML.split("\n");
     let newoptions = Array();
     options.forEach((option) => {
-        if (option.indexOf('value="' + occupiedstationmenu.value + '"') === -1) {
+        if (option.indexOf(`value="${occupiedstationmenu.value}"`) === -1) {
             newoptions.push(option);
         }
     });
@@ -242,7 +242,7 @@ function update_description(source, target) {
         thedescription = thedescription.replaceAll("\'", "\\\'");
         thedescription = thedescription.replaceAll("\"", "\\\"");
     }
-    document.getElementById(target).setAttribute("onClick", "alert('" + thedescription + "')");
+    document.getElementById(target).setAttribute("onClick", `alert("${thedescription}")`);
     document.getElementById(target).hidden = false;
 }
 

@@ -195,7 +195,7 @@ async function _update_data_via_api(theurl, themethod, theform) {
 
 async function delete_class() {
 	let classname = document.getElementById("deleteClassFormClassesMenu");
-	if (confirm("Delete class “" + classname.options[classname.selectedIndex].text + "?”")) {
+	if (confirm(`Delete class “${classname.options[classname.selectedIndex].text}?”`)) {
 		let status = await _update_data_via_api("/class/", "DELETE", deleteClassForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteClassForm").reset();
@@ -208,7 +208,7 @@ async function delete_class() {
 
 async function delete_site() {
 	let sitename = document.getElementById("deleteSiteFormSitesMenu");
-	if (confirm("Delete site “" + sitename.options[sitename.selectedIndex].text + "?”")) {
+	if (confirm(`Delete site “${sitename.options[sitename.selectedIndex].text}?”`)) {
 		let status = await _update_data_via_api("/site/", "DELETE", deleteSiteForm)
 		if (status >= 200 && status <= 299) {
 			document.getElementById("deleteSiteForm").reset();
@@ -221,15 +221,16 @@ async function delete_site() {
 
 async function delete_session() {
 	let sessionlabel = document.getElementById("deleteSessionFormSessionsMenu");
-	let themessage = "Delete session “" + sessionlabel.options[sessionlabel.selectedIndex].text + ",” including all its shots and groupings?\n\nThis cannot be undone, so download any important data before proceeding.";
+	let themessage = `Delete session “${sessionlabel.options[sessionlabel.selectedIndex].text},”`;
 	// get the current session and check if it's the one selected
 	let currentsession = false
 	let response = await fetch("/session/");
 	let json = await response.json();
 	if (Number(json.id) === Number(sessionlabel.options[sessionlabel.selectedIndex].value)) {
 		currentsession = true
-		themessage = "Delete the current session, including all its shots and groupings?\n\nThis cannot be undone, so download any important data before proceeding.";
+		themessage = "Delete the current session,";
 	}
+	themessage += " including all its shots and groupings?\n\nThis cannot be undone, so download any important data before proceeding."
 	if (confirm(themessage)) {
 		let status = await _update_data_via_api("/session/", "DELETE", deleteSessionForm)
 		if (status >= 200 && status <= 299) {
@@ -245,7 +246,7 @@ async function delete_session() {
 
 async function delete_station() {
 	let thestation = document.getElementById("deleteStationFormStationsMenu");
-	if (confirm("Delete station “" + thestation.options[thestation.selectedIndex].text + "?”")) {
+	if (confirm(`Delete station “${thestation.options[thestation.selectedIndex].text}?”`)) {
 		let status = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
 		if (status >= 200 && status <= 299) {
 			update_dependent_station_menu(document.getElementById("deleteStationFormSitesMenu"), "deleteStationFormStationsMenu");
@@ -257,7 +258,7 @@ async function delete_station() {
 
 async function delete_subclass() {
 	let thesubclass = document.getElementById("deleteSubclassFormSubclassesMenu");
-	if (confirm("Delete subclass “" + thesubclass.options[thesubclass.selectedIndex].text + "?”")) {
+	if (confirm(`Delete subclass “${thesubclass.options[thesubclass.selectedIndex].text}?”`)) {
 		let status = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
 		if (status >= 200 && status <= 299) {
 			update_dependent_subclass_menu(document.getElementById("deleteSubclassFormClassesMenu"), "deleteSubclassFormSubclassesMenu");
@@ -446,28 +447,25 @@ async function take_shot() {
 			theoutput.push(json.result);
 		} else {
 			if (document.getElementById("takeShotFormStakeoutCheckbox").checked) {
-				let themessage = "";
+				let themessage = [];
 				if (document.getElementById("takeShotFormStakeoutTargetNorthing").value) {
 					let n_difference = document.getElementById("takeShotFormStakeoutTargetNorthing").value - json.result.calculated_n;
 					let n_direction = "North";
 					if (n_difference < 0) {
 						n_direction = "South";
 					}
-					themessage += "Move " + Math.abs(n_difference).toFixed(2) + "m " + n_direction;
+					themessage.push(`Move ${Math.abs(n_difference).toFixed(2)}m ${n_direction}`);
 				}
 				if (document.getElementById("takeShotFormStakeoutTargetEasting").value) {
-					if (themessage) {
-						themessage += "\n";
-					}
 					let e_difference = document.getElementById("takeShotFormStakeoutTargetEasting").value - json.result.calculated_e;
 					let e_direction = "East";
 					if (e_difference < 0) {
 						e_direction = "West";
 					}
-					themessage += "Move " + Math.abs(e_difference).toFixed(2) + "m " + e_direction;
+					themessage.push(`Move ${Math.abs(e_difference).toFixed(2)}m ${e_direction}`);
 				}
 				if (themessage) {
-					alert("Distance to target coordinates:\n" + themessage);
+					alert("Distance to stakeout target:\n" + themessage.join("\n"));
 				}
 			}
 			show_take_shot_form("saveLastShotForm");
