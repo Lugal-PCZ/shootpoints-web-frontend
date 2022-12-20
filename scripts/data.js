@@ -70,12 +70,13 @@ async function load_current_grouping_info() {
 		show_take_shot_form();
 	} else {
 		document.getElementById("currentGroupingInfo").innerHTML = `${json.label} (${json.geometries_name})`;
-		document.getElementById("currentGroupingLabel").innerText = json.label;
-		document.getElementById("currentGroupingGeometry").innerText = json.geometries_name;
-		document.getElementById("currentGroupingClass").innerText = json.classes_name;
-		document.getElementById("currentGroupingSubclass").innerText = json.subclasses_name;
-		document.getElementById("currentGroupingDescription").innerText = json.description;
-		document.getElementById("currentGroupingNumberOfShots").innerText = json.num_shots;
+		document.getElementById("currentGroupingInfo").setAttribute("currentgroupingid", json.id);
+		document.getElementById("currentGroupingInfo").setAttribute("currentgroupinglabel", json.label);
+		document.getElementById("currentGroupingInfo").setAttribute("currentgroupinggeometry", json.geometries_name);
+		document.getElementById("currentGroupingInfo").setAttribute("currentgroupingclass", json.classes_name);
+		document.getElementById("currentGroupingInfo").setAttribute("currentgroupingsubclass", json.subclasses_name);
+		document.getElementById("currentGroupingInfo").setAttribute("currentgroupingdescription", json.description);
+		document.getElementById("currentGroupingInfo").setAttribute("currentgroupingnumberofshots", json.num_shots);
 		document.getElementById("currentGroupingDetails").setAttribute("onClick", "show_current_grouping_details();");
 		document.getElementById("currentGroupingDetails").hidden = false;
 		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = false;
@@ -95,11 +96,12 @@ async function load_current_session_info() {
 		show_take_shot_form();
 	} else {
 		document.getElementById("currentSessionInfo").innerHTML = `${json.label}`;
-		document.getElementById("currentSessionLabel").innerText = json.label;
-		document.getElementById("currentSessionStarted").innerText = json.started;
-		document.getElementById("currentSessionSite").innerText = json.sites_name;
-		document.getElementById("currentSessionOccupiedPoint").innerText = json.stations_name;
-		document.getElementById("currentSessionInstrumentHeight").innerText = json.instrumentheight;
+		document.getElementById("currentSessionInfo").setAttribute("currentsessionid", json.id);
+		document.getElementById("currentSessionInfo").setAttribute("currentsessionlabel", json.label);
+		document.getElementById("currentSessionInfo").setAttribute("currentsessionstarted", json.started);
+		document.getElementById("currentSessionInfo").setAttribute("currentsessionsite", json.sites_name);
+		document.getElementById("currentSessionInfo").setAttribute("currentsessionoccupiedpoint", json.stations_name);
+		document.getElementById("currentSessionInfo").setAttribute("currentsessioninstrumentheight", json.instrumentheight);
 		document.getElementById("currentSessionDetails").setAttribute("onClick", "show_current_session_details();");
 		document.getElementById("currentSessionDetails").hidden = false;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
@@ -267,7 +269,7 @@ async function delete_subclass() {
 
 async function end_current_grouping() {
 	let themessage = "This will end the current grouping.\n\nPress “Ok” to proceed or “Cancel” to go back.";
-	if (document.getElementById("outputBox").innerHTML.substring(0, 17) === "<b>Last Shot:</b>") {
+	if (document.getElementById("saveLastShotForm").hidden === false) {
 		themessage = "This will end the current grouping and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back."
 	}
 	if (confirm(themessage)) {
@@ -285,7 +287,7 @@ async function end_current_grouping() {
 
 async function end_current_session(prompt = true) {
 	let themessage = "This will end the current session.\n\nPress “Ok” to proceed or “Cancel” to go back.";
-	if (document.getElementById("outputBox").innerHTML.substring(0, 17) === "<b>Last Shot:</b>") {
+	if (document.getElementById("saveLastShotForm").hidden === false) {
 		themessage = "This will end the current session and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back.";
 	}
 	if (prompt === true) {
@@ -363,7 +365,7 @@ async function set_prism_offsets() {
 }
 
 async function start_new_grouping() {
-	if (document.getElementById("outputBox").innerHTML.substring(0, 17) === "<b>Last Shot:</b>") {
+	if (document.getElementById("saveLastShotForm").hidden === false) {
 		if (!confirm("You have an unsaved shot. Creating a new grouping now will put it in the new grouping when it’s saved. Do you wish to do this?\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
 			return;
 		}
@@ -383,12 +385,13 @@ async function start_new_grouping() {
 }
 
 async function start_new_session() {
-	if (document.getElementById("outputBox").innerHTML.substring(0, 17) === "<b>Last Shot:</b>") {
-		if (!confirm("You have an unsaved shot that will be deleted if you continue.\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
+	if (document.getElementById("saveLastShotForm").hidden === false) {
+		if (!confirm("You have a shot that will not be saved if you continue.\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
 			return;
 		}
 	}
 	if (confirm("Please verify that the atmospheric conditions are set correctly.\n\nPress “Ok” to proceed or “Cancel” to go back.") === true) {
+		document.getElementById("sessionFormCancelBacksightButton").setAttribute("backsightcanceled", "no");
 		document.getElementById("sessionFormIndicator").hidden = false;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
 		if (document.getElementById("sessionFormSessionTypeMenu").value === "Backsight") {
@@ -397,7 +400,7 @@ async function start_new_session() {
 		}
 		let status = await _update_data_via_api("/session/", "POST", sessionForm);
 		if (status >= 200 && status <= 299) {
-			if (document.getElementById("outputBox").innerText !== "Backsight shot canceled by user.\n") {
+			if (document.getElementById("sessionFormCancelBacksightButton").getAttribute("backsightcanceled") === "no") {
 				document.getElementById("sessionForm").reset();
 				document.getElementById("sessionFormSiteDescription").hidden = true;
 				document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
@@ -417,6 +420,11 @@ async function start_new_session() {
 		document.getElementById("sessionFormCancelBacksightButton").hidden = true;
 		load_prism_offsets();
 	}
+}
+
+async function cancel_backsight() {
+	document.getElementById("sessionFormCancelBacksightButton").setAttribute("backsightcanceled", "yes")
+	await fetch("/cancel/");
 }
 
 
@@ -474,10 +482,6 @@ async function take_shot() {
 		}
 	}
 	document.getElementById("outputBox").innerHTML = theoutput.join("\n");
-}
-
-async function cancel_backsight() {
-	await fetch("/cancel/");
 }
 
 async function cancel_shot() {

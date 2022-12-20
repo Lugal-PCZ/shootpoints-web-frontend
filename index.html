@@ -264,7 +264,9 @@
 				<span id="sessionFormHeader" onclick="collapse(this);">
 					<b>Session</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span><br>
 					<span class="currentSurveyingInfo">
-						<span id="currentSessionInfo"></span>
+						<span id="currentSessionInfo" currentsessionid="" currentsessionlabel=""
+							currentsessionstarted="" currentsessionsite="" currentsessionoccupiedpoint=""
+							currentsessioninstrumentheight=""></span>
 					</span>
 				</span>
 				<img class="infobutton" id="currentSessionDetails" src="img/info.svg" hidden>
@@ -321,16 +323,11 @@
 						<input type="text" id="sessionFormInstrumentHeight" name="instrument_height"
 							pattern="[1-2](\.\d{1,3})?" oninput="toggle_button('sessionForm');" />
 					</span>
-					<input type="hidden" id="currentSessionLabel" />
-					<input type="hidden" id="currentSessionStarted" />
-					<input type="hidden" id="currentSessionSite" />
-					<input type="hidden" id="currentSessionOccupiedPoint" />
-					<input type="hidden" id="currentSessionInstrumentHeight" />
 					<br>
 					<input type="button" id="sessionFormStartSessionButton" class="safe" value="Start New Session"
 						onclick="start_new_session();" disabled>
 					<input type="button" id="sessionFormCancelBacksightButton" class="dangerous"
-						value="Cancel Backsight" onclick="cancel_backsight();" hidden>
+						value="Cancel Backsight" onclick="cancel_backsight();" backsightcanceled="no" hidden>
 					<input type="button" id="sessionFormEndCurrentSessionButton" class="dangerous"
 						value="End Current Session" onclick="end_current_session();" disabled>
 				</span>
@@ -339,7 +336,9 @@
 				<span id="groupingFormHeader" onclick="collapse(this);">
 					<b>Grouping</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span><br>
 					<span class="currentSurveyingInfo">
-						<span id="currentGroupingInfo"></span>
+						<span id="currentGroupingInfo" currentgroupingid="" currentgroupinglabel=""
+							currentgroupinggeometry="" currentgroupingclass="" currentgroupingsubclass=""
+							currentgroupingdescription="" currentgroupingnumberofshots=""></span>
 					</span>
 				</span>
 				<img class="infobutton" id="currentGroupingDetails" src="img/info.svg" hidden>
@@ -368,12 +367,6 @@
 						required /><br>
 					<label for="groupingFormDescription">Description:</label>
 					<input type="text" id="groupingFormDescription" name="description" />
-					<input type="hidden" id="currentGroupingLabel" />
-					<input type="hidden" id="currentGroupingGeometry" />
-					<input type="hidden" id="currentGroupingClass" />
-					<input type="hidden" id="currentGroupingSubclass" />
-					<input type="hidden" id="currentGroupingDescription" />
-					<input type="hidden" id="currentGroupingNumberOfShots" />
 					<br>
 					<input type="button" id="groupingFormStartGroupingButton" class="safe" value="Start New Grouping"
 						onclick="start_new_grouping();" disabled />

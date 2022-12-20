@@ -67,18 +67,18 @@ function show_take_shot_form(theform = null) {
 }
 
 function show_current_grouping_details() {
-    let details = ["Class: " + document.getElementById("currentGroupingClass").innerText];
-    details.push("Subclass: " + document.getElementById("currentGroupingSubclass").innerText);
-    details.push("Description: " + document.getElementById("currentGroupingDescription").innerText);
-    details.push("Number of Shots in Grouping: " + document.getElementById("currentGroupingNumberOfShots").innerText);
+    let details = [`Class: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingclass")}`];
+    details.push(`Subclass: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingsubclass")}`);
+    details.push(`Description: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingdescription")}`);
+    details.push(`Number of Shots in Grouping: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingnumberofshots")}`);
     alert(details.join("\n"));
 }
 
 function show_current_session_details() {
-    let details = "Site: " + document.getElementById("currentSessionSite").innerText +
-        "\nOccupied Point: " + document.getElementById("currentSessionOccupiedPoint").innerText +
-        "\nInstrument Height: " + document.getElementById("currentSessionInstrumentHeight").innerText + "m";
-    alert(details);
+    let details = [`Site: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionsite")}`];
+    details.push(`Occupied Point: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionoccupiedpoint")}`);
+    details.push(`Instrument Height: ${document.getElementById("currentSessionInfo").getAttribute("currentsessioninstrumentheight")}m`);
+    alert(details.join("\n"));
 }
 
 async function show_on_the_fly_adjustments_popup() {
@@ -123,13 +123,13 @@ async function show_on_the_fly_adjustments_popup() {
 
 async function show_utilities_popup() {
     document.getElementById("onTheFlyAdjustmentsPopup").hidden = true;
-    if (document.getElementById("currentSessionInfo").innerText === "(no current session)") {
+    if (Number(document.getElementById("currentSessionInfo").getAttribute("currentsessionid")) > 0) {
+        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = false;
+        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = false;
+    } else {
         document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").checked = false;
         document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = true;
         document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = true;
-    } else {
-        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = false;
-        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = false;
     }
     toggle_rpi_power_buttons();
     load_sessions_menus();
