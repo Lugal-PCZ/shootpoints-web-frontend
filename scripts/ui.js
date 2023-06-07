@@ -234,16 +234,21 @@ async function update_dependent_subclass_menu(theclass, themenu) {
 }
 
 function update_description(source, target) {
-    let thedescription = source.options[source.selectedIndex].getAttribute("description");
-    if (thedescription === null || thedescription === "null" || thedescription === "") {
-        thedescription = "(no description recorded)";
-    } else {
-        thedescription = thedescription.replaceAll("\\", "\\\\");
-        thedescription = thedescription.replaceAll("\'", "\\\'");
-        thedescription = thedescription.replaceAll("\"", "\\\"");
+    if (source.options[source.selectedIndex].value === "") {
+        document.getElementById(target).hidden = true;
     }
-    document.getElementById(target).setAttribute("onClick", `alert("${thedescription}")`);
-    document.getElementById(target).hidden = false;
+    else {
+        let thedescription = source.options[source.selectedIndex].getAttribute("description");
+        if (thedescription === null || thedescription === "null" || thedescription === "") {
+            thedescription = "(no description recorded)";
+        } else {
+            thedescription = thedescription.replaceAll("\\", "\\\\");
+            thedescription = thedescription.replaceAll("\'", "\\\'");
+            thedescription = thedescription.replaceAll("\"", "\\\"");
+        }
+        document.getElementById(target).setAttribute("onClick", `alert("${thedescription}")`);
+        document.getElementById(target).hidden = false;
+    }
 }
 
 function update_required_new_session_fields() {
