@@ -471,7 +471,7 @@ async function abort_resection() {
 		document.getElementById("sessionFormSitesMenu").disabled = false;
 		document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
 		document.getElementById("sessionFormInstrumentHeight").disabled = false;
-		document.getElementById("sessionFormStartSessionButton").value = "Start New Session";
+		document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight #1";
 		document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
 		document.getElementById("sessionFormAbortResectionButton").hidden = true;

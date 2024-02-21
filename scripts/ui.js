@@ -89,6 +89,7 @@ function show_current_session_details() {
     let details = [`Site: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionsite")}`];
     details.push(`Occupied Point: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionoccupiedpoint")}`);
     details.push(`Instrument Height: ${document.getElementById("currentSessionInfo").getAttribute("currentsessioninstrumentheight")}m`);
+    details.push(`Started: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionstarted")}m`);
     alert(details.join("\n"));
 }
 
