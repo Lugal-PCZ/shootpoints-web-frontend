@@ -40,14 +40,6 @@ async function load_configs_menus() {
 		portsmenu.push(`<option value="${theport}">${theport}</option>`);
 	});
 	document.getElementById("setConfigsFormPortMenu").innerHTML = portsmenu.join("\n");
-	document.getElementById("setConfigsFormPortMenu").value = json.current.port;
-	if (json.current.port === "demo") {
-		document.getElementById("setConfigsFormMakeMenu").disabled = true;
-		document.getElementById("setConfigsFormModelMenu").disabled = true;
-	} else {
-		document.getElementById("setConfigsFormMakeMenu").disabled = false;
-		document.getElementById("setConfigsFormModelMenu").disabled = false;
-	};
 	let makesmenu = [];
 	Object.keys(json.options.total_stations).forEach(function (themake) {
 		makesmenu.push(`<option value="${themake}">${themake}</option>`);
@@ -57,6 +49,7 @@ async function load_configs_menus() {
 	update_model_menu(json.options.total_stations[json.current.make]);
 	document.getElementById("setConfigsFormModelMenu").value = json.current.model;
 	document.getElementById("setConfigsFormLimit").value = json.current.limit;
+	toggle_total_station_menus(document.getElementById("setConfigsFormPortMenu").value)
 }
 
 async function load_current_grouping_info() {
@@ -119,7 +112,6 @@ async function load_date_and_time() {
 	let now = new Date();
 	document.getElementById("dateAndTime").innerHTML = now.toString();
 	setTimeout(load_date_and_time, 1000);
-	document.getElementById("sessionFormLabel").value = now.toISOString().substring(0,10);
 }
 
 async function load_geometries_menu() {
@@ -368,6 +360,7 @@ async function set_atmospheric_conditions() {
 
 async function set_configs() {
 	await _update_data_via_api("/configs/", "PUT", setConfigsForm);
+	collapse(document.getElementById("setConfigsForm"));
 }
 
 async function set_prism_offsets() {

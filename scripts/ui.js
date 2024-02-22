@@ -56,6 +56,11 @@ async function os_check() {
     };
 }
 
+function put_date_in_session_label() {
+    let now = new Date();
+    document.getElementById("sessionFormLabel").value = now.toISOString().substring(0,10) + " ";
+}
+
 function remove_station_from_related_menu(thismenu, targetmenu) {
     let options = thismenu.innerHTML.split("\n");
     let newoptions = Array();
@@ -173,6 +178,16 @@ function toggle_stakeout_fields() {
         document.getElementById("takeShotFormStakeoutTarget").hidden = false;
     } else {
         document.getElementById("takeShotFormStakeoutTarget").hidden = true;
+    }
+}
+
+function toggle_total_station_menus(theport) {
+    if (theport === "demo") {
+        document.getElementById("setConfigsFormMakeMenu").disabled = true;
+        document.getElementById("setConfigsFormModelMenu").disabled = true;
+    } else {
+        document.getElementById("setConfigsFormMakeMenu").disabled = false;
+        document.getElementById("setConfigsFormModelMenu").disabled = false;
     }
 }
 
