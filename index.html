@@ -197,7 +197,6 @@
 				polygon {
 					marker: url(#surveyPointSymbol);
 				}
-
 			</style>
 			<polyline class="surveyStation surveyData" points="14826.706,-17659.494"
 				style="marker:url(#surveyStationSymbol)" />
@@ -254,15 +253,15 @@
 	<div id="outputBox"></div>
 
 	<div class="usage">
-		<div class="formcollectionheader" onclick="collapse(this);">
-			Surveying <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+		<div id="surveyingPanel" class="formcollectionheader" firstload onclick="collapse(this);">
+			Surveying <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 			<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();" hidden>
 		</div>
 
 		<div class="formcollection collapsible" hidden>
 			<form id="sessionForm">
 				<span id="sessionFormHeader" onclick="collapse(this);">
-					<b>Session</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span><br>
+					<b>Session</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span><br>
 					<span class="currentSurveyingInfo">
 						<span id="currentSessionInfo" currentsessionid="" currentsessionlabel=""
 							currentsessionstarted="" currentsessionsite="" currentsessionoccupiedpoint=""
@@ -280,28 +279,38 @@
 					<input type="text" id="sessionFormSurveyor" name="surveyor" oninput="toggle_button('sessionForm');"
 						required /><br>
 					<label for="sessionFormSitesMenu">Site:</label>
-					<select id="sessionFormSitesMenu" class="sitesmenu" name="sites_id"
-						onchange="update_description(this, 'sessionFormSiteDescription'); update_dependent_station_menu(this, 'sessionFormOccupiedPointMenu'); toggle_button('sessionForm');"
-						required>
+					<select id="sessionFormSitesMenu" class="sitesmenu" name="sites_id" onchange="update_description(this, 'sessionFormSiteDescription');
+							update_station_menu(this, 'sessionFormOccupiedPointMenu');
+							update_station_menu(this, 'sessionFormBacksightStation1Menu');
+							toggle_button('sessionForm');" required>
 					</select>
 					<img class="infobutton" id="sessionFormSiteDescription" src="img/info.svg" hidden><br>
-					<label for="sessionFormOccupiedPointMenu">Occupied Point:</label>
-					<select id="sessionFormOccupiedPointMenu" name="occupied_point_id" onchange="update_description(this, 'sessionFormOccupiedPointDescription');
-					update_backsight_station_menu(this); toggle_button('sessionForm');" required>
-					</select>
-					<img class="infobutton" id="sessionFormOccupiedPointDescription" src="img/info.svg" hidden><br>
+					<label for="sessionFormTemperature">Temperature (°C):</label>
+					<input type="text" id="sessionFormTemperature" name="temperature" pattern="-?\d{1,2}" required /><br>
+					<label for="sessionFormPressure">Pressure (mmHg):</label>
+					<input type="text" id="sessionFormPressure" name="pressure" pattern="[78]\d{2}" required /><br>
 					<label for="sessionFormSessionTypeMenu">Session Type:</label>
 					<select id="sessionFormSessionTypeMenu" name="sessiontype"
 						onchange="update_required_new_session_fields(this); toggle_button('sessionForm');" required>
 						<option></option>
 						<option value="Backsight">Backsight</option>
 						<option value="Azimuth">Azimuth</option>
+						<option value="Resection">Resection</option>
 					</select>
-					<span id="sessionFormBacksightStationMenuBlock" hidden><br>
+					<img class="infobutton" id="sessionFormSessionTypeDescription" src="img/info.svg" hidden><br>
+					<span id="sessionFormOccupiedPointMenuBlock" hidden>
+						<label for="sessionFormOccupiedPointMenu">Occupied Point:</label>
+						<select id="sessionFormOccupiedPointMenu" name="occupied_point_id" onchange="update_description(this, 'sessionFormOccupiedPointDescription');
+						remove_station_from_related_menu(this, 'sessionFormBacksightStationMenu'); toggle_button('sessionForm');" required>
+						</select>
+						<img class="infobutton" id="sessionFormOccupiedPointDescription" src="img/info.svg" hidden><br>
+					</span>
+					<span id="sessionFormBacksightStationMenuBlock" hidden>
 						<label for="sessionFormBacksightStationMenu" id="sessionFormBacksightStationMenuLabel">Backsight
 							Station:</label>
 						<select id="sessionFormBacksightStationMenu" name="backsight_station_id"
-							onchange="update_description(this, 'sessionFormBacksightStationDescription'); toggle_button('sessionForm');">
+							onchange="update_description(this, 'sessionFormBacksightStationDescription');
+							toggle_button('sessionForm');">
 						</select>
 						<img class="infobutton" id="sessionFormBacksightStationDescription" src="img/info.svg"
 							hidden><br>
@@ -310,18 +319,39 @@
 						<label for="sessionFormPrismHeight" id="sessionFormPrismHeightLabel">Prism Height:</label>
 						<input type="text" id="sessionFormPrismHeight" name="prism_height" pattern="[0-4](\.\d{1,3})?"
 							oninput="toggle_button('sessionForm');" />
+						<br>
 					</span>
-					<span id="sessionFormAzimuthBlock" hidden><br>
+					<span id="sessionFormAzimuthBlock" hidden>
 						<label for="sessionFormAzimuth" id="sessionFormAzimuthLabel">Azimuth (ddd.mmss):</label>
 						<input type="text" id="sessionFormAzimuth" name="azimuth"
 							pattern="(\d|[1-9]\d|[1-2]\d{2}|3[0-5]\d)\.[0-5][0-9][0-5][0-9]"
 							oninput="toggle_button('sessionForm');" /><br>
 					</span>
+					<span id="sessionFormBacksightStation1MenuBlock" hidden>
+						<label for="sessionFormBacksightStation1Menu"
+							id="sessionFormBacksightStation1MenuLabel">Backsight #1 (<i>left</i>):</label>
+						<select id="sessionFormBacksightStation1Menu" name="backsight_station_1_id"
+							onchange="update_description(this, 'sessionFormBacksightStation1Description');
+							remove_station_from_related_menu(this, 'sessionFormBacksightStation2Menu'); toggle_button('sessionForm');">
+						</select>
+						<img class="infobutton" id="sessionFormBacksightStation1Description" src="img/info.svg"
+							hidden><br>
+					</span>
+					<span id="sessionFormBacksightStation2MenuBlock" hidden>
+						<label for="sessionFormBacksightStation2Menu"
+							id="sessionFormBacksightStation2MenuLabel">Backsight #2 (<i>right</i>):</label>
+						<select id="sessionFormBacksightStation2Menu" name="backsight_station_2_id"
+							onchange="update_description(this, 'sessionFormBacksightStation2Description'); toggle_button('sessionForm');">
+						</select>
+						<img class="infobutton" id="sessionFormBacksightStation2Description" src="img/info.svg"
+							hidden><br>
+					</span>
 					<span id="sessionFormInstrumentHeightBlock" hidden>
 						<label for="sessionFormInstrumentHeight" id="sessionFormInstrumentHeightLabel">Instrument Height
 							(m):</label>
 						<input type="text" id="sessionFormInstrumentHeight" name="instrument_height"
-							pattern="[1-2](\.\d{1,3})?" oninput="toggle_button('sessionForm');" />
+							pattern="[0-2](\.\d{1,3})?" oninput="toggle_button('sessionForm');" />
+						<br>
 					</span>
 					<br>
 					<input type="button" id="sessionFormStartSessionButton" class="safe" value="Start New Session"
@@ -330,11 +360,13 @@
 						value="Cancel Backsight" onclick="cancel_backsight();" backsightcanceled="no" hidden>
 					<input type="button" id="sessionFormEndCurrentSessionButton" class="dangerous"
 						value="End Current Session" onclick="end_current_session();" disabled>
+					<input type="button" id="sessionFormAbortResectionButton" class="dangerous"
+						value="Abort Resection" onclick="abort_resection();" hidden>
 				</span>
 			</form>
 			<form id="groupingForm">
 				<span id="groupingFormHeader" onclick="collapse(this);">
-					<b>Grouping</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span><br>
+					<b>Grouping</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span><br>
 					<span class="currentSurveyingInfo">
 						<span id="currentGroupingInfo" currentgroupingid="" currentgroupinglabel=""
 							currentgroupinggeometry="" currentgroupingclass="" currentgroupingsubclass=""
@@ -352,7 +384,7 @@
 					<img class="infobutton" id="groupingFormGeometryDescription" src="img/info.svg" hidden><br>
 					<label for="groupingFormClassesMenu">Class:</label>
 					<select id="groupingFormClassesMenu" class="classesmenu" name="classes_id"
-						onchange="update_description(this, 'groupingFormClassDescription');update_dependent_subclass_menu(this, 'groupingFormSubclassesMenu'); toggle_button('groupingForm');"
+						onchange="update_description(this, 'groupingFormClassDescription');update_subclass_menu(this, 'groupingFormSubclassesMenu'); toggle_button('groupingForm');"
 						required>
 					</select>
 					<img class="infobutton" id="groupingFormClassDescription" src="img/info.svg" hidden><br>
@@ -382,7 +414,7 @@
 					<input type="text" id="takeShotFormStakeoutTargetNorthing" pattern="-?\d+(\.?\d{1,3})?" /><br>
 					<label for="takeShotFormStakeoutTargetEasting">Target Easting:</label>
 					<input type="text" id="takeShotFormStakeoutTargetEasting" pattern="-?\d+(\.?\d{1,3})?" />
-					<hr>
+					<br>
 				</span>
 				<input type="button" id="takeShotFormButton" class="safe" value="Take Shot" onclick="take_shot();"
 					disabled />
@@ -405,14 +437,14 @@
 	</div>
 
 	<div class="setup">
-		<div class="formcollectionheader" onclick="collapse(this);">
-			Setup <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+		<div id="setupPanel" class="formcollectionheader" onclick="collapse(this);">
+			Setup <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 		</div>
 
 		<div class="formcollection collapsible" hidden>
 			<form id="setConfigsForm">
 				<span onclick="collapse(this);">
-					<b>Set Configs</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Set Configs</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
@@ -421,18 +453,18 @@
 						onchange="toggle_total_station_menus(this.value);"></select><br>
 					<label for="setConfigsFormMakeMenu">Make:</label>
 					<select id="setConfigsFormMakeMenu" name="make"
-						onchange="update_dependent_model_menu();"></select><br>
+						onchange="update_model_menu();"></select><br>
 					<label for="setConfigsFormModelMenu">Model:</label>
 					<select id="setConfigsFormModelMenu" name="model"></select><br>
 					<label id="setConfigsFormLimitLabel" for="setConfigsFormLimit">Backsight Error Limit (cm):</label>
-					<input type="text" id="setConfigsFormLimit" name="limit" size="3" pattern="\d{1,2}" />
+					<input type="text" id="setConfigsFormLimit" name="limit" size="4" pattern="\d{1,2}(\.\d{1})?" />
 					<br>
 					<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" />
 				</span>
 			</form>
 			<form id="saveNewSiteForm">
 				<span onclick="collapse(this);">
-					<b>Save New Site</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Save New Site</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
@@ -448,7 +480,7 @@
 			</form>
 			<form id="saveNewStationForm">
 				<span onclick="collapse(this);">
-					<b>Save New Station</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Save New Station</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
@@ -516,7 +548,7 @@
 			</form>
 			<form id="saveNewClassForm">
 				<span onclick="collapse(this);">
-					<b>Save New Class</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Save New Class</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
@@ -532,7 +564,7 @@
 			</form>
 			<form id="saveNewSubclassForm">
 				<span onclick="collapse(this);">
-					<b>Save New Subclass</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Save New Subclass</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
@@ -549,13 +581,13 @@
 					<input type="text" id="saveNewSubclassFormSubclassDescription" name="description" />
 					<br>
 					<input type="button" id="saveNewSubclassFormButton" class="safe" value="Save New Subclass"
-						onclick="save_new_subclass(); update_dependent_subclass_menu(document.getElementById('groupingFormClassesMenu'), 'groupingFormSubclassesMenu');"
+						onclick="save_new_subclass(); update_subclass_menu(document.getElementById('groupingFormClassesMenu'), 'groupingFormSubclassesMenu');"
 						disabled />
 				</span>
 			</form>
 			<form id="deleteSiteForm">
 				<span onclick="collapse(this);">
-					<b>Delete Site</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Delete Site</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
@@ -572,13 +604,13 @@
 			</form>
 			<form id="deleteStationForm">
 				<span onclick="collapse(this);">
-					<b>Delete Station</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Delete Station</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
 					<label for="deleteStationFormSitesMenu">Site:</label>
 					<select id="deleteStationFormSitesMenu" class="sitesmenu" name="sites_id"
-						onchange="update_description(this, 'deleteStationFormSiteDescription'); update_dependent_station_menu(this, 'deleteStationFormStationsMenu'); toggle_button('deleteStationForm');"
+						onchange="update_description(this, 'deleteStationFormSiteDescription'); update_station_menu(this, 'deleteStationFormStationsMenu'); toggle_button('deleteStationForm');"
 						required>
 					</select>
 					<img class="infobutton" id="deleteStationFormSiteDescription" src="img/info.svg" hidden><br>
@@ -595,7 +627,7 @@
 			</form>
 			<form id="deleteClassForm">
 				<span onclick="collapse(this);">
-					<b>Delete Class</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Delete Class</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
@@ -612,13 +644,13 @@
 			</form>
 			<form id="deleteSubclassForm">
 				<span onclick="collapse(this);">
-					<b>Delete Subclass</b> <span class="collapser">‣</span><span class="expander" hidden>▾</span>
+					<b>Delete Subclass</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
 					<label for="deleteSubclassFormClassesMenu">Class:</label>
 					<select id="deleteSubclassFormClassesMenu" class="classesmenu" name="classes_id"
-						onchange="update_description(this, 'deleteSubclassFormClassDescription'); update_dependent_subclass_menu(this, 'deleteSubclassFormSubclassesMenu'); toggle_button('deleteSubclassForm');"
+						onchange="update_description(this, 'deleteSubclassFormClassDescription'); update_subclass_menu(this, 'deleteSubclassFormSubclassesMenu'); toggle_button('deleteSubclassForm');"
 						required>
 					</select>
 					<img class="infobutton" id="deleteSubclassFormClassDescription" src="img/info.svg" hidden><br>

@@ -54,7 +54,7 @@ async function load_configs_menus() {
 	});
 	document.getElementById("setConfigsFormMakeMenu").innerHTML = makesmenu.join("\n");
 	document.getElementById("setConfigsFormMakeMenu").value = json.current.make;
-	update_dependent_model_menu(json.options.total_stations[json.current.make]);
+	update_model_menu(json.options.total_stations[json.current.make]);
 	document.getElementById("setConfigsFormModelMenu").value = json.current.model;
 	document.getElementById("setConfigsFormLimit").value = json.current.limit;
 }
@@ -62,14 +62,14 @@ async function load_configs_menus() {
 async function load_current_grouping_info() {
 	let response = await fetch("/grouping/");
 	let json = await response.json();
-	if (json.result === "" || json.label === null) {
+	if (Object.keys(json).length === 0) {
 		document.getElementById("currentGroupingInfo").innerHTML = "<i>(no current grouping)</i>";
 		document.getElementById("currentGroupingDetails").hidden = true;
 		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = true;
 		document.getElementById("takeShotFormButton").disabled = true;
 		show_take_shot_form();
 	} else {
-		document.getElementById("currentGroupingInfo").innerHTML = `${json.label} (${json.geometries_name})`;
+		document.getElementById("currentGroupingInfo").innerHTML = `${json.subclasses_name}: ${json.label} (${json.geometries_name})`;
 		document.getElementById("currentGroupingInfo").setAttribute("currentgroupingid", json.id);
 		document.getElementById("currentGroupingInfo").setAttribute("currentgroupinglabel", json.label);
 		document.getElementById("currentGroupingInfo").setAttribute("currentgroupinggeometry", json.geometries_name);
@@ -88,7 +88,7 @@ async function load_current_grouping_info() {
 async function load_current_session_info() {
 	let response = await fetch("/session/");
 	let json = await response.json();
-	if (json.result === "" || json.label === null) {
+	if (Object.keys(json).length === 0) {
 		document.getElementById("currentSessionInfo").innerHTML = "<i>(no current session)</i>";
 		document.getElementById("currentSessionDetails").hidden = true;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
@@ -107,6 +107,11 @@ async function load_current_session_info() {
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
 		document.getElementById("groupingForm").hidden = false;
 		show_take_shot_form("takeShotForm");
+		// expand the surveying panel on first load if there’s an active session
+		if (document.getElementById("surveyingPanel").hasAttribute("firstload")) {
+			collapse(document.getElementById("surveyingPanel"));
+			document.getElementById("surveyingPanel").removeAttribute("firstload")
+		}
 	}
 }
 
@@ -114,6 +119,7 @@ async function load_date_and_time() {
 	let now = new Date();
 	document.getElementById("dateAndTime").innerHTML = now.toString();
 	setTimeout(load_date_and_time, 1000);
+	document.getElementById("sessionFormLabel").value = now.toISOString().substring(0,10);
 }
 
 async function load_geometries_menu() {
@@ -140,10 +146,15 @@ async function load_setup_errors() {
 	let errormessage = [];
 	let response = await fetch("/setuperrors/");
 	let json = await response.json();
-	json.forEach(function (theerror) {
-		errormessage.push(`<b style="color: red;">ERROR:</b> ${theerror}`);
-	});
-	document.getElementById("outputBox").innerHTML = errormessage.join("<br>");
+	if (json.errors) {
+		json.errors.forEach(function (theerror) {
+			errormessage.push(`<b style="color: red;">ERROR:</b> ${theerror}`);
+		});
+		document.getElementById("outputBox").innerHTML = errormessage.join("<br>");
+	}
+	else {
+		document.getElementById("outputBox").innerHTML = json.results;
+	};
 }
 
 async function load_sessions_menus() {
@@ -249,7 +260,7 @@ async function delete_station() {
 	if (confirm(`Delete station “${thestation.options[thestation.selectedIndex].text}?”`)) {
 		let status = await _update_data_via_api("/station/", "DELETE", deleteStationForm)
 		if (status >= 200 && status <= 299) {
-			update_dependent_station_menu(document.getElementById("deleteStationFormSitesMenu"), "deleteStationFormStationsMenu");
+			update_station_menu(document.getElementById("deleteStationFormSitesMenu"), "deleteStationFormStationsMenu");
 			document.getElementById("deleteStationFormStationDescription").hidden = true;
 			document.getElementById("deleteStationFormButton").disabled = true;
 		}
@@ -261,19 +272,19 @@ async function delete_subclass() {
 	if (confirm(`Delete subclass “${thesubclass.options[thesubclass.selectedIndex].text}?”`)) {
 		let status = await _update_data_via_api("/subclass/", "DELETE", deleteSubclassForm)
 		if (status >= 200 && status <= 299) {
-			update_dependent_subclass_menu(document.getElementById("deleteSubclassFormClassesMenu"), "deleteSubclassFormSubclassesMenu");
+			update_subclass_menu(document.getElementById("deleteSubclassFormClassesMenu"), "deleteSubclassFormSubclassesMenu");
 			document.getElementById("deleteSubclassFormSubclassDescription").hidden = true;
 			document.getElementById("deleteSubclassFormButton").disabled = true;
 		}
 	}
 }
 
-async function end_current_grouping() {
+async function end_current_grouping(prompt = true) {
 	let themessage = "This will end the current grouping.\n\nPress “Ok” to proceed or “Cancel” to go back.";
 	if (document.getElementById("saveLastShotForm").hidden === false) {
 		themessage = "This will end the current grouping and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back."
 	}
-	if (confirm(themessage)) {
+	if (!prompt || confirm(themessage)) {
 		let status = await _update_data_via_api("/grouping/", "PUT", groupingForm);
 		if (status >= 200 && status <= 299) {
 			document.getElementById("groupingForm").reset();
@@ -391,18 +402,42 @@ async function start_new_session() {
 			return;
 		}
 	}
-	if (confirm("Please verify that the atmospheric conditions are set correctly.\n\nPress “Ok” to proceed or “Cancel” to go back.") === true) {
-		document.getElementById("sessionFormCancelBacksightButton").setAttribute("backsightcanceled", "no");
-		document.getElementById("sessionFormIndicator").hidden = false;
-		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
-		if (document.getElementById("sessionFormSessionTypeMenu").value === "Backsight") {
-			document.getElementById("sessionFormStartSessionButton").hidden = true;
-			document.getElementById("sessionFormCancelBacksightButton").hidden = false;
+	let response = await fetch("/grouping/");
+	let json = await response.json();
+	if (Object.keys(json).length > 0) {
+		if (confirm(`You have an active grouping (“${json.label}”).\n\nPress “Ok” to end it before proceeding or “Cancel” to leave it active.`)) {
+			end_current_grouping(false);
 		}
-		let status = await _update_data_via_api("/session/", "POST", sessionForm);
-		if (status >= 200 && status <= 299) {
-			if (document.getElementById("sessionFormCancelBacksightButton").getAttribute("backsightcanceled") === "no") {
+	}
+	document.getElementById("sessionFormCancelBacksightButton").setAttribute("backsightcanceled", "no");
+	document.getElementById("sessionFormIndicator").hidden = false;
+	document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
+	document.getElementById("sessionFormAbortResectionButton").hidden = true;
+	if (["Backsight", "Resection"].includes(document.getElementById("sessionFormSessionTypeMenu").value)) {
+		document.getElementById("sessionFormStartSessionButton").hidden = true;
+		document.getElementById("sessionFormCancelBacksightButton").hidden = false;
+	}
+	let status = await _update_data_via_api("/session/", "POST", sessionForm);
+	if (status >= 200 && status <= 299) {
+		load_atmospheric_conditions();
+		load_prism_offsets();
+		if (document.getElementById("sessionFormCancelBacksightButton").getAttribute("backsightcanceled") === "no") {
+			// Special case for Backsight #1 of resection
+			if (document.getElementById("sessionFormStartSessionButton").value === "Shoot Backsight #1") {
+				document.getElementById("sessionFormSitesMenu").disabled = true;
+				document.getElementById("sessionFormBacksightStation1Menu").disabled = true;
+				document.getElementById("sessionFormInstrumentHeight").disabled = true;
+				document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight #2";
+				document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
+				document.getElementById("sessionFormAbortResectionButton").hidden = false;
+			}
+			else {
 				document.getElementById("sessionForm").reset();
+				document.getElementById("sessionFormSitesMenu").disabled = false;
+				document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
+				document.getElementById("sessionFormInstrumentHeight").disabled = false;
+				document.getElementById("sessionFormStartSessionButton").value = "Start New Session";
+				document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
 				document.getElementById("sessionFormSiteDescription").hidden = true;
 				document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
 				document.getElementById("sessionFormBacksightStationDescription").hidden = true;
@@ -413,14 +448,13 @@ async function start_new_session() {
 				load_current_grouping_info();
 				collapse(document.getElementById("sessionFormHeader"));
 			}
-		} else {
-			alert("An error occurred while starting the session. See the output box for details.");
 		}
-		document.getElementById("sessionFormIndicator").hidden = true;
-		document.getElementById("sessionFormStartSessionButton").hidden = false;
-		document.getElementById("sessionFormCancelBacksightButton").hidden = true;
-		load_prism_offsets();
+	} else {
+		alert("An error occurred while starting the session. See the output box for details.");
 	}
+	document.getElementById("sessionFormIndicator").hidden = true;
+	document.getElementById("sessionFormStartSessionButton").hidden = false;
+	document.getElementById("sessionFormCancelBacksightButton").hidden = true;
 }
 
 async function cancel_backsight() {
@@ -428,6 +462,21 @@ async function cancel_backsight() {
 	await fetch("/cancel/");
 }
 
+async function abort_resection() {
+	if (confirm("Do you wish to clear the currently saved settings for Backsight #1?")) {
+		let response = await fetch("/abort/");
+		let json = await response.json();
+		console.log(json);
+		document.getElementById("outputBox").innerHTML = json.result;
+		document.getElementById("sessionFormSitesMenu").disabled = false;
+		document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
+		document.getElementById("sessionFormInstrumentHeight").disabled = false;
+		document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight #1";
+		document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
+		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
+		document.getElementById("sessionFormAbortResectionButton").hidden = true;
+	}
+}
 
 // Shot Handling
 
@@ -443,7 +492,7 @@ async function take_shot() {
 		});
 	}
 	if (response.status >= 200 && response.status <= 299) {
-		if (json.result === "Measurement canceled by user.") {
+		if (json.result === "Shot canceled by user.") {
 			theoutput.push(json.result);
 		} else {
 			if (document.getElementById("takeShotFormStakeoutCheckbox").checked) {
@@ -472,9 +521,9 @@ async function take_shot() {
 			if ("result" in json) {
 				theoutput.push('<b>Last Shot:</b>');
 				theoutput.push('<table class="shotdata">');
-				theoutput.push(`<tr><td>delta_n = ${json.result.delta_n}</td><td>calculated_n = ${json.result.calculated_n}</td></tr>`);
-				theoutput.push(`<tr><td>delta_e = ${json.result.delta_e}</td><td>calculated_e = ${json.result.calculated_e}</td></tr>`);
-				theoutput.push(`<tr><td>delta_z = ${json.result.delta_z}</td><td>calculated_z = ${json.result.calculated_z}</td></tr>`);
+				theoutput.push(`<tr><td>delta_n</td><td align='right'>${json.result.delta_n.toFixed(3)}</td><td>|</td><td>calculated_n</td><td align='right'>${json.result.calculated_n.toFixed(3)}</td></tr>`);
+				theoutput.push(`<tr><td>delta_e</td><td align='right'>${json.result.delta_e.toFixed(3)}</td><td>|</td><td>calculated_e</td><td align='right'>${json.result.calculated_e.toFixed(3)}</td></tr>`);
+				theoutput.push(`<tr><td>delta_z</td><td align='right'>${json.result.delta_z.toFixed(3)}</td><td>|</td><td>calculated_z</td><td align='right'>${json.result.calculated_z.toFixed(3)}</td></tr>`);
 				theoutput.push('</table>');
 			}
 		}

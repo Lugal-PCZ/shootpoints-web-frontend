@@ -56,6 +56,17 @@ async function os_check() {
     };
 }
 
+function remove_station_from_related_menu(thismenu, targetmenu) {
+    let options = thismenu.innerHTML.split("\n");
+    let newoptions = Array();
+    options.forEach((option) => {
+        if (option.indexOf(`value="${thismenu.value}"`) === -1) {
+            newoptions.push(option);
+        }
+    });
+    document.getElementById(targetmenu).innerHTML = newoptions.join("\n");
+}
+
 function show_take_shot_form(theform = null) {
     document.getElementById("takeShotForm").hidden = true;
     document.getElementById("cancelShotForm").hidden = true;
@@ -77,6 +88,7 @@ function show_current_session_details() {
     let details = [`Site: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionsite")}`];
     details.push(`Occupied Point: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionoccupiedpoint")}`);
     details.push(`Instrument Height: ${document.getElementById("currentSessionInfo").getAttribute("currentsessioninstrumentheight")}m`);
+    details.push(`Started: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionstarted")}m`);
     alert(details.join("\n"));
 }
 
@@ -164,74 +176,6 @@ function toggle_stakeout_fields() {
     }
 }
 
-function update_backsight_station_menu(occupiedstationmenu) {
-    let options = occupiedstationmenu.innerHTML.split("\n");
-    let newoptions = Array();
-    options.forEach((option) => {
-        if (option.indexOf(`value="${occupiedstationmenu.value}"`) === -1) {
-            newoptions.push(option);
-        }
-    });
-    document.getElementById("sessionFormBacksightStationMenu").innerHTML = newoptions.join("\n");
-}
-
-async function update_dependent_model_menu(themodels = false) {
-    if (!themodels) {
-        let response = await fetch("/configs/");
-        let json = await response.json();
-        themodels = json.options.total_stations[document.getElementById("setConfigsFormMakeMenu").value];
-    };
-    modelsmenu = [];
-    themodels.forEach(function (themodel) {
-        modelsmenu.push(`<option value="${themodel}">${themodel}</option>`);
-    });
-    document.getElementById("setConfigsFormModelMenu").innerHTML = modelsmenu.join("\n");
-}
-
-async function update_dependent_station_menu(thesite, themenu) {
-    let target = document.getElementById(themenu);
-    let targetdescription = target.id.replace(/e?s?Menu/, "Description");
-    if (thesite.value === "") {
-        target.innerHTML = "";
-        document.getElementById(targetdescription).hidden = true;
-    } else {
-        let response = await fetch("/station/" + thesite.value);
-        let json = await response.json();
-        stationsmenu = ["<option></option>"];
-        json.stations.forEach(function (thestation) {
-            let thedescription = thestation.description;
-            if (thedescription === null || thedescription === "null" || thedescription === "") {
-                thedescription = "no description recorded";
-            }
-            stationsmenu.push(`<option value="${thestation.id}" description="${thedescription} (${thestation.northing}N, ${thestation.easting}E, ${thestation.elevation}Z)">${thestation.name}</option>`);
-        });
-        target.innerHTML = stationsmenu.join("\n");
-        if (json.stations.length === 0) {
-            document.getElementById(targetdescription).hidden = true;
-        }
-    }
-}
-
-async function update_dependent_subclass_menu(theclass, themenu) {
-    let target = document.getElementById(themenu);
-    let targetdescription = target.id.replace(/e?s?Menu/, "Description");
-    if (theclass.value === "") {
-        target.innerHTML = "";
-        document.getElementById(targetdescription).hidden = true;
-    } else {
-        let response = await fetch("/subclass/" + theclass.value);
-        let json = await response.json();
-        subclassesmenu = ["<option></option>"];
-        json.subclasses.forEach(function (thesubclass) {
-            subclassesmenu.push(`<option value="${thesubclass.id}" description="${thesubclass.description}">${thesubclass.name}</option>`);
-        });
-        target.innerHTML = subclassesmenu.join("\n");
-        if (json.subclasses.value === "") {
-            document.getElementById(targetdescription).hidden = true;
-        }
-    }
-}
-
 function update_description(source, target) {
     if (source.options[source.selectedIndex].value === "") {
         document.getElementById(target).hidden = true;
@@ -250,27 +194,67 @@ function update_description(source, target) {
     }
 }
 
+async function update_model_menu(themodels = false) {
+    if (!themodels) {
+        let response = await fetch("/configs/");
+        let json = await response.json();
+        themodels = json.options.total_stations[document.getElementById("setConfigsFormMakeMenu").value];
+    };
+    modelsmenu = [];
+    themodels.forEach(function (themodel) {
+        modelsmenu.push(`<option value="${themodel}">${themodel}</option>`);
+    });
+    document.getElementById("setConfigsFormModelMenu").innerHTML = modelsmenu.join("\n");
+}
+
 function update_required_new_session_fields() {
+    let thedescription = document.getElementById("sessionFormSessionTypeDescription");
     switch (document.getElementById("sessionFormSessionTypeMenu").value) {
         case "Backsight":
+            _show_required_field("sessionFormOccupiedPointMenu");
             _show_required_field("sessionFormBacksightStationMenu");
             _show_required_field("sessionFormPrismHeight");
             _hide_required_field("sessionFormInstrumentHeight");
             _hide_required_field("sessionFormAzimuth");
+            _hide_required_field("sessionFormBacksightStation1Menu");
+            _hide_required_field("sessionFormBacksightStation2Menu");
+            thedescription.setAttribute("onClick", `alert("Set up on a known station point and shoot to another known station point.")`);
+            thedescription.hidden = false;
             document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight";
             break;
         case "Azimuth":
+            _show_required_field("sessionFormOccupiedPointMenu");
             _hide_required_field("sessionFormBacksightStationMenu");
             _hide_required_field("sessionFormPrismHeight");
             _show_required_field("sessionFormInstrumentHeight");
             _show_required_field("sessionFormAzimuth");
+            _hide_required_field("sessionFormBacksightStation1Menu");
+            _hide_required_field("sessionFormBacksightStation2Menu");
+            thedescription.setAttribute("onClick", `alert("Set up on a known station point and enter the angle to a landmark.")`);
+            thedescription.hidden = false;
             document.getElementById("sessionFormStartSessionButton").value = "Set Instrument Azimuth";
             break;
+        case "Resection":
+            _hide_required_field("sessionFormOccupiedPointMenu");
+            _hide_required_field("sessionFormBacksightStationMenu");
+            _hide_required_field("sessionFormPrismHeight");
+            _show_required_field("sessionFormInstrumentHeight");
+            _hide_required_field("sessionFormAzimuth");
+            _show_required_field("sessionFormBacksightStation1Menu");
+            _show_required_field("sessionFormBacksightStation2Menu");
+            thedescription.setAttribute("onClick", `alert("Set up on an arbitrary point and shoot to two known station points (left first, then right).")`);
+            thedescription.hidden = false;
+            document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight #1";
+            break;
         default:
+            _hide_required_field("sessionFormOccupiedPointMenu");
             _hide_required_field("sessionFormBacksightStationMenu");
             _hide_required_field("sessionFormPrismHeight");
             _hide_required_field("sessionFormInstrumentHeight");
             _hide_required_field("sessionFormAzimuth");
+            _hide_required_field("sessionFormBacksightStation1Menu");
+            _hide_required_field("sessionFormBacksightStation2Menu");
+            thedescription.hidden = true;
             document.getElementById("sessionFormStartSessionButton").value = "Start New Session";
     }
 }
@@ -308,5 +292,49 @@ function update_required_new_site_fields() {
             _hide_required_field("saveNewStationFormStationUTMZone");
             _hide_required_field("saveNewStationFormStationLatitude");
             _hide_required_field("saveNewStationFormStationLongitude");
+    }
+}
+
+async function update_station_menu(thesite, themenu) {
+    let target = document.getElementById(themenu);
+    let targetdescription = target.id.replace(/e?s?Menu/, "Description");
+    if (thesite.value === "") {
+        target.innerHTML = "";
+        document.getElementById(targetdescription).hidden = true;
+    } else {
+        let response = await fetch("/station/" + thesite.value);
+        let json = await response.json();
+        stationsmenu = ["<option></option>"];
+        json.stations.forEach(function (thestation) {
+            let thedescription = thestation.description;
+            if (thedescription === null || thedescription === "null" || thedescription === "") {
+                thedescription = "no description recorded";
+            }
+            stationsmenu.push(`<option value="${thestation.id}" description="${thedescription} (${thestation.northing}N, ${thestation.easting}E, ${thestation.elevation}Z)">${thestation.name}</option>`);
+        });
+        target.innerHTML = stationsmenu.join("\n");
+        if (json.stations.length === 0) {
+            document.getElementById(targetdescription).hidden = true;
+        }
+    }
+}
+
+async function update_subclass_menu(theclass, themenu) {
+    let target = document.getElementById(themenu);
+    let targetdescription = target.id.replace(/e?s?Menu/, "Description");
+    if (theclass.value === "") {
+        target.innerHTML = "";
+        document.getElementById(targetdescription).hidden = true;
+    } else {
+        let response = await fetch("/subclass/" + theclass.value);
+        let json = await response.json();
+        subclassesmenu = ["<option></option>"];
+        json.subclasses.forEach(function (thesubclass) {
+            subclassesmenu.push(`<option value="${thesubclass.id}" description="${thesubclass.description}">${thesubclass.name}</option>`);
+        });
+        target.innerHTML = subclassesmenu.join("\n");
+        if (json.subclasses.value === "") {
+            document.getElementById(targetdescription).hidden = true;
+        }
     }
 }
