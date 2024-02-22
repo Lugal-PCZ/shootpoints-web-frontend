@@ -38,10 +38,10 @@
 			<span><b>Set Atmospheric Conditions</b></span>
 			<hr>
 			<label for="setAtmosphericConditionsFormTemperature">Temperature (°C):</label>
-			<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature" pattern="-?\d{1,2}"
-				size="3" required /><br>
+			<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature" pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50"
+				size="5" required /><br>
 			<label for="setAtmosphericConditionsFormPressure">Pressure (mmHg):</label>
-			<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure" pattern="[78]\d{2}" size="3"
+			<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure" pattern="7[2-9]\d|800" size="5"
 				required />
 			<br>
 			<input type="button" id="setAtmosphericConditionsFormButton" class="safe" value="Set Atmospheric Conditions"
@@ -55,16 +55,16 @@
 			<label for="setPrismOffsetsVerticalDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsVerticalDistance');">×&nbsp;</span>Vertical
 				Offset:</label>
-			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance" pattern="[0-4](\.\d{1,3})?"
-				size="4" />
+			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
+				size="5" />
 			<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
 				<option value="-1">Down</option>
 				<option value="1">Up</option>
 			</select><br>
 			<label for="setPrismOffsetsLatitudeDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsLatitudeDistance');">×&nbsp;</span>Latitude Offset:</label>
-			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance" pattern="[0-4](\.\d{1,3})?"
-				size="4" />
+			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
+				size="5" />
 			<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
 				<option value="1">North</option>
 				<option value="-1">South</option>
@@ -72,31 +72,31 @@
 			<label for="setPrismOffsetsLongitudeDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsLongitudeDistance');">×&nbsp;</span>Longitude Offset:</label>
 			<input type="text" id="setPrismOffsetsLongitudeDistance" name="longitude_distance"
-				pattern="[0-4](\.\d{1,3})?" size="4" />
+				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsLongitudeDirection" name="longitude_direction">
 				<option value="1">East</option>
 				<option value="-1">West</option>
 			</select><br>
 			<label for="setPrismOffsetsRadialDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsRadialDistance');">×&nbsp;</span>Radial Offset:</label>
-			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance" pattern="[0-4](\.\d{1,3})?"
-				size="4" />
+			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
+				size="5" />
 			<select id="setPrismOffsetsRadialDirection" name="radial_direction">
 				<option value="1">Away</option>
 				<option value="-1">Toward</option>
 			</select><br>
 			<label for="setPrismOffsetsTangentDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsTangentDistance');">×&nbsp;</span>Tangent Offset:</label>
-			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance" pattern="[0-4](\.\d{1,3})?"
-				size="4" />
+			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
+				size="5" />
 			<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
 				<option value="1">Right</option>
 				<option value="-1">Left</option>
 			</select><br>
 			<label for="setPrismOffsetsWedgeDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsWedgeDistance');">×&nbsp;</span>Wedge Offset:</label>
-			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance" pattern="[0-4](\.\d{1,3})?"
-				size="4" />
+			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
+				size="5" />
 			<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
 				<option value="1">Clockwise</option>
 				<option value="-1">Counter-Clockwise</option>
@@ -286,9 +286,9 @@
 					</select>
 					<img class="infobutton" id="sessionFormSiteDescription" src="img/info.svg" hidden><br>
 					<label for="sessionFormTemperature">Temperature (°C):</label>
-					<input type="text" id="sessionFormTemperature" name="temperature" pattern="-?\d{1,2}" required /><br>
+					<input type="text" id="sessionFormTemperature" name="temperature" pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" required /><br>
 					<label for="sessionFormPressure">Pressure (mmHg):</label>
-					<input type="text" id="sessionFormPressure" name="pressure" pattern="[78]\d{2}" required /><br>
+					<input type="text" id="sessionFormPressure" name="pressure" pattern="7[2-9]\d|800" required /><br>
 					<label for="sessionFormSessionTypeMenu">Session Type:</label>
 					<select id="sessionFormSessionTypeMenu" name="sessiontype"
 						onchange="update_required_new_session_fields(this); toggle_button('sessionForm');" required>
@@ -317,7 +317,7 @@
 					</span>
 					<span id="sessionFormPrismHeightBlock" hidden>
 						<label for="sessionFormPrismHeight" id="sessionFormPrismHeightLabel">Prism Height:</label>
-						<input type="text" id="sessionFormPrismHeight" name="prism_height" pattern="[0-4](\.\d{1,3})?"
+						<input type="text" id="sessionFormPrismHeight" name="prism_height" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
 							oninput="toggle_button('sessionForm');" />
 						<br>
 					</span>
@@ -350,7 +350,7 @@
 						<label for="sessionFormInstrumentHeight" id="sessionFormInstrumentHeightLabel">Instrument Height
 							(m):</label>
 						<input type="text" id="sessionFormInstrumentHeight" name="instrument_height"
-							pattern="[0-2](\.\d{1,3})?" oninput="toggle_button('sessionForm');" />
+							pattern="\.\d{1,3}|[0-2](\.\d{0,3})?" oninput="toggle_button('sessionForm');" />
 						<br>
 					</span>
 					<br>
@@ -456,8 +456,8 @@
 						onchange="update_model_menu();"></select><br>
 					<label for="setConfigsFormModelMenu">Model:</label>
 					<select id="setConfigsFormModelMenu" name="model"></select><br>
-					<label id="setConfigsFormLimitLabel" for="setConfigsFormLimit">Backsight Error Limit (cm):</label>
-					<input type="text" id="setConfigsFormLimit" name="limit" size="4" pattern="\d{1,2}(\.\d{1})?" />
+					<label id="setConfigsFormLimitLabel" for="setConfigsFormLimit">Backsight Error Limit (cm): </label>
+					<input type="text" id="setConfigsFormLimit" name="limit" size="5" pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" />
 					<br>
 					<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" />
 				</span>
