@@ -149,6 +149,16 @@
 			<a href="/database/" id="databaseDownloadTrigger" download hidden></a>
 			<input type="button" class="safe" value="Download" onclick="download_database();" />
 		</form>
+		<form id="resetDatabaseForm">
+			<span><b>Reset the ShootPoints Database</b></span>
+			<hr>
+			<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations" value="True" checked>
+			<label for="resetDatabaseFormPreserveSitesAndStations">Preserve Sites and Stations</label><br>
+			<input type="checkbox" id="resetDatabaseFormPreserveClassesAndSubclasses" name="preserveclassesandsubclasses" value="True" checked>
+			<label for="resetDatabaseFormPreserveClassesAndSubclasses">Preserve Classes and Subclasses</label><br>
+			<input type="hidden" name="ignore">
+			<input type="button" class="dangerous" value="Reset" onclick="reset_database();" />
+		</form>
 		<form id="deleteSessionForm">
 			<span><b>Delete Session</b></span>
 			<hr>

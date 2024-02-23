@@ -471,6 +471,21 @@ async function abort_resection() {
 	}
 }
 
+async function reset_database() {
+	if (confirm("Reset the ShootPoints database?")) {
+		await _update_data_via_api("/reset/", "DELETE", resetDatabaseForm);
+		load_atmospheric_conditions();
+		load_prism_offsets();
+		load_date_and_time();
+		load_configs_menus();
+		load_sites_menus();
+		load_classes_menus();
+		load_geometries_menu();
+		load_current_session_info();
+		load_current_grouping_info();
+	}
+}
+
 // Shot Handling
 
 async function take_shot() {
