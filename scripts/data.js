@@ -472,7 +472,7 @@ async function abort_resection() {
 }
 
 async function reset_database() {
-	if (confirm("Reset the ShootPoints database?")) {
+	if (confirm("Reset the ShootPoints database? If you are working with live data, it is recommended to back up the database before proceeding.")) {
 		await _update_data_via_api("/reset/", "DELETE", resetDatabaseForm);
 		load_atmospheric_conditions();
 		load_prism_offsets();
