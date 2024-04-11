@@ -19,7 +19,7 @@ function rpi_power(action) {
         if (endcurrentsession === true) {
             end_current_session(prompt = false);
         }
-        fetch(`/raspbian/${action}/`);
+        fetch(`/raspberrypi/${action}/`);
         document.getElementById("rpiPowerOffFormIndicator").hidden = false;
         setTimeout(function () {
             document.getElementById("rpiPowerOffFormIndicator").hidden = true;
@@ -36,5 +36,5 @@ function rpi_power(action) {
 async function set_rpi_clock() {
     let now = new Date();
     document.getElementById("setClockFormDateTimeString").value = now.toString();
-    await _update_data_via_api("/raspbian/clock/", "PUT", setClockForm);
+    await _update_data_via_api("/raspberrypi/clock/", "PUT", setClockForm);
 }

@@ -42,12 +42,12 @@ function handle_special_subclasses() {
 }
 
 async function os_check() {
-    let oscheck = await fetch("/raspbian/");
-    let raspbian = await oscheck.text();
-    if (raspbian === "true") {
+    let oscheck = await fetch("/raspberrypi/");
+    let raspberrypi = await oscheck.text();
+    if (raspberrypi === "true") {
         document.getElementById("rpiPowerOffForm").hidden = false;
         // Automatically set the Raspberry Pi clock if it is off by greater than 10 minutes from the browser time.
-        let clockcheck = await fetch("/raspbian/clock/");
+        let clockcheck = await fetch("/raspberrypi/clock/");
         let rpiclock = await clockcheck.text();
         let jsclock = new Date.now();
         if (Math.abs(rpiclock - jsclock) > 600) {
