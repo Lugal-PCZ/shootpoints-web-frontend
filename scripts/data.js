@@ -40,6 +40,7 @@ async function load_configs_menus() {
 		portsmenu.push(`<option value="${theport}">${theport}</option>`);
 	});
 	document.getElementById("setConfigsFormPortMenu").innerHTML = portsmenu.join("\n");
+	document.getElementById("setConfigsFormPortMenu").value = json.current.port;
 	let makesmenu = [];
 	Object.keys(json.options.total_stations).forEach(function (themake) {
 		makesmenu.push(`<option value="${themake}">${themake}</option>`);
