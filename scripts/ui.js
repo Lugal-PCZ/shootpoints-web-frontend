@@ -49,7 +49,7 @@ async function os_check() {
         // Automatically set the Raspberry Pi clock if it is off by greater than 10 minutes from the browser time.
         let clockcheck = await fetch("/raspberrypi/clock/");
         let rpiclock = await clockcheck.text();
-        let jsclock = new Date.now();
+        let jsclock = Date.now();
         if (Math.abs(rpiclock - jsclock) > 600) {
             set_rpi_clock();
         };
