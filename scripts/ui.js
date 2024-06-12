@@ -22,6 +22,12 @@ function collapse(theelement) {
     expander.hidden = !expander.hidden;
 }
 
+async function get_version() {
+    let response = await fetch("/version/");
+    let json = await response.json();
+    document.getElementById("version").innerHTML = "ShootPoints-Web v" + json.version;
+}
+
 function handle_special_subclasses() {
     let geometriesmenu = document.getElementById("groupingFormGeometriesMenu");
     if (document.getElementById("groupingFormSubclassesMenu").value === "1") {
