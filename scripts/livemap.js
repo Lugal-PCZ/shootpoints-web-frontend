@@ -34,7 +34,7 @@ function livemap_get_current_viewBox() {
 function livemap_rescale_map_elements(multiplier) {
     let theSurveyData = document.querySelector("#liveMap").querySelectorAll(".surveyData");
     let theUnsavedShot = document.querySelector("#liveMap").querySelector("#unsavedShot");
-    if (multiplier == 0) {
+    if (multiplier === 0) {
         // reset the elements to their default sizes
         for (var i = 0; i < theSurveyData.length; i++) {
             theSurveyData[i].style.strokeWidth = "2px";

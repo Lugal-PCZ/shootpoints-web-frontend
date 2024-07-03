@@ -15,11 +15,11 @@ function clear_field(thefield) {
 }
 
 function collapse(theelement) {
-    theelement.parentNode.querySelector(".collapsible").hidden = !theelement.parentNode.querySelector(".collapsible").hidden;
     let collapser = theelement.parentNode.querySelector(".collapser");
     collapser.hidden = !collapser.hidden;
     let expander = theelement.parentNode.querySelector(".expander");
     expander.hidden = !expander.hidden;
+    theelement.parentNode.querySelector(".collapsible").hidden = !theelement.parentNode.querySelector(".collapsible").hidden;
 }
 
 async function get_version() {

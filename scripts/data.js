@@ -89,6 +89,9 @@ async function load_current_session_info() {
 		document.getElementById("groupingForm").hidden = true;
 		show_take_shot_form();
 	} else {
+		document.getElementById("surveyingPanel").parentNode.querySelector(".collapsible").hidden = false;
+		document.getElementById("surveyingPanel").parentNode.querySelector(".collapser").hidden = false;
+		document.getElementById("surveyingPanel").parentNode.querySelector(".expander").hidden = true;
 		document.getElementById("currentSessionInfo").innerHTML = `${json.label}`;
 		document.getElementById("currentSessionInfo").setAttribute("currentsessionid", json.id);
 		document.getElementById("currentSessionInfo").setAttribute("currentsessionlabel", json.label);
@@ -101,11 +104,6 @@ async function load_current_session_info() {
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
 		document.getElementById("groupingForm").hidden = false;
 		show_take_shot_form("takeShotForm");
-		// expand the surveying panel on first load if there’s an active session
-		if (document.getElementById("surveyingPanel").hasAttribute("firstload")) {
-			collapse(document.getElementById("surveyingPanel"));
-			document.getElementById("surveyingPanel").removeAttribute("firstload")
-		}
 	}
 }
 
@@ -177,7 +175,7 @@ async function load_sites_menus() {
 
 // Data setters
 
-async function _update_data_via_api(theurl, themethod, theform) {
+async function _update_data_via_api(theurl, themethod, theform, silent = false) {
 	let response = await fetch(
 		theurl, {
 		method: themethod,
@@ -193,7 +191,9 @@ async function _update_data_via_api(theurl, themethod, theform) {
 	if ("result" in json) {
 		theoutput.push(`${json.result}<br>`);
 	}
-	document.getElementById("outputBox").innerHTML = theoutput.join("\n");
+	if (silent === false) {
+		document.getElementById("outputBox").innerHTML = theoutput.join("\n");
+	}
 	return response.status;
 }
 
@@ -242,7 +242,7 @@ async function delete_session() {
 			document.getElementById("deleteSessionForm").reset();
 			document.getElementById("deleteSessionFormButton").disabled = true;
 			if (currentsession === true) {
-				end_current_session(prompt = false);
+				end_current_session(false);
 			}
 		}
 	}

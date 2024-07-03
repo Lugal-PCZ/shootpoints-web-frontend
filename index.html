@@ -127,7 +127,7 @@
 		</form>
 		<form id="setClockForm" hidden>
 			<!-- This used to be a real form, but now is just a data placeholder so that I can use
-			the _update_data_via_api() function in scripts.js. -->
+			the _update_data_via_api() function in data.js. -->
 			<input type="text" id="setClockFormDateTimeString" name="datetimestring" />
 		</form>
 		<form id="exportSessionDataForm">
@@ -265,7 +265,7 @@
 	<div id="outputBox"></div>
 
 	<div class="usage">
-		<div id="surveyingPanel" class="formcollectionheader" firstload onclick="collapse(this);">
+		<div id="surveyingPanel" class="formcollectionheader" onclick="collapse(this);">
 			Surveying <span class="expander">‣</span><span class="collapser" hidden>▾</span>
 			<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();" hidden>
 		</div>
@@ -680,3 +680,4 @@
 		</div>
 	</div>
 </body>
+</html>

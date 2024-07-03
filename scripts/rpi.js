@@ -17,13 +17,14 @@ function rpi_power(action) {
     }
     if (confirm(warningmessage)) {
         if (endcurrentsession === true) {
-            end_current_session(prompt = false);
+            end_current_session(false);
         }
         fetch(`/raspberrypi/${action}/`);
         document.getElementById("rpiPowerOffFormIndicator").hidden = false;
         setTimeout(function () {
-            document.getElementById("rpiPowerOffFormIndicator").hidden = true;
-            document.getElementById("utilitiesPopup").hidden = true;
+            if (action === "shutdown") {
+                document.body.innerHTML = "<h1 style=\"color: white;\">Raspberry Pi is shut down</h1>"
+            }
             confirm(confirmationmessage);
             if (action === "reboot") {
                 window.location.reload();
@@ -36,5 +37,5 @@ function rpi_power(action) {
 async function set_rpi_clock() {
     let now = new Date();
     document.getElementById("setClockFormDateTimeString").value = now.toString();
-    await _update_data_via_api("/raspberrypi/clock/", "PUT", setClockForm);
+    await _update_data_via_api("/raspberrypi/clock/", "PUT", setClockForm, true);
 }
