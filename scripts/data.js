@@ -101,9 +101,16 @@ async function load_current_session_info() {
 		document.getElementById("currentSessionInfo").setAttribute("currentsessioninstrumentheight", json.instrumentheight);
 		document.getElementById("currentSessionDetails").setAttribute("onClick", "show_current_session_details();");
 		document.getElementById("currentSessionDetails").hidden = false;
-		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
-		document.getElementById("groupingForm").hidden = false;
-		show_take_shot_form("takeShotForm");
+		let started = new Date(json.started)
+		if ((Date.now() - started) / 1000 / 60 / 60 > 12) {
+			if (confirm("The current session was started over 12 hours ago. Do you wish to end this session to start a new one?")) {
+				end_current_session(false);
+			} else {
+				document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
+				document.getElementById("groupingForm").hidden = false;
+				show_take_shot_form("takeShotForm");
+			}
+		}
 	}
 }
 
