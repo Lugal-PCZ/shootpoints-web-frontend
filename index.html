@@ -264,10 +264,11 @@
 
 	<div id="outputBox"></div>
 
-	<div class="usage">
-		<div id="surveyingPanel" class="formcollectionheader" onclick="collapse(this);">
-			Surveying <span class="expander">‣</span><span class="collapser" hidden>▾</span>
-			<img id="showLiveMapIcon" src="img/map.svg" onclick="show_livemap_popup();" hidden>
+	<div class="usage rounded">
+		<div id="surveyingPanel" class="formcollectionheader">
+			<span id="surveyingPanelLabel" onclick="collapse(this.parentNode);">Surveying <span
+					class="expander">‣</span><span class="collapser" hidden>▾</span></span>
+			<img id="showLiveMapIcon" src="img/livemap.svg" onclick="livemap_show();">
 		</div>
 
 		<div class="formcollection collapsible" hidden>
@@ -448,9 +449,11 @@
 		</div>
 	</div>
 
-	<div class="setup">
-		<div id="setupPanel" class="formcollectionheader" onclick="collapse(this);">
-			Setup <span class="expander">‣</span><span class="collapser" hidden>▾</span>
+	<div class="setup rounded">
+		<div id="setupPanel" class="formcollectionheader rounded">
+			<span id="setupPanelLabel" onclick="collapse(this.parentNode);">Setup <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span>
+			</span>
 		</div>
 
 		<div class="formcollection collapsible" hidden>
