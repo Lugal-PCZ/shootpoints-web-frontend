@@ -280,6 +280,7 @@ async function delete_subclass() {
 }
 
 async function end_current_grouping(prompt = true) {
+	// note: this function is only ever called when a grouping is explicitly ended, otherwise it’s handled quietly by the backend
 	let themessage = "This will end the current grouping.\n\nPress “Ok” to proceed or “Cancel” to go back.";
 	if (document.getElementById("saveLastShotForm").hidden === false) {
 		themessage = "This will end the current grouping and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back."
@@ -293,6 +294,7 @@ async function end_current_grouping(prompt = true) {
 			document.getElementById("groupingFormSubclassDescription").hidden = true;
 			document.getElementById("groupingFormStartGroupingButton").disabled = true;
 			load_current_grouping_info();
+			livemap_end_current_grouping();
 		}
 	}
 }
@@ -307,6 +309,13 @@ async function end_current_session(prompt = true) {
 			return;
 		}
 	}
+	let response = await fetch("/grouping/");
+	let json = await response.json();
+	if (Object.keys(json).length > 0) {
+		if (confirm(`You have an active grouping (“${json.label}”).\n\nPress “Ok” to end it before proceeding or “Cancel” to leave it active.`)) {
+			end_current_grouping(false);
+		}
+	}
 	let status = await _update_data_via_api("/session/", "PUT", sessionForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("sessionForm").reset();
@@ -316,6 +325,7 @@ async function end_current_session(prompt = true) {
 		update_required_new_session_fields();
 		document.getElementById("sessionFormStartSessionButton").disabled = true;
 		load_current_session_info();
+		livemap_end_current_grouping();
 	}
 }
 
@@ -394,6 +404,7 @@ async function start_new_grouping() {
 		show_take_shot_form("takeShotForm");
 		load_current_grouping_info();
 		collapse(document.getElementById("groupingFormHeader"));
+		livemap_end_current_grouping();
 	}
 }
 
@@ -467,7 +478,6 @@ async function abort_resection() {
 	if (confirm("Do you wish to clear the currently saved settings for Backsight #1?")) {
 		let response = await fetch("/abort/");
 		let json = await response.json();
-		console.log(json);
 		document.getElementById("outputBox").innerHTML = json.result;
 		document.getElementById("sessionFormSitesMenu").disabled = false;
 		document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
@@ -541,6 +551,7 @@ async function take_shot() {
 				theoutput.push(`<tr><td>delta_e</td><td align='right'>${json.result.delta_e.toFixed(3)}</td><td>|</td><td>calculated_e</td><td align='right'>${json.result.calculated_e.toFixed(3)}</td></tr>`);
 				theoutput.push(`<tr><td>delta_z</td><td align='right'>${json.result.delta_z.toFixed(3)}</td><td>|</td><td>calculated_z</td><td align='right'>${json.result.calculated_z.toFixed(3)}</td></tr>`);
 				theoutput.push('</table>');
+				livemap_plot_unsaved_shot(json.result.calculated_lat, json.result.calculated_lon);
 			}
 		}
 	}
@@ -556,11 +567,13 @@ async function save_last_shot() {
 	await _update_data_via_api("/shot/", "POST", saveLastShotForm);
 	show_take_shot_form("takeShotForm");
 	load_current_grouping_info();
+	livemap_save_last_shot();
 }
 
 function discard_last_shot() {
 	if (confirm("Discard this shot without saving?")) {
 		document.getElementById("outputBox").innerText = "Last shot discarded.";
 		show_take_shot_form("takeShotForm");
+		livemap_discard_last_shot();
 	}
 }

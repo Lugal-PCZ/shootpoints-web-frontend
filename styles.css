@@ -2,21 +2,11 @@ body {
 	background-color: rgb(56, 50, 46);
 }
 
-div {
-	width: 100%;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 8px;
-	margin-bottom: 1em;
-	float: left;
-	clear: both;
-}
-
 form {
 	width: calc(100% - 2em);
 	margin: 0.5em;
 	float: left;
-	clear: left;
+	/* clear: left; */
 	border: rgba(0, 0, 0, 0.15) thin solid;
 	border-radius: 8px;
 	padding: 8px;
@@ -69,32 +59,20 @@ label {
 	display: inline-block;
 }
 
-#liveMapPopup {
-	z-index: 10;
-	background-color: burlywood;
-	position: absolute;
-	top: 20ex;
-	width: 326px;
-	left: 10%;
-}
-
 #liveMap {
-	width: 300px;
-	height: 300px;
-	margin: 10px;
-	border-style: solid;
-	border-color: peru;
-	background-color: antiquewhite;
+	position: absolute;
+	z-index: 10;
+	width: calc(100% - 1.4em);
+	height: calc(100% - 3ex);
 }
 
-#liveMap>.surveyData {
-	stroke: blue;
-	fill: none;
-}
-
-#liveMap>#unsavedShot {
-	stroke: none;
-	fill: red;
+#liveMapControls {
+	position: absolute;
+	right: 0px;
+	z-index: 9999;
+	padding: 5px;
+	background-color: white;
+	font-size: large;
 }
 
 #onTheFlyAdjustmentsPopup {
@@ -150,7 +128,7 @@ label {
 	width: 7em;
 }
 
-#setAtmosphericConditionsForm>label,
+#setAtmosphericConditionsForm label,
 #setPrismOffsetsForm label,
 #saveNewStationForm label {
 	width: 8em;
@@ -197,6 +175,16 @@ label {
 	background: rgba(190, 115, 115, 0.15);
 }
 
+.rounded {
+	width: 100%;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 8px;
+	margin-bottom: 1em;
+	float: left;
+	/* clear: both; */
+}
+
 .info {
 	display: flex;
 	justify-content: space-between;
@@ -216,10 +204,6 @@ label {
 	padding: 5px;
 	border-radius: 6px;
 	background: rgba(0, 0, 0, 0.13);
-}
-
-.currentSurveyingInfo>.infobutton {
-	margin-right: 0px;
 }
 
 .formcollectionheader {
