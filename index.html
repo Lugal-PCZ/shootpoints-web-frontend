@@ -5,12 +5,20 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<title>ShootPoints</title>
-	<script type="text/javascript" src="scripts/data.js"></script>
-	<script type="text/javascript" src="scripts/livemap.js"></script>
-	<script type="text/javascript" src="scripts/rpi.js"></script>
-	<script type="text/javascript" src="scripts/ui.js"></script>
+	<script src="scripts/data.js"></script>
+	<script src="scripts/rpi.js"></script>
+	<script src="scripts/ui.js"></script>
 	<link rel="stylesheet" href="styles.css">
 	<link rel="icon" href="img/favicon.ico">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+	<script async
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_uuheZ-exX3v-7MNuCyV1OfjhHfzqxE0&loading=async"></script>
+	<script src="https://unpkg.com/leaflet.gridlayer.googlemutant@latest/dist/Leaflet.GoogleMutant.js"></script>
+	<script src="https://unpkg.com/leaflet-svg-shape-markers@latest/dist/leaflet-svg-shape-markers.min.js"></script>
+	<script src="scripts/livemap.js"></script>
 </head>
 
 <body onload="
@@ -26,11 +34,11 @@
 	load_geometries_menu();
 	load_current_session_info();
 	load_current_grouping_info();
-	livemap_recenter();
+	livemap_initialize();
 	">
 
-	<div id="onTheFlyAdjustmentsPopup" hidden>
-		<div class="formcollectionheader">
+	<div id="onTheFlyAdjustmentsPopup" class="rounded" hidden>
+		<div class="formcollectionheader rounded">
 			On-The-Fly Adjustments
 			<span style="float: right;"
 				onclick="document.getElementById('onTheFlyAdjustmentsPopup').hidden=true">×&nbsp;</span>
@@ -39,8 +47,8 @@
 			<span><b>Set Atmospheric Conditions</b></span>
 			<hr>
 			<label for="setAtmosphericConditionsFormTemperature">Temperature (°C):</label>
-			<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature" pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50"
-				size="5" required /><br>
+			<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature"
+				pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" size="5" required /><br>
 			<label for="setAtmosphericConditionsFormPressure">Pressure (mmHg):</label>
 			<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure" pattern="7[2-9]\d|800" size="5"
 				required />
@@ -56,16 +64,16 @@
 			<label for="setPrismOffsetsVerticalDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsVerticalDistance');">×&nbsp;</span>Vertical
 				Offset:</label>
-			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
-				size="5" />
+			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance"
+				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
 				<option value="-1">Down</option>
 				<option value="1">Up</option>
 			</select><br>
 			<label for="setPrismOffsetsLatitudeDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsLatitudeDistance');">×&nbsp;</span>Latitude Offset:</label>
-			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
-				size="5" />
+			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance"
+				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
 				<option value="1">North</option>
 				<option value="-1">South</option>
@@ -80,24 +88,24 @@
 			</select><br>
 			<label for="setPrismOffsetsRadialDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsRadialDistance');">×&nbsp;</span>Radial Offset:</label>
-			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
-				size="5" />
+			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance"
+				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsRadialDirection" name="radial_direction">
 				<option value="1">Away</option>
 				<option value="-1">Toward</option>
 			</select><br>
 			<label for="setPrismOffsetsTangentDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsTangentDistance');">×&nbsp;</span>Tangent Offset:</label>
-			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
-				size="5" />
+			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance"
+				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
 				<option value="1">Right</option>
 				<option value="-1">Left</option>
 			</select><br>
 			<label for="setPrismOffsetsWedgeDistance"><span class="clearfield"
 					onclick="clear_field('setPrismOffsetsWedgeDistance');">×&nbsp;</span>Wedge Offset:</label>
-			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
-				size="5" />
+			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance"
+				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
 				<option value="1">Clockwise</option>
 				<option value="-1">Counter-Clockwise</option>
@@ -108,8 +116,8 @@
 		</form>
 	</div>
 
-	<div id="utilitiesPopup" hidden>
-		<div class="formcollectionheader">
+	<div id="utilitiesPopup" class="rounded" hidden>
+		<div class="formcollectionheader rounded">
 			Utilities
 			<span style="float: right;" onclick="document.getElementById('utilitiesPopup').hidden=true">×&nbsp;</span>
 		</div>
@@ -153,9 +161,11 @@
 		<form id="resetDatabaseForm">
 			<span><b>Reset the ShootPoints Database</b></span>
 			<hr>
-			<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations" value="True" checked>
+			<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations"
+				value="True" checked>
 			<label for="resetDatabaseFormPreserveSitesAndStations">Preserve Sites and Stations</label><br>
-			<input type="checkbox" id="resetDatabaseFormPreserveClassesAndSubclasses" name="preserveclassesandsubclasses" value="True" checked>
+			<input type="checkbox" id="resetDatabaseFormPreserveClassesAndSubclasses"
+				name="preserveclassesandsubclasses" value="True" checked>
 			<label for="resetDatabaseFormPreserveClassesAndSubclasses">Preserve Classes and Subclasses</label><br>
 			<input type="hidden" name="ignore">
 			<input type="button" class="dangerous" value="Reset" onclick="reset_database();" />
@@ -176,78 +186,8 @@
 		<p id="version" style="font-size:x-small; padding-left: 10px;"></p>
 	</div>
 
-	<div id="liveMapPopup" hidden>
-		<div class="formcollectionheader">
-			Live Map (demo)
-			<span style="float: right;" onclick="document.getElementById('liveMapPopup').hidden=true">×&nbsp;</span>
-		</div>
-		<svg id="liveMap" preserveAspectRatio="xMinYMin slice" xmlns="http://www.w3.org/2000/svg">
-			<defs>
-				<marker id="surveyStationSymbol" markerWidth="10" markerHeight="10" refX="4" refY="4.3">
-					<path d="M 4,1 L 7,6 L 1,6 Z" stroke="white" stroke-width="1" fill="white" opacity="0.7" />
-					<g fill="none" stroke="black" stroke-width="0.5">
-						<path d="M 4,1 L 7,6 L 1,6 Z" />
-						<circle cx="4" cy="4.3" r="0.6" fill="black" stroke="none" />
-					</g>
-				</marker>
-				<marker id="surveyPointSymbol" markerWidth="10" markerHeight="10" refX="2.5" refY="2.5">
-					<g fill="none" stroke="white" stroke-width="1" stroke-linecap="butt" opacity="0.7">
-						<path d="M 0.8,0.8 L 4.2,4.2" />
-						<path d="M 4.2,0.8 L 0.8,4.2" />
-					</g>
-					<g fill="none" stroke="black" stroke-width="0.5">
-						<path d="M 1,1 L 4,4" />
-						<path d="M 4,1 L 1,4" />
-					</g>
-				</marker>
-				<marker id="savedSurveyPointSymbol">
-					<!-- container for the surveyPointSymbol innerHTML when it's empty -->
-				</marker>
-			</defs>
-			<style type="text/css">
-				polyline,
-				polygon {
-					marker: url(#surveyPointSymbol);
-				}
-			</style>
-			<polyline class="surveyStation surveyData" points="14826.706,-17659.494"
-				style="marker:url(#surveyStationSymbol)" />
-			<polygon class="surveyData"
-				points="14829.515,-17667.713 14829.312,-17669.291 14829.313,-17669.337 14829.23,-17669.378 14829.123,-17669.346 14829.119,-17669.272" />
-			<polyline class="surveyData"
-				points="14828.323,-17669.127 14828.33,-17669.392 14828.195,-17669.382 14828.125,-17669.341 14828.069,-17669.185 14828.092,-17669.124" />
-			<polyline class="surveyData"
-				points="14806.678,-17658.043 14806.886,-17658.026 14806.887,-17658.168 14806.687,-17658.15" />
-			<polyline class="surveyData"
-				points="14765.287,-17645.624 14764.979,-17648.853 14765.582,-17649.124 14765.301,-17649.888 14765.145,-17649.81 14763.996,-17653.096 14765.028,-17653.591 14765.335,-17658.145 14765.677,-17658.828" />
-			<circle id="unsavedShot" cx="14775.287" cy="-17655.624">
-		</svg>
-		<table style="margin-top: -30px">
-			<tr>
-				<td onclick="livemap_hide_points();">☐</td>
-				<td onclick="livemap_show_points();">☒</td>
-				<td>&nbsp;</td>
-				<td onclick="livemap_pan('N');">▲</td>
-				<td>&nbsp;</td>
-				<td onclick="livemap_zoom_in();" style="font-weight: bold; padding-left: 20px;">+</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td onclick="livemap_pan('W');">◀︎</td>
-				<td onclick="livemap_recenter();">❖</td>
-				<td onclick="livemap_pan('E');">►</td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td onclick="livemap_pan('S');">▼</td>
-				<td>&nbsp;</td>
-				<td onclick="livemap_zoom_out();" style="font-weight: bold; padding-left: 20px;">−</td>&nbsp;
-			</tr>
-		</table>
+	<div id="liveMap" class="rounded" hidden>
+		<span id="liveMapControls" onclick="document.getElementById('liveMap').hidden=true;">&nbsp;×&nbsp;</span>
 	</div>
 
 	<img id="editAtmosphereAndPrismOffsetsIcon" src="img/arrows.svg" onclick="show_on_the_fly_adjustments_popup();">
@@ -262,7 +202,7 @@
 		</span>
 	</span>
 
-	<div id="outputBox"></div>
+	<div id="outputBox" class="rounded"></div>
 
 	<div class="usage rounded">
 		<div id="surveyingPanel" class="formcollectionheader">
@@ -271,7 +211,7 @@
 			<img id="showLiveMapIcon" src="img/livemap.svg" onclick="livemap_show();">
 		</div>
 
-		<div class="formcollection collapsible" hidden>
+		<div class="formcollection collapsible rounded" hidden>
 			<form id="sessionForm">
 				<span id="sessionFormHeader" onclick="collapse(this);">
 					<b>Session</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span><br>
@@ -286,8 +226,8 @@
 				<span class="collapsible" hidden>
 					<hr>
 					<label for="sessionFormLabel">Label:</label>
-					<input type="text" id="sessionFormLabel" name="label" onclick="put_date_in_session_label();" oninput="toggle_button('sessionForm');"
-						required /><br>
+					<input type="text" id="sessionFormLabel" name="label" onclick="put_date_in_session_label();"
+						oninput="toggle_button('sessionForm');" required /><br>
 					<label for="sessionFormSurveyor">Surveyor:</label>
 					<input type="text" id="sessionFormSurveyor" name="surveyor" oninput="toggle_button('sessionForm');"
 						required /><br>
@@ -299,7 +239,8 @@
 					</select>
 					<img class="infobutton" id="sessionFormSiteDescription" src="img/info.svg" hidden><br>
 					<label for="sessionFormTemperature">Temperature (°C):</label>
-					<input type="text" id="sessionFormTemperature" name="temperature" pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" required /><br>
+					<input type="text" id="sessionFormTemperature" name="temperature"
+						pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" required /><br>
 					<label for="sessionFormPressure">Pressure (mmHg):</label>
 					<input type="text" id="sessionFormPressure" name="pressure" pattern="7[2-9]\d|800" required /><br>
 					<label for="sessionFormSessionTypeMenu">Session Type:</label>
@@ -314,15 +255,15 @@
 					<span id="sessionFormOccupiedPointMenuBlock" hidden>
 						<label for="sessionFormOccupiedPointMenu">Occupied Point:</label>
 						<select id="sessionFormOccupiedPointMenu" name="occupied_point_id" onchange="update_description(this, 'sessionFormOccupiedPointDescription');
-						remove_station_from_related_menu(this, 'sessionFormBacksightStationMenu'); toggle_button('sessionForm');" required>
+						remove_station_from_related_menu(this, 'sessionFormBacksightStationMenu'); toggle_button('sessionForm');"
+							required>
 						</select>
 						<img class="infobutton" id="sessionFormOccupiedPointDescription" src="img/info.svg" hidden><br>
 					</span>
 					<span id="sessionFormBacksightStationMenuBlock" hidden>
 						<label for="sessionFormBacksightStationMenu" id="sessionFormBacksightStationMenuLabel">Backsight
 							Station:</label>
-						<select id="sessionFormBacksightStationMenu" name="backsight_station_id"
-							onchange="update_description(this, 'sessionFormBacksightStationDescription');
+						<select id="sessionFormBacksightStationMenu" name="backsight_station_id" onchange="update_description(this, 'sessionFormBacksightStationDescription');
 							toggle_button('sessionForm');">
 						</select>
 						<img class="infobutton" id="sessionFormBacksightStationDescription" src="img/info.svg"
@@ -330,8 +271,8 @@
 					</span>
 					<span id="sessionFormPrismHeightBlock" hidden>
 						<label for="sessionFormPrismHeight" id="sessionFormPrismHeightLabel">Prism Height:</label>
-						<input type="text" id="sessionFormPrismHeight" name="prism_height" pattern="\.\d{1,3}|[0-4](\.\d{0,3})?"
-							oninput="toggle_button('sessionForm');" />
+						<input type="text" id="sessionFormPrismHeight" name="prism_height"
+							pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" oninput="toggle_button('sessionForm');" />
 						<br>
 					</span>
 					<span id="sessionFormAzimuthBlock" hidden>
@@ -343,8 +284,7 @@
 					<span id="sessionFormBacksightStation1MenuBlock" hidden>
 						<label for="sessionFormBacksightStation1Menu"
 							id="sessionFormBacksightStation1MenuLabel">Backsight #1 (<i>left</i>):</label>
-						<select id="sessionFormBacksightStation1Menu" name="backsight_station_1_id"
-							onchange="update_description(this, 'sessionFormBacksightStation1Description');
+						<select id="sessionFormBacksightStation1Menu" name="backsight_station_1_id" onchange="update_description(this, 'sessionFormBacksightStation1Description');
 							remove_station_from_related_menu(this, 'sessionFormBacksightStation2Menu'); toggle_button('sessionForm');">
 						</select>
 						<img class="infobutton" id="sessionFormBacksightStation1Description" src="img/info.svg"
@@ -373,8 +313,8 @@
 						value="Cancel Backsight" onclick="cancel_backsight();" backsightcanceled="no" hidden>
 					<input type="button" id="sessionFormEndCurrentSessionButton" class="dangerous"
 						value="End Current Session" onclick="end_current_session();" disabled>
-					<input type="button" id="sessionFormAbortResectionButton" class="dangerous"
-						value="Abort Resection" onclick="abort_resection();" hidden>
+					<input type="button" id="sessionFormAbortResectionButton" class="dangerous" value="Abort Resection"
+						onclick="abort_resection();" hidden>
 				</span>
 			</form>
 			<form id="groupingForm">
@@ -456,7 +396,7 @@
 			</span>
 		</div>
 
-		<div class="formcollection collapsible" hidden>
+		<div class="formcollection collapsible rounded" hidden>
 			<form id="setConfigsForm">
 				<span onclick="collapse(this);">
 					<b>Set Configs</b> <span class="expander">‣</span><span class="collapser" hidden>▾</span>
@@ -467,12 +407,12 @@
 					<select id="setConfigsFormPortMenu" name="port"
 						onchange="toggle_total_station_menus(this.value);"></select><br>
 					<label for="setConfigsFormMakeMenu">Make:</label>
-					<select id="setConfigsFormMakeMenu" name="make"
-						onchange="update_model_menu();"></select><br>
+					<select id="setConfigsFormMakeMenu" name="make" onchange="update_model_menu();"></select><br>
 					<label for="setConfigsFormModelMenu">Model:</label>
 					<select id="setConfigsFormModelMenu" name="model"></select><br>
 					<label id="setConfigsFormLimitLabel" for="setConfigsFormLimit">Backsight Error Limit (cm): </label>
-					<input type="text" id="setConfigsFormLimit" name="limit" size="5" pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" />
+					<input type="text" id="setConfigsFormLimit" name="limit" size="5"
+						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" />
 					<br>
 					<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" />
 				</span>
@@ -683,4 +623,5 @@
 		</div>
 	</div>
 </body>
+
 </html>

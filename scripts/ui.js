@@ -64,7 +64,7 @@ async function os_check() {
 
 function put_date_in_session_label() {
     let now = new Date();
-    document.getElementById("sessionFormLabel").value = now.toISOString().substring(0,10) + " ";
+    document.getElementById("sessionFormLabel").value = now.toISOString().substring(0, 10) + " ";
 }
 
 function remove_station_from_related_menu(thismenu, targetmenu) {
@@ -88,10 +88,15 @@ function show_take_shot_form(theform = null) {
 }
 
 function show_current_grouping_details() {
-    let details = [`Class: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingclass")}`];
-    details.push(`Subclass: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingsubclass")}`);
-    details.push(`Description: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingdescription")}`);
-    details.push(`Number of Shots in Grouping: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingnumberofshots")}`);
+    let details = [];
+    if (document.getElementById("currentGroupingInfo").getAttribute("currentgroupingdescription") !== "undefined") {
+        details.push(`Description: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingdescription")}`);
+    }
+    if (document.getElementById("currentGroupingInfo").getAttribute("currentgroupingnumberofshots") !== "undefined") {
+        details.push(`Number of Shots in Grouping: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingnumberofshots")}`);
+    } else {
+        details.push(`Number of Shots in Grouping: 0`);
+    }
     alert(details.join("\n"));
 }
 

@@ -1,104 +1,188 @@
 // Live Map Manipulation
 
-function show_livemap_popup() {
-    document.getElementById("liveMapPopup").hidden = false;
-    event.stopPropagation();
+var map;
+var sessionplotted = false;
+var backgrounddrawn = false;
+var currentopenpolygon = null;
+var currentclosedpolygon = null;
+var unsavedshot = null;
+
+async function livemap_initialize() {
+    var canvasRenderer = L.canvas({ tolerance: 4 });
+    map = L.map("liveMap", { renderer: canvasRenderer, zoomControl: false });
 }
 
-function livemap_save_survey_point_symbol() {
-    document.getElementById("savedSurveyPointSymbol").innerHTML = document.getElementById("surveyPointSymbol").innerHTML;
+async function livemap_show() {
+    if (!sessionplotted) {
+        await livemap_plot_session();
+    }
+    document.getElementById("liveMap").hidden = false;
+    map.invalidateSize();
 }
 
-function livemap_recenter() {
-    livemap_rescale_map_elements(0);
-    let liveMap = document.getElementById("liveMap");
-    let firstSurveyStation = liveMap.getElementsByClassName("surveyStation")[0];
-    let stationCoordinates = firstSurveyStation.getAttribute("points").split(",");
-    stationCoordinates[0] = Number(stationCoordinates[0]) - 100;
-    stationCoordinates[1] = Number(stationCoordinates[1]) - 100;
-    liveMap.setAttribute("viewBox", stationCoordinates.join(" ") + " 200 200");
+async function livemap_plot_session() {
+    let data = await fetch("/livemap/");
+    let json = await data.json();
+    if (Object.keys(json).length === 0) {
+        return;
+    }
+    if (!backgrounddrawn && !json.occupiedstation.sitelocalcoords) {
+        L.gridLayer.googleMutant({
+            type: "satellite",
+            maxNativeZoom: 21,
+            maxZoom: 27,
+        }).addTo(map);
+        backgrounddrawn = true;
+    }
+    map.setView(json.occupiedstation.coords, 18);
+    var label = "<b>Session “" + json.occupiedstation.label[0] + "”</b><br>Occupied Station: " + json.occupiedstation.label[1]
+    L.shapeMarker(json.occupiedstation.coords,
+        {
+            renderer: L.svg(),
+            shape: "triangle",
+            color: "black",
+            fillColor: "white",
+            radius: 6,
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.5
+        }).bindPopup(label).addTo(map);
+    L.circleMarker(json.occupiedstation.coords,
+        {
+            renderer: L.svg(),
+            stroke: false,
+            fillColor: "black",
+            radius: 2,
+            fillOpacity: 1
+        }).bindPopup(json.occupiedstation.label).addTo(map);
+    json.polylines.forEach(function (thepolyline) {
+        label = "<b>" + thepolyline.label[0] + ":</b><br>" + thepolyline.label[1]
+        if (thepolyline.groupingid !== json.currentgrouping) {
+            L.polyline(thepolyline.coords,
+                {
+                    color: "blue",
+                    lineCap: "butt",
+                    lineJoin: "bevel",
+                    weight: 2,
+                    opacity: 1,
+                }).bindPopup(label).addTo(map);
+        } else {
+            livemap_plot_current_open_polygon(thepolyline.coords, label);
+        }
+    });
+    json.polygons.forEach(function (thepolygon) {
+        label = "<b>" + thepolygon.label[0] + ":</b><br>" + thepolygon.label[1]
+        if (thepolygon.groupingid !== json.currentgrouping) {
+            L.polygon(thepolygon.coords,
+                {
+                    color: "blue",
+                    lineCap: "butt",
+                    lineJoin: "bevel",
+                    weight: 2,
+                    opacity: 1,
+                }).bindPopup(label).addTo(map);
+        } else {
+            livemap_plot_current_closed_polygon(thepolygon.coords, label);
+        }
+    });
+    json.points.forEach(function (thepoint) {
+        label = "<b>" + thepoint.label[0] + ":</b><br>" + thepoint.label[1]
+        L.circleMarker(thepoint.coords,
+            {
+                color: "white",
+                fillColor: "black",
+                radius: 3,
+                weight: 2,
+                opacity: 0.5,
+                fillOpacity: 1
+            }).bindPopup(label).addTo(map);
+    });
+    sessionplotted = true;
 }
 
-function livemap_get_current_viewBox() {
-    let liveMap = document.getElementById("liveMap");
-    let currentViewBox = liveMap.getAttribute("viewBox").split(" ");
-    currentViewBox = Array(
-        Number(currentViewBox[0]),
-        Number(currentViewBox[1]),
-        Number(currentViewBox[2]),
-        Number(currentViewBox[3])
-    );
-    return currentViewBox;
+function livemap_plot_current_open_polygon(coords, label) {
+    if (!label) {
+        var label = livemap_current_grouping_label();
+    }
+    currentopenpolygon = L.polyline(coords,
+        {
+            color: "blue",
+            lineCap: "butt",
+            lineJoin: "bevel",
+            weight: 2,
+            opacity: 1,
+        }).bindPopup(label).addTo(map);
 }
 
-function livemap_rescale_map_elements(multiplier) {
-    let theSurveyData = document.querySelector("#liveMap").querySelectorAll(".surveyData");
-    let theUnsavedShot = document.querySelector("#liveMap").querySelector("#unsavedShot");
-    if (multiplier === 0) {
-        // reset the elements to their default sizes
-        for (var i = 0; i < theSurveyData.length; i++) {
-            theSurveyData[i].style.strokeWidth = "2px";
-        };
-        theUnsavedShot.setAttribute("r", "2.5px");
-    } else {
-        // rescale the elements
-        let currentStrokeWidth = theSurveyData[0].style.strokeWidth.split("px");
-        for (var i = 0; i < theSurveyData.length; i++) {
-            theSurveyData[i].style.strokeWidth = Number(currentStrokeWidth[0] * multiplier) + "px";
-        };
-        let currentCircleRadius = theUnsavedShot.getAttribute("r").split("px");
-        theUnsavedShot.setAttribute("r", Number(currentCircleRadius[0] * multiplier) + "px");
-    };
+function livemap_plot_current_closed_polygon(coords, label) {
+    if (!label) {
+        var label = livemap_current_grouping_label();
+    }
+    currentclosedpolygon = L.polygon(coords,
+        {
+            color: "blue",
+            lineCap: "butt",
+            lineJoin: "bevel",
+            weight: 2,
+            opacity: 1,
+        }).bindPopup(label).addTo(map);
 }
 
-function livemap_zoom_in() {
-    livemap_rescale_map_elements(0.5);
-    let currentViewBox = livemap_get_current_viewBox();
-    let newViewBox = Array(
-        currentViewBox[0] + (currentViewBox[2] / 4),
-        currentViewBox[1] + (currentViewBox[3] / 4),
-        currentViewBox[2] / 2,
-        currentViewBox[3] / 2
-    ).join(" ");
-    document.getElementById("liveMap").setAttribute("viewBox", newViewBox);
+function livemap_plot_unsaved_shot(lat, lon) {
+    var label = livemap_current_grouping_label();
+    if (currentopenpolygon === null) {
+        livemap_plot_current_open_polygon([], null);
+    }
+    if (currentclosedpolygon === null) {
+        livemap_plot_current_closed_polygon([], null);
+    }
+    if (["Open Polygon", "Closed Polygon"].includes(document.getElementById("currentGroupingInfo").getAttribute("currentgroupinggeometry"))) {
+        if (document.getElementById("currentGroupingInfo").getAttribute("currentgroupinggeometry") === "Open Polygon") {
+            currentopenpolygon.addLatLng([lat, lon]);
+        } else if (document.getElementById("currentGroupingInfo").getAttribute("currentgroupinggeometry") === "Closed Polygon") {
+            currentclosedpolygon.addLatLng([lat, lon]);
+        }
+    }
+    unsavedshot = L.circleMarker([lat, lon],
+        {
+            color: "white",
+            fillColor: "red",
+            radius: 4,
+            weight: 2,
+            opacity: 0.5,
+            fillOpacity: 1
+        }).bindPopup(label).addTo(map);
 }
 
-function livemap_zoom_out() {
-    livemap_rescale_map_elements(2);
-    let currentViewBox = livemap_get_current_viewBox();
-    let newViewBox = Array(
-        currentViewBox[0] - (currentViewBox[2] / 2),
-        currentViewBox[1] - (currentViewBox[3] / 2),
-        currentViewBox[2] * 2,
-        currentViewBox[3] * 2
-    ).join(" ");
-    document.getElementById("liveMap").setAttribute("viewBox", newViewBox);
+function livemap_discard_last_shot() {
+    try {
+        map.removeLayer(unsavedshot);
+        if (currentopenpolygon._latlngs.length > 0) {
+            currentopenpolygon._latlngs.pop();
+            currentopenpolygon.redraw();
+        }
+        if (currentclosedpolygon._latlngs.length > 0) {
+            currentclosedpolygon._latlngs[0].pop();
+            currentclosedpolygon.redraw();
+        }
+    } catch { }
 }
 
-function livemap_pan(direction) {
-    let currentViewBox = livemap_get_current_viewBox();
-    switch (direction) {
-        case "N":
-            currentViewBox[1] = currentViewBox[1] - (currentViewBox[3] / 4);
-            break;
-        case "S":
-            currentViewBox[1] = currentViewBox[1] + (currentViewBox[3] / 4);
-            break;
-        case "E":
-            currentViewBox[0] = currentViewBox[0] + (currentViewBox[2] / 4);
-            break;
-        case "W":
-            currentViewBox[0] = currentViewBox[0] - (currentViewBox[2] / 4);
-            break;
-    };
-    document.getElementById("liveMap").setAttribute("viewBox", currentViewBox.join(" "));
+function livemap_save_last_shot() {
+    unsavedshot.options.fillColor = "black";
+    unsavedshot._radius = 3;
+    unsavedshot.redraw();
 }
 
-function livemap_hide_points() {
-    livemap_save_survey_point_symbol();
-    document.getElementById("surveyPointSymbol").innerHTML = ""
+function livemap_end_current_grouping() {
+    livemap_discard_last_shot();
+    currentopenpolygon = null;
+    currentclosedpolygon = null;
 }
 
-function livemap_show_points() {
-    document.getElementById("surveyPointSymbol").innerHTML = document.getElementById("savedSurveyPointSymbol").innerHTML;
+function livemap_current_grouping_label() {
+    var info = [];
+    info.push("<b>" + document.getElementById("currentGroupingInfo").getAttribute("currentgroupingsubclass") + ":</b>");
+    info.push(document.getElementById("currentGroupingInfo").getAttribute("currentgroupinglabel"));
+    return info.join("<br>")
 }
