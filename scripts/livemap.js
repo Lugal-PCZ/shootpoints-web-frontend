@@ -27,10 +27,9 @@ async function livemap_plot_session() {
         return;
     }
     if (!backgrounddrawn && !json.occupiedstation.sitelocalcoords) {
-        L.gridLayer.googleMutant({
-            type: "satellite",
-            maxNativeZoom: 21,
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 27,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
         backgrounddrawn = true;
     }
