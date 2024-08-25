@@ -266,12 +266,6 @@
 						<img class="infobutton" id="sessionFormBacksightStationDescription" src="img/info.svg"
 							hidden><br>
 					</span>
-					<span id="sessionFormPrismHeightBlock" hidden>
-						<label for="sessionFormPrismHeight" id="sessionFormPrismHeightLabel">Prism Height:</label>
-						<input type="text" id="sessionFormPrismHeight" name="prism_height"
-							pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" oninput="toggle_button('sessionForm');" />
-						<br>
-					</span>
 					<span id="sessionFormAzimuthBlock" hidden>
 						<label for="sessionFormAzimuth" id="sessionFormAzimuthLabel">Azimuth (ddd.mmss):</label>
 						<input type="text" id="sessionFormAzimuth" name="azimuth"
@@ -279,8 +273,8 @@
 							oninput="toggle_button('sessionForm');" /><br>
 					</span>
 					<span id="sessionFormBacksightStation1MenuBlock" hidden>
-						<label for="sessionFormBacksightStation1Menu"
-							id="sessionFormBacksightStation1MenuLabel">Backsight #1 (<i>left</i>):</label>
+						<label for="sessionFormBacksightStation1Menu" id="sessionFormBacksightStation1MenuLabel">Left
+							Backsight:</label>
 						<select id="sessionFormBacksightStation1Menu" name="backsight_station_1_id" onchange="update_description(this, 'sessionFormBacksightStation1Description');
 							remove_station_from_related_menu(this, 'sessionFormBacksightStation2Menu'); toggle_button('sessionForm');">
 						</select>
@@ -288,8 +282,8 @@
 							hidden><br>
 					</span>
 					<span id="sessionFormBacksightStation2MenuBlock" hidden>
-						<label for="sessionFormBacksightStation2Menu"
-							id="sessionFormBacksightStation2MenuLabel">Backsight #2 (<i>right</i>):</label>
+						<label for="sessionFormBacksightStation2Menu" id="sessionFormBacksightStation2MenuLabel">Right
+							Backsight:</label>
 						<select id="sessionFormBacksightStation2Menu" name="backsight_station_2_id"
 							onchange="update_description(this, 'sessionFormBacksightStation2Description'); toggle_button('sessionForm');">
 						</select>
@@ -301,6 +295,12 @@
 							(m):</label>
 						<input type="text" id="sessionFormInstrumentHeight" name="instrument_height"
 							pattern="\.\d{1,3}|[0-2](\.\d{0,3})?" oninput="toggle_button('sessionForm');" />
+						<br>
+					</span>
+					<span id="sessionFormPrismHeightBlock" hidden>
+						<label for="sessionFormPrismHeight" id="sessionFormPrismHeightLabel">Prism Height (m):</label>
+						<input type="text" id="sessionFormPrismHeight" name="prism_height"
+							pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" oninput="toggle_button('sessionForm');" />
 						<br>
 					</span>
 					<br>

@@ -263,14 +263,14 @@ function update_required_new_session_fields() {
         case "Resection":
             _hide_required_field("sessionFormOccupiedPointMenu");
             _hide_required_field("sessionFormBacksightStationMenu");
-            _hide_required_field("sessionFormPrismHeight");
+            _show_required_field("sessionFormPrismHeight");
             _show_required_field("sessionFormInstrumentHeight");
             _hide_required_field("sessionFormAzimuth");
             _show_required_field("sessionFormBacksightStation1Menu");
             _show_required_field("sessionFormBacksightStation2Menu");
             thedescription.setAttribute("onClick", `alert("Set up on an arbitrary point and shoot to two known station points (left first, then right).")`);
             thedescription.hidden = false;
-            document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight #1";
+            document.getElementById("sessionFormStartSessionButton").value = "Shoot Left Backsight";
             break;
         default:
             _hide_required_field("sessionFormOccupiedPointMenu");

@@ -434,12 +434,12 @@ async function start_new_session() {
 		load_atmospheric_conditions();
 		load_prism_offsets();
 		if (document.getElementById("sessionFormCancelBacksightButton").getAttribute("backsightcanceled") === "no") {
-			// Special case for Backsight #1 of resection
-			if (document.getElementById("sessionFormStartSessionButton").value === "Shoot Backsight #1") {
+			// Special case for Backsight #1 (left) of resection
+			if (document.getElementById("sessionFormStartSessionButton").value === "Shoot Left Backsight") {
 				document.getElementById("sessionFormSitesMenu").disabled = true;
 				document.getElementById("sessionFormBacksightStation1Menu").disabled = true;
 				document.getElementById("sessionFormInstrumentHeight").disabled = true;
-				document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight #2";
+				document.getElementById("sessionFormStartSessionButton").value = "Shoot Right Backsight";
 				document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
 				document.getElementById("sessionFormAbortResectionButton").hidden = false;
 			}
@@ -475,14 +475,14 @@ async function cancel_backsight() {
 }
 
 async function abort_resection() {
-	if (confirm("Do you wish to clear the currently saved settings for Backsight #1?")) {
+	if (confirm("Do you wish to clear the currently saved settings for the Left Backsight?")) {
 		let response = await fetch("/abort/");
 		let json = await response.json();
 		document.getElementById("outputBox").innerHTML = json.result;
 		document.getElementById("sessionFormSitesMenu").disabled = false;
 		document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
 		document.getElementById("sessionFormInstrumentHeight").disabled = false;
-		document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight #1";
+		document.getElementById("sessionFormStartSessionButton").value = "Shoot Left Backsight";
 		document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
 		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
 		document.getElementById("sessionFormAbortResectionButton").hidden = true;
