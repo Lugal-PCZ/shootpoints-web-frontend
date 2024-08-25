@@ -29,6 +29,7 @@ async function livemap_plot_session() {
     if (!backgrounddrawn && !json.occupiedstation.sitelocalcoords) {
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 27,
+            maxNativeZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
         backgrounddrawn = true;
