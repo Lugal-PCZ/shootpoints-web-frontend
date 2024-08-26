@@ -474,18 +474,16 @@ async function cancel_backsight() {
 }
 
 async function abort_resection() {
-	if (confirm("Do you wish to clear the currently saved settings for the Left Backsight?")) {
-		let response = await fetch("/abort/");
-		let json = await response.json();
-		document.getElementById("outputBox").innerHTML = json.result;
-		document.getElementById("sessionFormSitesMenu").disabled = false;
-		document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
-		document.getElementById("sessionFormInstrumentHeight").disabled = false;
-		document.getElementById("sessionFormStartSessionButton").value = "Shoot Left Backsight";
-		document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
-		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
-		document.getElementById("sessionFormAbortResectionButton").hidden = true;
-	}
+	let response = await fetch("/abort/");
+	let json = await response.json();
+	document.getElementById("outputBox").innerHTML = json.result;
+	document.getElementById("sessionFormSitesMenu").disabled = false;
+	document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
+	document.getElementById("sessionFormInstrumentHeight").disabled = false;
+	document.getElementById("sessionFormStartSessionButton").value = "Shoot Left Backsight";
+	document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
+	document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
+	document.getElementById("sessionFormAbortResectionButton").hidden = true;
 }
 
 async function reset_database() {
