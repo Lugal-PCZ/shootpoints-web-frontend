@@ -304,7 +304,6 @@
 					<label for="sessionFormPressure">Pressure (mmHg):</label>
 					<input type="text" id="sessionFormPressure" name="pressure" pattern="7[2-9]\d|800"
 						oninput="toggle_button('sessionForm');" required /><br>
-					<br>
 					<input type="button" id="sessionFormStartSessionButton" class="safe" value="Start New Session"
 						onclick="start_new_session();" disabled>
 					<input type="button" id="sessionFormCancelBacksightButton" class="dangerous"
@@ -350,7 +349,6 @@
 						required /><br>
 					<label for="groupingFormDescription">Description:</label>
 					<input type="text" id="groupingFormDescription" name="description" /><br>
-					<br>
 					<input type="button" id="groupingFormStartGroupingButton" class="safe" value="Start New Grouping"
 						onclick="start_new_grouping();" disabled />
 					<input type="button" id="groupingFormEndCurrentGroupingButton" class="dangerous"
@@ -412,7 +410,6 @@
 					<label id="setConfigsFormLimitLabel" for="setConfigsFormLimit">Backsight Error Limit (cm): </label>
 					<input type="text" id="setConfigsFormLimit" name="limit" size="5"
 						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" /><br>
-					<br>
 					<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" />
 				</span>
 			</form>
@@ -427,7 +424,6 @@
 						oninput="toggle_button('saveNewSiteForm');" required /><br>
 					<label for="saveNewSiteFormSiteDescription">Description:</label>
 					<input type="text" id="saveNewSiteFormSiteDescription" name="description" /><br>
-					<br>
 					<input type="button" id="saveNewSiteFormButton" class="safe" value="Save New Site"
 						onclick="save_new_site();" disabled />
 				</span>
@@ -496,7 +492,6 @@
 							oninput="toggle_button('saveNewStationForm');"
 							pattern="([1-5]\d?|[6-9]|60)[cCdDeEfFgGhHjJkKlLmMnNpPqQrRsStTuUvVwWxX]" /><br>
 					</span>
-					<br>
 					<input type="button" id="saveNewStationFormButton" class="safe" value="Save New Station"
 						onclick="save_new_station();" disabled />
 				</span>
@@ -512,7 +507,6 @@
 						oninput="toggle_button('saveNewClassForm')" required /><br>
 					<label for="saveNewClassFormClassDescription">Description:</label>
 					<input type="text" id="saveNewClassFormClassDescription" name="description" /><br>
-					<br>
 					<input type="button" id="saveNewClassFormButton" class="safe" value="Save New Class"
 						onclick="save_new_class();" disabled />
 				</span>
@@ -534,7 +528,6 @@
 						oninput="toggle_button('saveNewSubclassForm');" required /><br>
 					<label for="saveNewSubclassFormSubclassDescription">Description:</label>
 					<input type="text" id="saveNewSubclassFormSubclassDescription" name="description" /><br>
-					<br>
 					<input type="button" id="saveNewSubclassFormButton" class="safe" value="Save New Subclass"
 						onclick="save_new_subclass(); update_subclass_menu(document.getElementById('groupingFormClassesMenu'), 'groupingFormSubclassesMenu');"
 						disabled />
@@ -552,7 +545,6 @@
 						required>
 					</select>
 					<img class="infobutton" id="deleteSiteFormSiteDescription" src="img/info.svg" hidden><br>
-					<br>
 					<input type="button" id="deleteSiteFormButton" class="dangerous" value="Delete Site"
 						onclick="delete_site();" disabled />
 				</span>
@@ -575,7 +567,6 @@
 						required>
 					</select>
 					<img class="infobutton" id="deleteStationFormStationDescription" src="img/info.svg" hidden><br>
-					<br>
 					<input type="button" id="deleteStationFormButton" class="dangerous" value="Delete Station"
 						onclick="delete_station();" disabled />
 				</span>
@@ -592,7 +583,6 @@
 						required>
 					</select>
 					<img class="infobutton" id="deleteClassFormClassDescription" src="img/info.svg" hidden><br>
-					<br>
 					<input type="button" id="deleteClassFormButton" class="dangerous" value="Delete Class"
 						onclick="delete_class();" disabled />
 				</span>
@@ -615,7 +605,6 @@
 						required>
 					</select>
 					<img class="infobutton" id="deleteSubclassFormSubclassDescription" src="img/info.svg" hidden><br>
-					<br>
 					<input type="button" id="deleteSubclassFormButton" class="dangerous" value="Delete Subclass"
 						onclick="delete_subclass();" disabled />
 				</span>
