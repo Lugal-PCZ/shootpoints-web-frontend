@@ -59,7 +59,7 @@ async function load_current_grouping_info() {
 	if (Object.keys(json).length === 0) {
 		document.getElementById("currentGroupingInfo").innerHTML = "<i>(no current grouping)</i>";
 		document.getElementById("currentGroupingDetails").hidden = true;
-		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = true;
+		document.getElementById("groupingFormEndCurrentGroupingButton").hidden = true;
 		document.getElementById("takeShotFormButton").disabled = true;
 		show_take_shot_form();
 	} else {
@@ -73,7 +73,7 @@ async function load_current_grouping_info() {
 		document.getElementById("currentGroupingInfo").setAttribute("currentgroupingnumberofshots", json.num_shots);
 		document.getElementById("currentGroupingDetails").setAttribute("onClick", "show_current_grouping_details();");
 		document.getElementById("currentGroupingDetails").hidden = false;
-		document.getElementById("groupingFormEndCurrentGroupingButton").disabled = false;
+		document.getElementById("groupingFormEndCurrentGroupingButton").hidden = false;
 		document.getElementById("takeShotFormButton").disabled = false;
 		show_take_shot_form("takeShotForm");
 	}
@@ -85,7 +85,7 @@ async function load_current_session_info() {
 	if (Object.keys(json).length === 0) {
 		document.getElementById("currentSessionInfo").innerHTML = "<i>(no current session)</i>";
 		document.getElementById("currentSessionDetails").hidden = true;
-		document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
+		document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
 		document.getElementById("groupingForm").hidden = true;
 		show_take_shot_form();
 	} else {
@@ -101,7 +101,7 @@ async function load_current_session_info() {
 		document.getElementById("currentSessionInfo").setAttribute("currentsessioninstrumentheight", json.instrumentheight);
 		document.getElementById("currentSessionDetails").setAttribute("onClick", "show_current_session_details();");
 		document.getElementById("currentSessionDetails").hidden = false;
-		document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
+		document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
 		document.getElementById("groupingForm").hidden = false;
 		show_take_shot_form("takeShotForm");
 		let started = new Date(json.started)

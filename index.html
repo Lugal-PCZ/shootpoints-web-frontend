@@ -58,56 +58,55 @@
 			<hr>
 			<span style="font-size: small">(direction is in meters from prism to point, as seen from the total
 				station)</span><br>
-			<label for="setPrismOffsetsVerticalDistance"><span class="clearfield"
-					onclick="clear_field('setPrismOffsetsVerticalDistance');">×&nbsp;</span>Vertical
+			<label for="setPrismOffsetsVerticalDistance">Vertical
 				Offset:</label>
 			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance"
 				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
 				<option value="-1">Down</option>
 				<option value="1">Up</option>
-			</select><br>
-			<label for="setPrismOffsetsLatitudeDistance"><span class="clearfield"
-					onclick="clear_field('setPrismOffsetsLatitudeDistance');">×&nbsp;</span>Latitude Offset:</label>
+			</select>
+			<span class="redx" onclick="clear_field('setPrismOffsetsVerticalDistance');">×</span><br>
+			<label for="setPrismOffsetsLatitudeDistance">Latitude Offset:</label>
 			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance"
 				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
 				<option value="1">North</option>
 				<option value="-1">South</option>
-			</select><br>
-			<label for="setPrismOffsetsLongitudeDistance"><span class="clearfield"
-					onclick="clear_field('setPrismOffsetsLongitudeDistance');">×&nbsp;</span>Longitude Offset:</label>
+			</select>
+			<span class="redx" onclick="clear_field('setPrismOffsetsLatitudeDistance');">×</span><br>
+			<label for="setPrismOffsetsLongitudeDistance">Longitude Offset:</label>
 			<input type="text" id="setPrismOffsetsLongitudeDistance" name="longitude_distance"
 				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsLongitudeDirection" name="longitude_direction">
 				<option value="1">East</option>
 				<option value="-1">West</option>
-			</select><br>
-			<label for="setPrismOffsetsRadialDistance"><span class="clearfield"
-					onclick="clear_field('setPrismOffsetsRadialDistance');">×&nbsp;</span>Radial Offset:</label>
+			</select>
+			<span class="redx" onclick="clear_field('setPrismOffsetsLongitudeDistance');">×</span><br>
+			<label for="setPrismOffsetsRadialDistance">Radial Offset:</label>
 			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance"
 				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsRadialDirection" name="radial_direction">
 				<option value="1">Away</option>
 				<option value="-1">Toward</option>
-			</select><br>
-			<label for="setPrismOffsetsTangentDistance"><span class="clearfield"
-					onclick="clear_field('setPrismOffsetsTangentDistance');">×&nbsp;</span>Tangent Offset:</label>
+			</select>
+			<span class="redx" onclick="clear_field('setPrismOffsetsRadialDistance');">×</span><br>
+			<label for="setPrismOffsetsTangentDistance">Tangent Offset:</label>
 			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance"
 				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
 				<option value="1">Right</option>
 				<option value="-1">Left</option>
-			</select><br>
-			<label for="setPrismOffsetsWedgeDistance"><span class="clearfield"
-					onclick="clear_field('setPrismOffsetsWedgeDistance');">×&nbsp;</span>Wedge Offset:</label>
+			</select>
+			<span class="redx" onclick="clear_field('setPrismOffsetsTangentDistance');">×</span><br>
+			<label for="setPrismOffsetsWedgeDistance">Wedge Offset:</label>
 			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance"
 				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
 			<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
 				<option value="1">Clockwise</option>
 				<option value="-1">Counter-Clockwise</option>
 			</select>
-			<br>
+			<span class="redx" onclick="clear_field('setPrismOffsetsWedgeDistance');">×</span><br>
 			<input type="button" id="setPrismOffsetsFormButton" class="safe" value="Set Prism Offsets"
 				onclick="set_prism_offsets();" />
 		</form>
@@ -219,6 +218,8 @@
 					</span>
 				</span>
 				<img class="infobutton" id="currentSessionDetails" src="img/info.svg" hidden>
+				<span id="sessionFormEndCurrentSessionButton" class="redx" onclick="end_current_session();"
+					hidden>×</span>
 				<img id="sessionFormIndicator" src="img/cylon.svg" hidden />
 				<span class="collapsible" hidden>
 					<hr>
@@ -308,8 +309,6 @@
 						onclick="start_new_session();" disabled>
 					<input type="button" id="sessionFormCancelBacksightButton" class="dangerous"
 						value="Cancel Backsight" onclick="cancel_backsight();" backsightcanceled="no" hidden>
-					<input type="button" id="sessionFormEndCurrentSessionButton" class="dangerous"
-						value="End Current Session" onclick="end_current_session();" disabled>
 					<input type="button" id="sessionFormAbortResectionButton" class="dangerous" value="Abort Resection"
 						onclick="abort_resection();" hidden>
 				</span>
@@ -324,6 +323,8 @@
 					</span>
 				</span>
 				<img class="infobutton" id="currentGroupingDetails" src="img/info.svg" hidden>
+				<span id="groupingFormEndCurrentGroupingButton" class="redx" onclick="end_current_grouping();"
+					hidden>×</span>
 				<span class="collapsible" hidden>
 					<hr>
 					<label for="groupingFormGeometriesMenu">Geometry:</label>
@@ -351,8 +352,6 @@
 					<input type="text" id="groupingFormDescription" name="description" /><br>
 					<input type="button" id="groupingFormStartGroupingButton" class="safe" value="Start New Grouping"
 						onclick="start_new_grouping();" disabled />
-					<input type="button" id="groupingFormEndCurrentGroupingButton" class="dangerous"
-						value="End Current Grouping" onclick="end_current_grouping();" disabled>
 				</span>
 			</form>
 			<form id="takeShotForm">

@@ -234,13 +234,16 @@ label {
 }
 
 .infobutton {
+	margin-left: 0.5ex;
 	vertical-align: -0.25em;
-	margin-right: 1ex;
 }
 
-.clearfield {
+.redx {
 	color: red;
+	font-size: large;
 	font-weight: bold;
+	margin-left: 0.5ex;
+	vertical-align: -0.1em;
 }
 
 .shotdata {
