@@ -35,7 +35,7 @@ async function livemap_plot_session() {
         backgrounddrawn = true;
     }
     map.setView(json.occupiedstation.coords, 18);
-    var label = "<b>Session “" + json.occupiedstation.label[0] + "”</b><br>Occupied Station: " + json.occupiedstation.label[1]
+    var label = `<b>Session “${json.occupiedstation.label[0]}”</b><br>Occupied Station: ${json.occupiedstation.label[1]}`;
     L.shapeMarker(json.occupiedstation.coords,
         {
             renderer: L.svg(),
@@ -56,7 +56,7 @@ async function livemap_plot_session() {
             fillOpacity: 1
         }).bindPopup(json.occupiedstation.label).addTo(map);
     json.polylines.forEach(function (thepolyline) {
-        label = "<b>" + thepolyline.label[0] + ":</b><br>" + thepolyline.label[1]
+        label = `<b>${thepolyline.label[0]}:</b><br>${thepolyline.label[1]}`;
         if (thepolyline.groupingid !== json.currentgrouping) {
             L.polyline(thepolyline.coords,
                 {
@@ -71,7 +71,7 @@ async function livemap_plot_session() {
         }
     });
     json.polygons.forEach(function (thepolygon) {
-        label = "<b>" + thepolygon.label[0] + ":</b><br>" + thepolygon.label[1]
+        label = `<b>${thepolygon.label[0]}:</b><br>${thepolygon.label[1]}`;
         if (thepolygon.groupingid !== json.currentgrouping) {
             L.polygon(thepolygon.coords,
                 {
@@ -86,7 +86,7 @@ async function livemap_plot_session() {
         }
     });
     json.points.forEach(function (thepoint) {
-        label = "<b>" + thepoint.label[0] + ":</b><br>" + thepoint.label[1]
+        label = `<b>${thepoint.label[0]}:</b><br>${thepoint.label[1]}`;
         L.circleMarker(thepoint.coords,
             {
                 color: "white",
@@ -182,7 +182,7 @@ function livemap_end_current_grouping() {
 
 function livemap_current_grouping_label() {
     var info = [];
-    info.push("<b>" + document.getElementById("currentGroupingInfo").getAttribute("currentgroupingsubclass") + ":</b>");
+    info.push(`<b>${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingsubclass")}:</b>`);
     info.push(document.getElementById("currentGroupingInfo").getAttribute("currentgroupinglabel"));
     return info.join("<br>")
 }

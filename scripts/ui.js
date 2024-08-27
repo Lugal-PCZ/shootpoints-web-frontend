@@ -2,12 +2,12 @@
 
 function _hide_required_field(thefield) {
     document.getElementById(thefield).required = false;
-    document.getElementById(thefield + "Block").hidden = true;
+    document.getElementById(`${thefield}Block`).hidden = true;
 }
 
 function _show_required_field(thefield) {
     document.getElementById(thefield).required = true;
-    document.getElementById(thefield + "Block").hidden = false;
+    document.getElementById(`${thefield}Block`).hidden = false;
 }
 
 function clear_field(thefield) {
@@ -25,7 +25,7 @@ function collapse(theelement) {
 async function get_version() {
     let response = await fetch("/version/");
     let json = await response.json();
-    document.getElementById("version").innerHTML = "ShootPoints-Web v" + json.version;
+    document.getElementById("version").innerHTML = `ShootPoints-Web v${json.version}`;
 }
 
 function handle_special_subclasses() {
@@ -328,7 +328,7 @@ async function update_station_menu(thesite, themenu) {
         target.innerHTML = "";
         document.getElementById(targetdescription).hidden = true;
     } else {
-        let response = await fetch("/station/" + thesite.value);
+        let response = await fetch(`/station/${thesite.value}`);
         let json = await response.json();
         stationsmenu = ["<option></option>"];
         json.stations.forEach(function (thestation) {
@@ -352,7 +352,7 @@ async function update_subclass_menu(theclass, themenu) {
         target.innerHTML = "";
         document.getElementById(targetdescription).hidden = true;
     } else {
-        let response = await fetch("/subclass/" + theclass.value);
+        let response = await fetch(`/subclass/${theclass.value}`);
         let json = await response.json();
         subclassesmenu = ["<option></option>"];
         json.subclasses.forEach(function (thesubclass) {

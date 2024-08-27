@@ -7,7 +7,7 @@ async function download_database() {
 async function export_session_data() {
 	let sessions_id = document.getElementById("exportSessionDataFormSessionsMenu").value;
 	let thetrigger = document.getElementById("sessionDataExportTrigger");
-	thetrigger.setAttribute("href", "/export/" + sessions_id);
+	thetrigger.setAttribute("href", `/export/${sessions_id}`);
 	thetrigger.click();
 	document.getElementById("exportSessionDataForm").reset();
 	document.getElementById("exportSessionDataFormButton").disabled = true;
@@ -537,7 +537,7 @@ async function take_shot() {
 					themessage.push(`Move ${Math.abs(e_difference).toFixed(2)}m ${e_direction}`);
 				}
 				if (themessage) {
-					alert("Distance to stakeout target:\n" + themessage.join("\n"));
+					alert(`Distance to stakeout target:\n${themessage.join("\n")}`);
 				}
 			}
 			show_take_shot_form("saveLastShotForm");
