@@ -238,6 +238,11 @@ label {
 	vertical-align: -0.25em;
 }
 
+.noentry {
+	pointer-events: none;
+	background-color: silver;
+}
+
 .redx {
 	color: red;
 	font-size: large;

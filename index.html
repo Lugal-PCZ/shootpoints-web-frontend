@@ -32,6 +32,7 @@
 	load_current_session_info();
 	load_current_grouping_info();
 	livemap_initialize();
+	abort_resection(false);
 	">
 
 	<div id="onTheFlyAdjustmentsPopup" class="rounded" hidden>
@@ -240,8 +241,8 @@
 					<select id="sessionFormSessionTypeMenu" name="sessiontype"
 						onchange="update_required_new_session_fields(this); toggle_button('sessionForm');" required>
 						<option></option>
-						<option value="Backsight">Backsight</option>
 						<option value="Azimuth">Azimuth</option>
+						<option value="Backsight">Backsight</option>
 						<option value="Resection">Resection</option>
 					</select>
 					<img class="infobutton" id="sessionFormSessionTypeDescription" src="img/info.svg" hidden><br>
@@ -305,8 +306,15 @@
 					<label for="sessionFormPressure">Pressure (mmHg):</label>
 					<input type="text" id="sessionFormPressure" name="pressure" pattern="7[2-9]\d|800"
 						oninput="toggle_button('sessionForm');" required /><br>
-					<input type="button" id="sessionFormStartSessionButton" class="safe" value="Start New Session"
-						onclick="start_new_session();" disabled>
+					<input type="button" id="sessionFormStartSessionBlankButton" value="Start New Session" disabled>
+					<input type="button" id="sessionFormStartSessionWithAzimuthButton" class="safe"
+						value="Set Instrument Azimuth" onclick="start_new_session('Azimuth');" hidden disabled>
+					<input type="button" id="sessionFormStartSessionWithBacksightButton" class="safe"
+						value="Shoot Backsight" onclick="start_new_session('Backsight');" hidden disabled>
+					<input type="button" id="sessionFormStartSessionWithResectionLeftButton" class="safe"
+						value="Shoot Left Backsight" onclick="start_new_session('ResectionLeft');" hidden disabled>
+					<input type="button" id="sessionFormStartSessionWithResectionRightButton" class="safe"
+						value="Shoot Right Backsight" onclick="start_new_session('ResectionRight');" hidden disabled>
 					<input type="button" id="sessionFormCancelBacksightButton" class="dangerous"
 						value="Cancel Backsight" onclick="cancel_backsight();" backsightcanceled="no" hidden>
 					<input type="button" id="sessionFormAbortResectionButton" class="dangerous" value="Abort Resection"

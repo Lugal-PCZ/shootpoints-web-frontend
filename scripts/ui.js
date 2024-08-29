@@ -173,7 +173,7 @@ function toggle_button(theformid) {
             allfieldsarevalid *= formfield.validity.valid;
         }
     });
-    theform.querySelector("input[type=button]").disabled = !allfieldsarevalid;
+    theform.querySelector("input[type=button]:not([hidden])").disabled = !allfieldsarevalid;
 }
 
 function toggle_rpi_power_buttons() {
@@ -236,21 +236,16 @@ async function update_model_menu(themodels = false) {
 }
 
 function update_required_new_session_fields() {
+    document.getElementById("sessionFormStartSessionBlankButton").hidden = true;
+    document.getElementById("sessionFormStartSessionWithAzimuthButton").hidden = true;
+    document.getElementById("sessionFormStartSessionWithBacksightButton").hidden = true;
+    document.getElementById("sessionFormStartSessionWithResectionLeftButton").hidden = true;
+    document.getElementById("sessionFormStartSessionWithResectionRightButton").hidden = true;
+    document.getElementById("sessionFormCancelBacksightButton").hidden = true;
     let thedescription = document.getElementById("sessionFormSessionTypeDescription");
     switch (document.getElementById("sessionFormSessionTypeMenu").value) {
-        case "Backsight":
-            _show_required_field("sessionFormOccupiedPointMenu");
-            _show_required_field("sessionFormBacksightStationMenu");
-            _show_required_field("sessionFormPrismHeight");
-            _hide_required_field("sessionFormInstrumentHeight");
-            _hide_required_field("sessionFormAzimuth");
-            _hide_required_field("sessionFormBacksightStation1Menu");
-            _hide_required_field("sessionFormBacksightStation2Menu");
-            thedescription.setAttribute("onClick", `alert("Set up on a known station point and shoot to another known station point.")`);
-            thedescription.hidden = false;
-            document.getElementById("sessionFormStartSessionButton").value = "Shoot Backsight";
-            break;
         case "Azimuth":
+            document.getElementById("sessionFormStartSessionWithAzimuthButton").hidden = false;
             _show_required_field("sessionFormOccupiedPointMenu");
             _hide_required_field("sessionFormBacksightStationMenu");
             _hide_required_field("sessionFormPrismHeight");
@@ -260,9 +255,21 @@ function update_required_new_session_fields() {
             _hide_required_field("sessionFormBacksightStation2Menu");
             thedescription.setAttribute("onClick", `alert("Set up on a known station point and enter the angle to a landmark.")`);
             thedescription.hidden = false;
-            document.getElementById("sessionFormStartSessionButton").value = "Set Instrument Azimuth";
+            break;
+        case "Backsight":
+            document.getElementById("sessionFormStartSessionWithBacksightButton").hidden = false;
+            _show_required_field("sessionFormOccupiedPointMenu");
+            _show_required_field("sessionFormBacksightStationMenu");
+            _show_required_field("sessionFormPrismHeight");
+            _hide_required_field("sessionFormInstrumentHeight");
+            _hide_required_field("sessionFormAzimuth");
+            _hide_required_field("sessionFormBacksightStation1Menu");
+            _hide_required_field("sessionFormBacksightStation2Menu");
+            thedescription.setAttribute("onClick", `alert("Set up on a known station point and shoot to another known station point.")`);
+            thedescription.hidden = false;
             break;
         case "Resection":
+            document.getElementById("sessionFormStartSessionWithResectionLeftButton").hidden = false;
             _hide_required_field("sessionFormOccupiedPointMenu");
             _hide_required_field("sessionFormBacksightStationMenu");
             _show_required_field("sessionFormPrismHeight");
@@ -272,7 +279,6 @@ function update_required_new_session_fields() {
             _show_required_field("sessionFormBacksightStation2Menu");
             thedescription.setAttribute("onClick", `alert("Set up on an arbitrary point and shoot to two known station points (left first, then right).")`);
             thedescription.hidden = false;
-            document.getElementById("sessionFormStartSessionButton").value = "Shoot Left Backsight";
             break;
         default:
             _hide_required_field("sessionFormOccupiedPointMenu");
@@ -283,7 +289,7 @@ function update_required_new_session_fields() {
             _hide_required_field("sessionFormBacksightStation1Menu");
             _hide_required_field("sessionFormBacksightStation2Menu");
             thedescription.hidden = true;
-            document.getElementById("sessionFormStartSessionButton").value = "Start New Session";
+            document.getElementById("sessionFormStartSessionBlankButton").hidden = false;
     }
 }
 

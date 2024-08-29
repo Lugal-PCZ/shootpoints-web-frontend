@@ -322,9 +322,7 @@ async function end_current_session(prompt = true) {
 		document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
 		document.getElementById("sessionFormBacksightStationDescription").hidden = true;
 		update_required_new_session_fields();
-		document.getElementById("sessionFormStartSessionButton").disabled = true;
 		load_current_session_info();
-		livemap_end_current_grouping();
 	}
 }
 
@@ -407,7 +405,7 @@ async function start_new_grouping() {
 	}
 }
 
-async function start_new_session() {
+async function start_new_session(sessiontype) {
 	if (document.getElementById("saveLastShotForm").hidden === false) {
 		if (!confirm("You have a shot that will not be saved if you continue.\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
 			return;
@@ -420,52 +418,65 @@ async function start_new_session() {
 			end_current_grouping(false);
 		}
 	}
-	document.getElementById("sessionFormCancelBacksightButton").setAttribute("backsightcanceled", "no");
+	document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
 	document.getElementById("sessionFormIndicator").hidden = false;
-	document.getElementById("sessionFormEndCurrentSessionButton").disabled = true;
-	document.getElementById("sessionFormAbortResectionButton").hidden = true;
-	if (["Backsight", "Resection"].includes(document.getElementById("sessionFormSessionTypeMenu").value)) {
-		document.getElementById("sessionFormStartSessionButton").hidden = true;
+	document.getElementById("sessionFormCancelBacksightButton").setAttribute("backsightcanceled", "no");
+	document.getElementById(`sessionFormStartSessionWith${sessiontype}Button`).disabled = true;
+	if (sessiontype !== "Azimuth") {
+		document.getElementById(`sessionFormStartSessionWith${sessiontype}Button`).hidden = true;
 		document.getElementById("sessionFormCancelBacksightButton").hidden = false;
+	}
+	if (sessiontype !== "ResectionLeft") {
+		document.getElementById("sessionFormAbortResectionButton").hidden = true;
 	}
 	let status = await _update_data_via_api("/session/", "POST", sessionForm);
 	if (status >= 200 && status <= 299) {
 		load_atmospheric_conditions();
 		load_prism_offsets();
-		if (document.getElementById("sessionFormCancelBacksightButton").getAttribute("backsightcanceled") === "no") {
-			// Special case for Backsight #1 (left) of resection
-			if (document.getElementById("sessionFormStartSessionButton").value === "Shoot Left Backsight") {
-				document.getElementById("sessionFormSitesMenu").disabled = true;
-				document.getElementById("sessionFormBacksightStation1Menu").disabled = true;
-				document.getElementById("sessionFormInstrumentHeight").disabled = true;
-				document.getElementById("sessionFormStartSessionButton").value = "Shoot Right Backsight";
-				document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
+		document.getElementById("sessionFormIndicator").hidden = true;
+		document.getElementById("sessionFormCancelBacksightButton").hidden = true;
+		if (document.getElementById("sessionFormCancelBacksightButton").getAttribute("backsightcanceled") === "yes") {
+			document.getElementById("sessionFormCancelBacksightButton").hidden = true;
+			document.getElementById(`sessionFormStartSessionWith${sessiontype}Button`).disabled = false;
+			document.getElementById(`sessionFormStartSessionWith${sessiontype}Button`).hidden = false;
+			if (sessiontype === "ResectionRight") {
 				document.getElementById("sessionFormAbortResectionButton").hidden = false;
 			}
-			else {
+		} else {
+			if (sessiontype === "ResectionLeft") {
+				// set the form to take a resection right backsight
+				document.getElementById("sessionForm").querySelectorAll("input[type=text],select").forEach(formfield => {
+					formfield.classList.add("noentry");
+				});
+				document.getElementById("sessionFormBacksightStation2Menu").classList.remove("noentry");
+				document.getElementById("sessionFormStartSessionWithResectionRightButton").disabled = false;
+				document.getElementById("sessionFormStartSessionWithResectionLeftButton").hidden = true;
+				document.getElementById("sessionFormStartSessionWithResectionRightButton").hidden = false;
+				document.getElementById("sessionFormAbortResectionButton").hidden = false;
+			} else {
+				// reset the form
+				document.getElementById("sessionForm").querySelectorAll("input[type=text],select").forEach(formfield => {
+					formfield.classList.remove("noentry");
+				});
 				document.getElementById("sessionForm").reset();
-				document.getElementById("sessionFormSitesMenu").disabled = false;
-				document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
-				document.getElementById("sessionFormInstrumentHeight").disabled = false;
-				document.getElementById("sessionFormStartSessionButton").value = "Start New Session";
-				document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
-				document.getElementById("sessionFormSiteDescription").hidden = true;
-				document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
-				document.getElementById("sessionFormBacksightStationDescription").hidden = true;
-				document.getElementById("sessionFormStartSessionButton").disabled = true;
-				document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
 				update_required_new_session_fields();
-				load_current_session_info();
-				load_current_grouping_info();
 				collapse(document.getElementById("sessionFormHeader"));
 			}
 		}
 	} else {
 		alert("An error occurred while starting the session. See the output box for details.");
+		update_required_new_session_fields("sessionFormSessionTypeMenu");
+		toggle_button("sessionForm");
+		if (sessiontype === "ResectionRight") {
+			document.getElementById("sessionFormIndicator").hidden = true;
+			document.getElementById("sessionFormStartSessionWithResectionRightButton").disabled = false;
+			document.getElementById("sessionFormStartSessionWithResectionLeftButton").hidden = true;
+			document.getElementById("sessionFormStartSessionWithResectionRightButton").hidden = false;
+			document.getElementById("sessionFormAbortResectionButton").hidden = false;
+		}
 	}
-	document.getElementById("sessionFormIndicator").hidden = true;
-	document.getElementById("sessionFormStartSessionButton").hidden = false;
-	document.getElementById("sessionFormCancelBacksightButton").hidden = true;
+	load_current_session_info();
+	load_current_grouping_info();
 }
 
 async function cancel_backsight() {
@@ -473,17 +484,18 @@ async function cancel_backsight() {
 	await fetch("/cancel/");
 }
 
-async function abort_resection() {
+async function abort_resection(feedback = true) {
+	document.getElementById("sessionForm").querySelectorAll("input[type=text],select").forEach(formfield => {
+		formfield.classList.remove("noentry");
+	});
 	let response = await fetch("/abort/");
 	let json = await response.json();
-	document.getElementById("outputBox").innerHTML = json.result;
-	document.getElementById("sessionFormSitesMenu").disabled = false;
-	document.getElementById("sessionFormBacksightStation1Menu").disabled = false;
-	document.getElementById("sessionFormInstrumentHeight").disabled = false;
-	document.getElementById("sessionFormStartSessionButton").value = "Shoot Left Backsight";
-	document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
-	document.getElementById("sessionFormEndCurrentSessionButton").disabled = false;
-	document.getElementById("sessionFormAbortResectionButton").hidden = true;
+	if (feedback) {
+		document.getElementById("outputBox").innerHTML = json.result;
+		document.getElementById("sessionFormAbortResectionButton").hidden = true;
+		document.getElementById("sessionForm").reset();
+		update_required_new_session_fields();
+	}
 }
 
 async function reset_database() {
