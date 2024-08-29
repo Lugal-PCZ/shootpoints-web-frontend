@@ -64,7 +64,9 @@ async function os_check() {
 
 function put_date_in_session_label() {
     let now = new Date();
-    document.getElementById("sessionFormLabel").value = now.toISOString().substring(0, 10) + " ";
+    if (document.getElementById("sessionFormLabel").value === "") {
+        document.getElementById("sessionFormLabel").value = now.toISOString().substring(0, 10) + " ";
+    }
 }
 
 function remove_station_from_related_menu(thismenu, targetmenu) {
