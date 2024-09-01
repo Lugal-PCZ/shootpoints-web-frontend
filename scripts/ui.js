@@ -25,7 +25,7 @@ function collapse(theelement) {
 async function get_version() {
     let response = await fetch("/version/");
     let json = await response.json();
-    document.getElementById("version").innerHTML = `ShootPoints-Web v${json.version}`;
+    document.getElementById("version").innerHTML = `ShootPoints-Web v${json.version.app}`;
 }
 
 function handle_special_subclasses() {
