@@ -4,6 +4,25 @@ async function download_database() {
 	document.getElementById("databaseDownloadTrigger").click();
 }
 
+
+async function ensure_unique_resection_station_name() {
+	let thesite = document.getElementById("sessionFormSitesMenu");
+	let newstation = document.getElementById("sessionFormNewStationName").value;
+	if (thesite && newstation) {
+		let response = await fetch(`/station/${thesite.value}`);
+		let json = await response.json();
+		json.stations.forEach(function (thestation) {
+			if (thestation.name === document.getElementById("sessionFormNewStationName").value) {
+				alert(`The station name “${newstation}” is already taken at ${thesite.name}. Please choose a different name.`);
+				document.getElementById("sessionFormNewStationName").value = "";
+			}
+		});
+	} else {
+		console.log("not ready");
+	}
+}
+
+
 async function export_session_data() {
 	let sessions_id = document.getElementById("exportSessionDataFormSessionsMenu").value;
 	let thetrigger = document.getElementById("sessionDataExportTrigger");

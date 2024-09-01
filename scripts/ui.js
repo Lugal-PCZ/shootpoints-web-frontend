@@ -251,6 +251,7 @@ function update_required_new_session_fields() {
             _hide_required_field("sessionFormPrismHeight");
             _show_required_field("sessionFormInstrumentHeight");
             _show_required_field("sessionFormAzimuth");
+            _hide_required_field("sessionFormNewStationName");
             _hide_required_field("sessionFormBacksightStation1Menu");
             _hide_required_field("sessionFormBacksightStation2Menu");
             thedescription.setAttribute("onClick", `alert("Set up on a known station point and enter the angle to a landmark.")`);
@@ -263,6 +264,7 @@ function update_required_new_session_fields() {
             _show_required_field("sessionFormPrismHeight");
             _hide_required_field("sessionFormInstrumentHeight");
             _hide_required_field("sessionFormAzimuth");
+            _hide_required_field("sessionFormNewStationName");
             _hide_required_field("sessionFormBacksightStation1Menu");
             _hide_required_field("sessionFormBacksightStation2Menu");
             thedescription.setAttribute("onClick", `alert("Set up on a known station point and shoot to another known station point.")`);
@@ -275,6 +277,7 @@ function update_required_new_session_fields() {
             _show_required_field("sessionFormPrismHeight");
             _show_required_field("sessionFormInstrumentHeight");
             _hide_required_field("sessionFormAzimuth");
+            _show_required_field("sessionFormNewStationName");
             _show_required_field("sessionFormBacksightStation1Menu");
             _show_required_field("sessionFormBacksightStation2Menu");
             thedescription.setAttribute("onClick", `alert("Set up on an arbitrary point and shoot to two known station points (left first, then right).")`);

@@ -234,7 +234,8 @@
 					<select id="sessionFormSitesMenu" class="sitesmenu" name="sites_id" onchange="update_description(this, 'sessionFormSiteDescription');
 							update_station_menu(this, 'sessionFormOccupiedPointMenu');
 							update_station_menu(this, 'sessionFormBacksightStation1Menu');
-							toggle_button('sessionForm');" required>
+							toggle_button('sessionForm');
+							ensure_unique_resection_station_name();" required>
 					</select>
 					<img class="infobutton" id="sessionFormSiteDescription" src="img/info.svg" hidden><br>
 					<label for="sessionFormSessionTypeMenu">Session Type:</label>
@@ -268,6 +269,12 @@
 						<input type="text" id="sessionFormAzimuth" name="azimuth"
 							pattern="(\d|[1-9]\d|[1-2]\d{2}|3[0-5]\d)\.[0-5][0-9][0-5][0-9]"
 							oninput="toggle_button('sessionForm');" /><br>
+					</span>
+					<span id="sessionFormNewStationNameBlock" hidden>
+						<label for="sessionFormNewStationName" id="sessionFormNewStationLabel">New Station Name:</label>
+						<input type="text" id="sessionFormNewStationName" name="new_station_name"
+							oninput="toggle_button('sessionForm');"
+							onblur="ensure_unique_resection_station_name()" /><br>
 					</span>
 					<span id="sessionFormBacksightStation1MenuBlock" hidden>
 						<label for="sessionFormBacksightStation1Menu" id="sessionFormBacksightStation1MenuLabel">Left
