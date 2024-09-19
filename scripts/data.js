@@ -17,8 +17,6 @@ async function ensure_unique_resection_station_name() {
 				document.getElementById("sessionFormNewStationName").value = "";
 			}
 		});
-	} else {
-		console.log("not ready");
 	}
 }
 
