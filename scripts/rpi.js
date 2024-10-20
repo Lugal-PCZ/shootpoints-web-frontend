@@ -3,11 +3,9 @@
 function rpi_power(action) {
     // The valid actions are "shutdown" and "reboot"
     let warningmessageaction = "safely shut down";
-    let confirmationmessage = "Shutdown complete. You can now unplug the Raspberry Pi.";
     let timeout = 10000;
     if (action === "reboot") {
         warningmessageaction = "reboot";
-        confirmationmessage = "The Raspberry Pi has been rebooted and your browser will now refresh.";
         timeout = 60000;
     }
     let warningmessage = `Press “Ok” to ${warningmessageaction} the Raspberry Pi.`;
@@ -23,10 +21,10 @@ function rpi_power(action) {
         document.getElementById("rpiPowerOffFormIndicator").hidden = false;
         setTimeout(function () {
             if (action === "shutdown") {
-                document.body.innerHTML = "<h1 style=\"color: white;\">Raspberry Pi is shut down</h1>"
+                document.body.innerHTML = "<h1 style=\"color: white;\">Raspberry Pi is shut down</h1><p>It can now be unplugged.</p>";
             }
-            confirm(confirmationmessage);
             if (action === "reboot") {
+                confirm("The Raspberry Pi has been rebooted and your browser will now refresh.");
                 window.location.reload();
             }
         }, timeout);
