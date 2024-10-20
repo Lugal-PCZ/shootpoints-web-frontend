@@ -316,22 +316,16 @@ async function end_current_grouping(prompt = true) {
 }
 
 async function end_current_session(prompt = true) {
-	let themessage = "This will end the current session.\n\nPress “Ok” to proceed or “Cancel” to go back.";
+	let themessage = "This will end the current session and grouping.\n\nPress “Ok” to proceed or “Cancel” to go back.";
 	if (document.getElementById("saveLastShotForm").hidden === false) {
-		themessage = "This will end the current session and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back.";
+		themessage = "This will end the current session and grouping, and discard your unsaved shot.\n\nPress “Ok” to proceed or “Cancel” to go back.";
 	}
 	if (prompt === true) {
 		if (!confirm(themessage)) {
 			return;
 		}
 	}
-	let response = await fetch("/grouping/");
-	let json = await response.json();
-	if (Object.keys(json).length > 0) {
-		if (confirm(`You have an active grouping (“${json.label}”).\n\nPress “Ok” to end it before proceeding or “Cancel” to leave it active.`)) {
-			end_current_grouping(false);
-		}
-	}
+	end_current_grouping(false);
 	let status = await _update_data_via_api("/session/", "PUT", sessionForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("sessionForm").reset();
@@ -426,13 +420,6 @@ async function start_new_session(sessiontype) {
 	if (document.getElementById("saveLastShotForm").hidden === false) {
 		if (!confirm("You have a shot that will not be saved if you continue.\n\nPress “Ok” to proceed or “Cancel” to go back.")) {
 			return;
-		}
-	}
-	let response = await fetch("/grouping/");
-	let json = await response.json();
-	if (Object.keys(json).length > 0) {
-		if (confirm(`You have an active grouping (“${json.label}”).\n\nPress “Ok” to end it before proceeding or “Cancel” to leave it active.`)) {
-			end_current_grouping(false);
 		}
 	}
 	document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
