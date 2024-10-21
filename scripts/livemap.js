@@ -1,6 +1,7 @@
 // Live Map Manipulation
 
 var map;
+var internetAccessible = false;
 var sessionplotted = false;
 var backgrounddrawn = false;
 var currentopenpolygon = null;
@@ -10,6 +11,18 @@ var unsavedshot = null;
 async function livemap_initialize() {
     var canvasRenderer = L.canvas({ tolerance: 4 });
     map = L.map("liveMap", { renderer: canvasRenderer, zoomControl: false });
+    AbortSignal.timeout ??= function timeout(ms) {
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), ms);
+        return ctrl.signal;
+    };
+    fetch("https://google.com", { signal: AbortSignal.timeout(2000), mode: "no-cors" })
+        .then((r) => {
+            internetAccessible = true;
+        })
+        .catch((e) => {
+            internetAccessible = false;
+        });
 }
 
 async function livemap_show() {
@@ -26,7 +39,7 @@ async function livemap_plot_session() {
     if (Object.keys(json).length === 0) {
         return;
     }
-    if (!backgrounddrawn && !json.occupiedstation.sitelocalcoords) {
+    if (internetAccessible && !backgrounddrawn && !json.occupiedstation.sitelocalcoords) {
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 27,
             maxNativeZoom: 19,
