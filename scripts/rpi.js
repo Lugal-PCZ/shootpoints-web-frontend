@@ -11,7 +11,7 @@ function rpi_power(action) {
     let warningmessage = `Press “Ok” to ${warningmessageaction} the Raspberry Pi.`;
     let endcurrentsession = document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").checked;
     if (endcurrentsession === true) {
-        warningmessage = `Press “Ok” to end the current session and ${warningmessageaction} the Raspberry Pi.`;
+        warningmessage = `Press “Ok” to end the current session and grouping, and ${warningmessageaction} the Raspberry Pi.`;
     }
     if (confirm(warningmessage)) {
         if (endcurrentsession === true) {

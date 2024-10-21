@@ -110,59 +110,62 @@ function show_current_session_details() {
     alert(details.join("\n"));
 }
 
-async function show_on_the_fly_adjustments_popup() {
+async function toggle_on_the_fly_adjustments_popup() {
     document.getElementById("utilitiesPopup").hidden = true;
-    fetch("/atmosphere/")
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("setAtmosphericConditionsFormTemperature").value = data.temperature;
-            document.getElementById("setAtmosphericConditionsFormPressure").value = data.pressure;
-        });
-    fetch("/prism_raw/")
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("setPrismOffsetsVerticalDistance").value = Math.abs(data.vertical_distance);
-            if (data.vertical_distance !== 0) {
-                document.getElementById("setPrismOffsetsVerticalDirection").value = data.vertical_distance / Math.abs(data.vertical_distance);
-            }
-            document.getElementById("setPrismOffsetsLatitudeDistance").value = Math.abs(data.latitude_distance);
-            if (data.latitude_distance !== 0) {
-                document.getElementById("setPrismOffsetsLatitudeDirection").value = data.latitude_distance / Math.abs(data.latitude_distance);
-            }
-            document.getElementById("setPrismOffsetsLongitudeDistance").value = Math.abs(data.longitude_distance);
-            if (data.longitude_distance !== 0) {
-                document.getElementById("setPrismOffsetsLongitudeDirection").value = data.longitude_distance / Math.abs(data.longitude_distance);
-            }
-            document.getElementById("setPrismOffsetsRadialDistance").value = Math.abs(data.radial_distance);
-            if (data.radial_distance !== 0) {
-                document.getElementById("setPrismOffsetsRadialDirection").value = data.radial_distance / Math.abs(data.radial_distance);
-            }
-            document.getElementById("setPrismOffsetsTangentDistance").value = Math.abs(data.tangent_distance);
-            if (data.tangent_distance !== 0) {
-                document.getElementById("setPrismOffsetsTangentDirection").value = data.tangent_distance / Math.abs(data.tangent_distance);
-            }
-            document.getElementById("setPrismOffsetsWedgeDistance").value = Math.abs(data.wedge_distance);
-            if (data.wedge_distance !== 0) {
-                document.getElementById("setPrismOffsetsWedgeDirection").value = data.wedge_distance / Math.abs(data.wedge_distance);
-            }
-        });
-    let thepopup = document.getElementById("onTheFlyAdjustmentsPopup");
-    thepopup.hidden = false;
+    if (document.getElementById("onTheFlyAdjustmentsPopup").hidden) {
+        fetch("/atmosphere/")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("setAtmosphericConditionsFormTemperature").value = data.temperature;
+                document.getElementById("setAtmosphericConditionsFormPressure").value = data.pressure;
+            });
+        fetch("/prism_raw/")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("setPrismOffsetsVerticalDistance").value = Math.abs(data.vertical_distance);
+                if (data.vertical_distance !== 0) {
+                    document.getElementById("setPrismOffsetsVerticalDirection").value = data.vertical_distance / Math.abs(data.vertical_distance);
+                }
+                document.getElementById("setPrismOffsetsLatitudeDistance").value = Math.abs(data.latitude_distance);
+                if (data.latitude_distance !== 0) {
+                    document.getElementById("setPrismOffsetsLatitudeDirection").value = data.latitude_distance / Math.abs(data.latitude_distance);
+                }
+                document.getElementById("setPrismOffsetsLongitudeDistance").value = Math.abs(data.longitude_distance);
+                if (data.longitude_distance !== 0) {
+                    document.getElementById("setPrismOffsetsLongitudeDirection").value = data.longitude_distance / Math.abs(data.longitude_distance);
+                }
+                document.getElementById("setPrismOffsetsRadialDistance").value = Math.abs(data.radial_distance);
+                if (data.radial_distance !== 0) {
+                    document.getElementById("setPrismOffsetsRadialDirection").value = data.radial_distance / Math.abs(data.radial_distance);
+                }
+                document.getElementById("setPrismOffsetsTangentDistance").value = Math.abs(data.tangent_distance);
+                if (data.tangent_distance !== 0) {
+                    document.getElementById("setPrismOffsetsTangentDirection").value = data.tangent_distance / Math.abs(data.tangent_distance);
+                }
+                document.getElementById("setPrismOffsetsWedgeDistance").value = Math.abs(data.wedge_distance);
+                if (data.wedge_distance !== 0) {
+                    document.getElementById("setPrismOffsetsWedgeDirection").value = data.wedge_distance / Math.abs(data.wedge_distance);
+                }
+            });
+    }
+    document.getElementById("onTheFlyAdjustmentsPopup").hidden = !document.getElementById("onTheFlyAdjustmentsPopup").hidden;
 }
 
-async function show_utilities_popup() {
+async function toggle_utilities_popup() {
     document.getElementById("onTheFlyAdjustmentsPopup").hidden = true;
-    if (Number(document.getElementById("currentSessionInfo").getAttribute("currentsessionid")) > 0) {
-        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = false;
-        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = false;
-    } else {
-        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").checked = false;
-        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = true;
-        document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = true;
+    if (document.getElementById("utilitiesPopup").hidden) {
+        if (Number(document.getElementById("currentSessionInfo").getAttribute("currentsessionid")) > 0) {
+            document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = false;
+            document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = false;
+        } else {
+            document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").checked = false;
+            document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").hidden = true;
+            document.getElementById("rpiPowerOffFormEndCurrentSessionCheckboxLabel").hidden = true;
+        }
+        toggle_rpi_power_buttons();
+        load_sessions_menus();
     }
-    toggle_rpi_power_buttons();
-    load_sessions_menus();
-    document.getElementById("utilitiesPopup").hidden = false;
+    document.getElementById("utilitiesPopup").hidden = !document.getElementById("utilitiesPopup").hidden;
 }
 
 function toggle_button(theformid) {
