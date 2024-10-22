@@ -21,7 +21,7 @@ function rpi_power(action) {
         document.getElementById("rpiPowerOffFormIndicator").hidden = false;
         setTimeout(function () {
             if (action === "shutdown") {
-                document.body.innerHTML = "<h1 style=\"color: white;\">Raspberry Pi is shut down</h1><p>It can now be unplugged.</p>";
+                document.body.innerHTML = "<h1 style=\"color: white;\">Raspberry Pi is shut down</h1><p style=\"color: white;\">It can now be unplugged.</p>";
             }
             if (action === "reboot") {
                 confirm("The Raspberry Pi has been rebooted and your browser will now refresh.");
