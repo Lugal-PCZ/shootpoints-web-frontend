@@ -234,7 +234,8 @@ label {
 }
 
 .infobutton {
-	margin-left: 1ex;
+	margin-left: 1.5ex;
+	margin-right: 0.5ex;
 	vertical-align: -0.25em;
 }
 
@@ -245,9 +246,9 @@ label {
 
 .redx {
 	color: red;
-	font-size: large;
+	font-size: x-large;
 	font-weight: bold;
-	margin-left: 1ex;
+	margin-left: 0.5ex;
 	vertical-align: -0.1em;
 }
 

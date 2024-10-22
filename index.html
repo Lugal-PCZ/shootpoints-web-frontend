@@ -38,8 +38,6 @@
 	<div id="onTheFlyAdjustmentsPopup" class="rounded" hidden>
 		<div class="formcollectionheader rounded">
 			On-The-Fly Adjustments
-			<span style="float: right;"
-				onclick="document.getElementById('onTheFlyAdjustmentsPopup').hidden=true">×&nbsp;</span>
 		</div>
 		<form id="setAtmosphericConditionsForm">
 			<span><b>Set Atmospheric Conditions</b></span>
@@ -116,7 +114,6 @@
 	<div id="utilitiesPopup" class="rounded" hidden>
 		<div class="formcollectionheader rounded">
 			Utilities
-			<span style="float: right;" onclick="document.getElementById('utilitiesPopup').hidden=true">×&nbsp;</span>
 		</div>
 		<form id="rpiPowerOffForm" hidden>
 			<span><b>Power Off the Raspberry Pi</b></span>
@@ -139,7 +136,6 @@
 			<span><b>Export Surveying Session Data</b></span>
 			<hr>
 			<a href="" id="sessionDataExportTrigger" download hidden></a>
-			<label for="exportSessionDataFormSessionsMenu">Session:</label>
 			<select id="exportSessionDataFormSessionsMenu" name="sessions_id"
 				onchange="update_description(this, 'exportSessionDataFormSessionDescription'); toggle_button('exportSessionDataForm');"
 				required>
@@ -170,7 +166,6 @@
 		<form id="deleteSessionForm">
 			<span><b>Delete Session</b></span>
 			<hr>
-			<label for="deleteSessionFormSessionsMenu">Session:</label>
 			<select id="deleteSessionFormSessionsMenu" name="sessions_id"
 				onchange="update_description(this, 'deleteSessionFormSessionDescription'); toggle_button('deleteSessionForm');"
 				required>
@@ -184,7 +179,8 @@
 	</div>
 
 	<div id="liveMap" class="rounded" hidden>
-		<span id="liveMapControls" onclick="document.getElementById('liveMap').hidden=true;">&nbsp;×&nbsp;</span>
+		<span id="liveMapControls" onclick="document.getElementById('liveMap').hidden=true;"
+			style="font-weight: bold; font-size: large;">&nbsp;×&nbsp;</span>
 	</div>
 
 	<img id="editAtmosphereAndPrismOffsetsIcon" src="img/arrows.svg" onclick="toggle_on_the_fly_adjustments_popup();">
