@@ -188,7 +188,9 @@ function livemap_save_last_shot() {
 }
 
 function livemap_end_current_grouping() {
-    livemap_discard_last_shot();
+    if (unsavedshot.options.fillColor === "red") {
+        livemap_discard_last_shot();
+    }
     currentopenpolygon = null;
     currentclosedpolygon = null;
 }
