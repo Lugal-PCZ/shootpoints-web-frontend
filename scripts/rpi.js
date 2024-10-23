@@ -33,7 +33,7 @@ function rpi_power(action) {
 
 
 async function set_rpi_clock() {
-    let now = new Date();
-    document.getElementById("setClockFormDateTimeString").value = now.toString();
+    let now = new Date().toISOString();
+    document.getElementById("setClockFormDateTimeString").value = `${now.slice(0, 10)} ${now.slice(11, 19)}`;
     await _update_data_via_api("/raspberrypi/clock/", "PUT", setClockForm, true);
 }
