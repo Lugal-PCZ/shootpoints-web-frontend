@@ -35,6 +35,8 @@ async function load_atmospheric_conditions() {
 	let response = await fetch("/atmosphere/");
 	let json = await response.json();
 	document.getElementById("atmosphericConditions").innerHTML = `Atmosphere: ${json.temperature}°C, ${json.pressure}mmHg`;
+	document.getElementById("sessionFormTemperature").value = json.temperature;
+	document.getElementById("sessionFormPressure").value = json.pressure;
 }
 
 async function load_classes_menus() {
