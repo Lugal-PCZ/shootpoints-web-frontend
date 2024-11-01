@@ -103,6 +103,7 @@ async function load_current_session_info() {
 	let json = await response.json();
 	if (Object.keys(json).length === 0) {
 		document.getElementById("currentSessionInfo").innerHTML = "<i>(no current session)</i>";
+		document.getElementById("currentSessionInfo").setAttribute("currentsessionid", 0);
 		document.getElementById("currentSessionDetails").hidden = true;
 		document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
 		document.getElementById("groupingForm").hidden = true;
