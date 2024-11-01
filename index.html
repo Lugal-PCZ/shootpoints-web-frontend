@@ -39,75 +39,81 @@
 		<div class="formcollectionheader rounded">
 			On-The-Fly Adjustments
 		</div>
-		<form id="setAtmosphericConditionsForm">
-			<span><b>Set Atmospheric Conditions</b></span>
-			<hr>
-			<label for="setAtmosphericConditionsFormTemperature">Temperature (°C):</label>
-			<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature"
-				pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" size="5" required /><br>
-			<label for="setAtmosphericConditionsFormPressure">Pressure (mmHg):</label>
-			<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure" pattern="7[2-9]\d|800" size="5"
-				required />
-			<br>
-			<input type="button" id="setAtmosphericConditionsFormButton" class="safe" value="Set Atmospheric Conditions"
-				onclick="set_atmospheric_conditions();" />
+		<form id="setAtmosphericConditionsForm" class="collapsible">
+			<span onclick="collapse(this);"><b>Set Atmospheric Conditions</b> <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<label for="setAtmosphericConditionsFormTemperature">Temperature (°C):</label>
+				<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature"
+					pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" size="5" required /><br>
+				<label for="setAtmosphericConditionsFormPressure">Pressure (mmHg):</label>
+				<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure" pattern="7[2-9]\d|800"
+					size="5" required />
+				<br>
+				<input type="button" id="setAtmosphericConditionsFormButton" class="safe"
+					value="Set Atmospheric Conditions" onclick="set_atmospheric_conditions();" />
+			</span>
 		</form>
-		<form id="setPrismOffsetsForm">
-			<span><b>Set Prism Offsets</b></span>
-			<hr>
-			<span style="font-size: small">(direction is in meters from prism to point, as seen from the total
-				station)</span><br>
-			<label for="setPrismOffsetsVerticalDistance">Vertical
-				Offset:</label>
-			<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance"
-				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
-			<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
-				<option value="-1">Down</option>
-				<option value="1">Up</option>
-			</select>
-			<span class="redx" onclick="clear_field('setPrismOffsetsVerticalDistance');">×</span><br>
-			<label for="setPrismOffsetsLatitudeDistance">Latitude Offset:</label>
-			<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance"
-				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
-			<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
-				<option value="1">North</option>
-				<option value="-1">South</option>
-			</select>
-			<span class="redx" onclick="clear_field('setPrismOffsetsLatitudeDistance');">×</span><br>
-			<label for="setPrismOffsetsLongitudeDistance">Longitude Offset:</label>
-			<input type="text" id="setPrismOffsetsLongitudeDistance" name="longitude_distance"
-				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
-			<select id="setPrismOffsetsLongitudeDirection" name="longitude_direction">
-				<option value="1">East</option>
-				<option value="-1">West</option>
-			</select>
-			<span class="redx" onclick="clear_field('setPrismOffsetsLongitudeDistance');">×</span><br>
-			<label for="setPrismOffsetsRadialDistance">Radial Offset:</label>
-			<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance"
-				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
-			<select id="setPrismOffsetsRadialDirection" name="radial_direction">
-				<option value="1">Away</option>
-				<option value="-1">Toward</option>
-			</select>
-			<span class="redx" onclick="clear_field('setPrismOffsetsRadialDistance');">×</span><br>
-			<label for="setPrismOffsetsTangentDistance">Tangent Offset:</label>
-			<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance"
-				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
-			<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
-				<option value="1">Right</option>
-				<option value="-1">Left</option>
-			</select>
-			<span class="redx" onclick="clear_field('setPrismOffsetsTangentDistance');">×</span><br>
-			<label for="setPrismOffsetsWedgeDistance">Wedge Offset:</label>
-			<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance"
-				pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
-			<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
-				<option value="1">Clockwise</option>
-				<option value="-1">Counter-Clockwise</option>
-			</select>
-			<span class="redx" onclick="clear_field('setPrismOffsetsWedgeDistance');">×</span><br>
-			<input type="button" id="setPrismOffsetsFormButton" class="safe" value="Set Prism Offsets"
-				onclick="set_prism_offsets();" />
+		<form id="setPrismOffsetsForm" class="collapsible">
+			<span onclick="collapse(this)"><b>Set Prism Offsets</b> <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<span style="font-size: small">(direction is in meters from prism to point, as seen from the total
+					station)</span><br>
+				<label for="setPrismOffsetsVerticalDistance">Vertical
+					Offset:</label>
+				<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance"
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+				<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
+					<option value="-1">Down</option>
+					<option value="1">Up</option>
+				</select>
+				<span class="redx" onclick="clear_field('setPrismOffsetsVerticalDistance');">×</span><br>
+				<label for="setPrismOffsetsLatitudeDistance">Latitude Offset:</label>
+				<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance"
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+				<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
+					<option value="1">North</option>
+					<option value="-1">South</option>
+				</select>
+				<span class="redx" onclick="clear_field('setPrismOffsetsLatitudeDistance');">×</span><br>
+				<label for="setPrismOffsetsLongitudeDistance">Longitude Offset:</label>
+				<input type="text" id="setPrismOffsetsLongitudeDistance" name="longitude_distance"
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+				<select id="setPrismOffsetsLongitudeDirection" name="longitude_direction">
+					<option value="1">East</option>
+					<option value="-1">West</option>
+				</select>
+				<span class="redx" onclick="clear_field('setPrismOffsetsLongitudeDistance');">×</span><br>
+				<label for="setPrismOffsetsRadialDistance">Radial Offset:</label>
+				<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance"
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+				<select id="setPrismOffsetsRadialDirection" name="radial_direction">
+					<option value="1">Away</option>
+					<option value="-1">Toward</option>
+				</select>
+				<span class="redx" onclick="clear_field('setPrismOffsetsRadialDistance');">×</span><br>
+				<label for="setPrismOffsetsTangentDistance">Tangent Offset:</label>
+				<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance"
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+				<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
+					<option value="1">Right</option>
+					<option value="-1">Left</option>
+				</select>
+				<span class="redx" onclick="clear_field('setPrismOffsetsTangentDistance');">×</span><br>
+				<label for="setPrismOffsetsWedgeDistance">Wedge Offset:</label>
+				<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance"
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+				<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
+					<option value="1">Clockwise</option>
+					<option value="-1">Counter-Clockwise</option>
+				</select>
+				<span class="redx" onclick="clear_field('setPrismOffsetsWedgeDistance');">×</span><br>
+				<input type="button" id="setPrismOffsetsFormButton" class="safe" value="Set Prism Offsets"
+					onclick="set_prism_offsets();" />
+			</span>
 		</form>
 	</div>
 
@@ -115,65 +121,80 @@
 		<div class="formcollectionheader rounded">
 			Utilities
 		</div>
-		<form id="rpiPowerOffForm" hidden>
-			<span><b>Power Off the Raspberry Pi</b></span>
-			<hr>
-			<input type="checkbox" id="rpiPowerOffFormEndCurrentSessionCheckbox"
-				onchange="toggle_rpi_power_buttons();" />
-			<span id="rpiPowerOffFormEndCurrentSessionCheckboxLabel">End the Current
-				Session<br></span>
-			<input type="button" id="rpiPowerOffFormShutdownButton" value="Shut Down"
-				onclick="rpi_power('shutdown');" />
-			<input type="button" id="rpiPowerOffFormRebootButton" value="Reboot" onclick="rpi_power('reboot');" />
-			<img id="rpiPowerOffFormIndicator" src="img/cylon.svg" hidden />
+		<form id="rpiPowerOffForm" class="collapsible" hidden>
+			<span onclick="collapse(this);"><b>Power Off the Raspberry Pi</b> <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<input type="checkbox" id="rpiPowerOffFormEndCurrentSessionCheckbox"
+					onchange="toggle_rpi_power_buttons();" />
+				<span id="rpiPowerOffFormEndCurrentSessionCheckboxLabel">End the Current
+					Session<br></span>
+				<input type="button" id="rpiPowerOffFormShutdownButton" value="Shut Down"
+					onclick="rpi_power('shutdown');" />
+				<input type="button" id="rpiPowerOffFormRebootButton" value="Reboot" onclick="rpi_power('reboot');" />
+				<img id="rpiPowerOffFormIndicator" src="img/cylon.svg" hidden />
+			</span>
 		</form>
 		<form id="setClockForm" hidden>
 			<!-- This used to be a real form, but now is just a data placeholder so that I can use
 			the _update_data_via_api() function in data.js. -->
 			<input type="text" id="setClockFormDateTimeString" name="datetimestring" />
 		</form>
-		<form id="exportSessionDataForm">
-			<span><b>Export Surveying Session Data</b></span>
-			<hr>
-			<a href="" id="sessionDataExportTrigger" download hidden></a>
-			<select id="exportSessionDataFormSessionsMenu" name="sessions_id"
-				onchange="update_description(this, 'exportSessionDataFormSessionDescription'); toggle_button('exportSessionDataForm');"
-				required>
-			</select>
-			<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg" hidden>
-			<br>
-			<input type="button" id="exportSessionDataFormButton" class="safe" value="Export"
-				onclick="export_session_data();" disabled />
+		<form id="exportSessionDataForm" class="collapsible">
+			<span onclick="collapse(this);"><b>Export Surveying Session Data</b> <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<a href="" id="sessionDataExportTrigger" download hidden></a>
+				<select id="exportSessionDataFormSessionsMenu" name="sessions_id"
+					onchange="update_description(this, 'exportSessionDataFormSessionDescription'); toggle_button('exportSessionDataForm');"
+					required>
+				</select>
+				<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg" hidden>
+				<br>
+				<input type="button" id="exportSessionDataFormButton" class="safe" value="Export"
+					onclick="export_session_data();" disabled />
+			</span>
 		</form>
-		<form id="downloadDatabaseForm">
-			<span><b>Download the ShootPoints Database</b></span>
-			<hr>
-			<a href="/database/" id="databaseDownloadTrigger" download hidden></a>
-			<input type="button" class="safe" value="Download" onclick="download_database();" />
+		<form id="downloadDatabaseForm" class="collapsible">
+			<span onclick="collapse(this)"><b>Download the ShootPoints Database</b> <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<a href="/database/" id="databaseDownloadTrigger" download hidden></a>
+				<input type="button" class="safe" value="Download" onclick="download_database();" />
+			</span>
 		</form>
-		<form id="resetDatabaseForm">
-			<span><b>Reset the ShootPoints Database</b></span>
-			<hr>
-			<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations"
-				value="True" checked>
-			<label for="resetDatabaseFormPreserveSitesAndStations">Preserve Sites and Stations</label><br>
-			<input type="checkbox" id="resetDatabaseFormPreserveClassesAndSubclasses"
-				name="preserveclassesandsubclasses" value="True" checked>
-			<label for="resetDatabaseFormPreserveClassesAndSubclasses">Preserve Classes and Subclasses</label><br>
-			<input type="hidden" name="ignore">
-			<input type="button" class="dangerous" value="Reset" onclick="reset_database();" />
+		<form id="resetDatabaseForm" class="collapsible">
+			<span onclick="collapse(this)"><b>Reset the ShootPoints Database</b> <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations"
+					value="True" checked>
+				<label for="resetDatabaseFormPreserveSitesAndStations">Preserve Sites and Stations</label><br>
+				<input type="checkbox" id="resetDatabaseFormPreserveClassesAndSubclasses"
+					name="preserveclassesandsubclasses" value="True" checked>
+				<label for="resetDatabaseFormPreserveClassesAndSubclasses">Preserve Classes and Subclasses</label><br>
+				<input type="hidden" name="ignore">
+				<input type="button" class="dangerous" value="Reset" onclick="reset_database();" />
+			</span>
 		</form>
-		<form id="deleteSessionForm">
-			<span><b>Delete Session</b></span>
-			<hr>
-			<select id="deleteSessionFormSessionsMenu" name="sessions_id"
-				onchange="update_description(this, 'deleteSessionFormSessionDescription'); toggle_button('deleteSessionForm');"
-				required>
-			</select>
-			<img class="infobutton" id="deleteSessionFormSessionDescription" src="img/info.svg" hidden>
-			<br>
-			<input type="button" id="deleteSessionFormButton" class="dangerous" value="Delete Session"
-				onclick="delete_session();" disabled />
+		<form id="deleteSessionForm" class="collapsible">
+			<span onclick="collapse(this)"><b>Delete Session</b> <span class="expander">‣</span><span class="collapser"
+					hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<select id="deleteSessionFormSessionsMenu" name="sessions_id"
+					onchange="update_description(this, 'deleteSessionFormSessionDescription'); toggle_button('deleteSessionForm');"
+					required>
+				</select>
+				<img class="infobutton" id="deleteSessionFormSessionDescription" src="img/info.svg" hidden>
+				<br>
+				<input type="button" id="deleteSessionFormButton" class="dangerous" value="Delete Session"
+					onclick="delete_session();" disabled />
+			</span>
 		</form>
 		<p id="version" style="font-size:x-small; padding-left: 10px;"></p>
 	</div>
