@@ -62,10 +62,19 @@ async function os_check() {
     };
 }
 
-function put_date_in_session_label() {
-    let now = new Date();
+async function put_date_in_session_label() {
+    let sessions = await fetch("/sessions/");
+    let json = await sessions.json();
+    let today = new Date().toISOString().substring(0, 10);
+    let nthsessiontoday = 1;
+    json.sessions.forEach(session => {
+        console.log(session.started);
+        if (session.started.substring(0, 10) === today) {
+            nthsessiontoday += 1;
+        }
+    });
     if (document.getElementById("sessionFormLabel").value === "") {
-        document.getElementById("sessionFormLabel").value = now.toISOString().substring(0, 10) + " ";
+        document.getElementById("sessionFormLabel").value = `${today}_${nthsessiontoday} `;
     }
 }
 
