@@ -119,6 +119,7 @@ async function load_current_session_info() {
 		document.getElementById("currentSessionInfo").setAttribute("currentsessionsite", json.sites_name);
 		document.getElementById("currentSessionInfo").setAttribute("currentsessionoccupiedpoint", json.stations_name);
 		document.getElementById("currentSessionInfo").setAttribute("currentsessioninstrumentheight", json.instrumentheight);
+		document.getElementById("currentSessionInfo").setAttribute("currentsessionnumberofshots", json.num_shots);
 		document.getElementById("currentSessionDetails").setAttribute("onClick", "show_current_session_details();");
 		document.getElementById("currentSessionDetails").hidden = false;
 		document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
@@ -181,11 +182,17 @@ async function load_sessions_menus() {
 	let json = await sessions.json();
 	let sessionsmenu = ["<option></option>"];
 	json.sessions.forEach(function (thesession) {
-		sessionsmenu.push(`<option value="${thesession.id}" description="${thesession.description}">${thesession.name}</option>`)
+		sessionsmenu.push(`<option
+			value="${thesession.id}"
+			site="${thesession.sites_name}"
+			started="${thesession.started}"
+			station="${thesession.stations_name}"
+			instrumentheight="${thesession.instrumentheight}"
+			shots="${thesession.num_shots}"
+			>${thesession.label}</option>`);
 	});
-	document.getElementById("deleteSessionFormSessionsMenu").innerHTML = sessionsmenu.join("\n");
-	document.getElementById("deleteSessionFormSessionDescription").hidden = true;
 	document.getElementById("exportSessionDataFormSessionsMenu").innerHTML = sessionsmenu.join("\n");
+	document.getElementById("deleteSessionFormSessionsMenu").innerHTML = sessionsmenu.join("\n");
 }
 
 async function load_sites_menus() {
@@ -584,6 +591,7 @@ async function cancel_shot() {
 async function save_last_shot() {
 	await _update_data_via_api("/shot/", "POST", saveLastShotForm);
 	show_take_shot_form("takeShotForm");
+	load_current_session_info();
 	load_current_grouping_info();
 	livemap_save_last_shot();
 }

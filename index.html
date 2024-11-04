@@ -6,8 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<title>ShootPoints</title>
 	<!-- Third-party javascript and css -->
-	<link rel="stylesheet" href="lib/leaflet/leaflet.css" crossorigin="" />
-	<script src="lib/leaflet/leaflet.js" crossorigin=""></script>
+	<link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+	<script src="lib/leaflet/leaflet.js"></script>
 	<script src="lib/Leaflet.SvgShapeMarkers/leaflet-svg-shape-markers.min.js"></script>
 	<!-- ShootPoints javascript and css. Version tracks the project version and needs to be updated manually -->
 	<script src="scripts/data.js?v=1.5.3"></script>
@@ -148,10 +148,11 @@
 				<hr>
 				<a href="" id="sessionDataExportTrigger" download hidden></a>
 				<select id="exportSessionDataFormSessionsMenu" name="sessions_id"
-					onchange="update_description(this, 'exportSessionDataFormSessionDescription'); toggle_button('exportSessionDataForm');"
+					onchange="toggle_info(this,'exportSessionDataFormSessionDescription'); toggle_button('exportSessionDataForm');"
 					required>
 				</select>
-				<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg" hidden>
+				<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg"
+					onclick="show_selected_session_details('exportSessionDataFormSessionsMenu')" hidden>
 				<br>
 				<input type="button" id="exportSessionDataFormButton" class="safe" value="Export"
 					onclick="export_session_data();" disabled />
@@ -187,10 +188,11 @@
 			<span class="collapsible" hidden>
 				<hr>
 				<select id="deleteSessionFormSessionsMenu" name="sessions_id"
-					onchange="update_description(this, 'deleteSessionFormSessionDescription'); toggle_button('deleteSessionForm');"
+					onchange="toggle_info(this,'deleteSessionFormSessionDescription'); toggle_button('deleteSessionForm');"
 					required>
 				</select>
-				<img class="infobutton" id="deleteSessionFormSessionDescription" src="img/info.svg" hidden>
+				<img class="infobutton" id="deleteSessionFormSessionDescription" src="img/info.svg"
+					onclick="show_selected_session_details('deleteSessionFormSessionsMenu')" hidden>
 				<br>
 				<input type="button" id="deleteSessionFormButton" class="dangerous" value="Delete Session"
 					onclick="delete_session();" disabled />
@@ -232,7 +234,7 @@
 					<span class="currentSurveyingInfo">
 						<span id="currentSessionInfo" currentsessionid="" currentsessionlabel=""
 							currentsessionstarted="" currentsessionsite="" currentsessionoccupiedpoint=""
-							currentsessioninstrumentheight=""></span>
+							currentsessioninstrumentheight="" currentsessionnumberofshots=0></span>
 					</span>
 				</span>
 				<img class="infobutton" id="currentSessionDetails" src="img/info.svg" hidden>
@@ -351,7 +353,7 @@
 					<span class="currentSurveyingInfo">
 						<span id="currentGroupingInfo" currentgroupingid="" currentgroupinglabel=""
 							currentgroupinggeometry="" currentgroupingclass="" currentgroupingsubclass=""
-							currentgroupingdescription="" currentgroupingnumberofshots=""></span>
+							currentgroupingdescription="" currentgroupingnumberofshots=0></span>
 					</span>
 				</span>
 				<img class="infobutton" id="currentGroupingDetails" src="img/info.svg" hidden>

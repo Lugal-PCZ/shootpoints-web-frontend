@@ -104,9 +104,20 @@ function show_current_grouping_details() {
 
 function show_current_session_details() {
     let details = [`Site: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionsite")}`];
+    details.push(`Started: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionstarted")}`);
     details.push(`Occupied Point: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionoccupiedpoint")}`);
     details.push(`Instrument Height: ${document.getElementById("currentSessionInfo").getAttribute("currentsessioninstrumentheight")}m`);
-    details.push(`Started: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionstarted")}m`);
+    details.push(`Number of Shots in Session: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionnumberofshots")}`);
+    alert(details.join("\n"));
+}
+
+function show_selected_session_details(themenu) {
+    let theindex = document.getElementById(themenu).selectedIndex;
+    let details = [`Site: ${document.getElementById(themenu)[theindex].getAttribute("site")}`];
+    details.push(`Started: ${document.getElementById(themenu)[theindex].getAttribute("started")}`);
+    details.push(`Occupied Point: ${document.getElementById(themenu)[theindex].getAttribute("station")}`);
+    details.push(`Instrument Height: ${document.getElementById(themenu)[theindex].getAttribute("instrumentheight")}m`);
+    details.push(`Number of Shots in Session: ${document.getElementById(themenu)[theindex].getAttribute("shots")}`);
     alert(details.join("\n"));
 }
 
@@ -178,6 +189,14 @@ function toggle_button(theformid) {
     });
     theform.querySelector("input[type=button]:not([hidden])").disabled = !allfieldsarevalid;
 }
+
+function toggle_info(thesourcemenu, theinfobutton) {
+    document.getElementById(theinfobutton).hidden = true;
+    if (thesourcemenu.selectedIndex) {
+        document.getElementById(theinfobutton).hidden = false;
+    }
+}
+
 
 function toggle_rpi_power_buttons() {
     if (document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").checked) {
