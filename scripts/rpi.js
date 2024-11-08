@@ -8,10 +8,10 @@ function rpi_power(action) {
         warningmessageaction = "reboot";
         timeout = 60000;
     }
-    let warningmessage = `Press “Ok” to ${warningmessageaction} the Raspberry Pi.`;
+    let warningmessage = `Press “Ok” to ${warningmessageaction} the data collector.`;
     let endcurrentsession = document.getElementById("rpiPowerOffFormEndCurrentSessionCheckbox").checked;
     if (endcurrentsession === true) {
-        warningmessage = `Press “Ok” to end the current session and grouping, and ${warningmessageaction} the Raspberry Pi.`;
+        warningmessage = `Press “Ok” to end the current session and grouping, and ${warningmessageaction} the data collector.`;
     }
     if (confirm(warningmessage)) {
         if (endcurrentsession === true) {
@@ -21,11 +21,10 @@ function rpi_power(action) {
         document.getElementById("rpiPowerOffFormIndicator").hidden = false;
         setTimeout(function () {
             if (action === "shutdown") {
-                document.body.innerHTML = "<h1 style=\"color: white;\">Raspberry Pi is shut down</h1><p style=\"color: white;\">It can now be unplugged.</p>";
+                document.body.innerHTML = "<h1 style=\"color: white;\">The data collector is shut down</h1><h2 style=\"color: white;\">It can now be unplugged.</h2>";
             }
             if (action === "reboot") {
-                confirm("The Raspberry Pi has been rebooted and your browser will now refresh.");
-                window.location.reload();
+                document.body.innerHTML = "<h1 style=\"color: white;\">The data collector has been rebooted</h1><h2 style=\"color: white;\">Please reconnect to the “shootpoints” WiFi network and refresh your browser window.</h2>";
             }
         }, timeout);
     }
