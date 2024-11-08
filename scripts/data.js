@@ -341,6 +341,7 @@ async function end_current_session(prompt = true) {
 	let status = await _update_data_via_api("/session/", "PUT", sessionForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("sessionForm").reset();
+		load_atmospheric_conditions();
 		document.getElementById("sessionFormSiteDescription").hidden = true;
 		document.getElementById("sessionFormOccupiedPointDescription").hidden = true;
 		document.getElementById("sessionFormBacksightStationDescription").hidden = true;
