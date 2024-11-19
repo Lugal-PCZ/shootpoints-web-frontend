@@ -48,8 +48,8 @@
 				<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature"
 					pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" size="5" required /><br>
 				<label for="setAtmosphericConditionsFormPressure">Pressure (mmHg):</label>
-				<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure" pattern="7[2-9]\d|800"
-					size="5" required />
+				<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure"
+					pattern="4[8-9]\d|[5-7][0-9]\d|800" size="5" required />
 				<br>
 				<input type="button" id="setAtmosphericConditionsFormButton" class="safe"
 					value="Set Atmospheric Conditions" onclick="set_atmospheric_conditions();" />
@@ -330,7 +330,7 @@
 					<input type="text" id="sessionFormTemperature" name="temperature"
 						pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" oninput="toggle_button('sessionForm');" required /><br>
 					<label for="sessionFormPressure">Pressure (mmHg):</label>
-					<input type="text" id="sessionFormPressure" name="pressure" pattern="7[2-9]\d|800"
+					<input type="text" id="sessionFormPressure" name="pressure" pattern="4[8-9]\d|[5-7][0-9]\d|800"
 						oninput="toggle_button('sessionForm');" required /><br>
 					<input type="button" id="sessionFormStartSessionBlankButton" value="Start New Session" disabled>
 					<input type="button" id="sessionFormStartSessionWithAzimuthButton" class="safe"
