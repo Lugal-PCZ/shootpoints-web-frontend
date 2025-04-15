@@ -14,7 +14,7 @@ form {
 }
 
 select {
-	width: 12em;
+	width: 9em;
 	border: thin lightgrey solid;
 }
 
@@ -234,9 +234,9 @@ label {
 }
 
 .infobutton {
-	margin-left: 1.5ex;
-	margin-right: 0.5ex;
-	vertical-align: -0.25em;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	vertical-align: -0.5ex;
 }
 
 .noentry {
