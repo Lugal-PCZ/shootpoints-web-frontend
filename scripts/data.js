@@ -98,7 +98,7 @@ async function load_current_grouping_info() {
 	}
 }
 
-async function load_current_session_info() {
+async function load_current_session_info(checkifstale = false) {
 	let response = await fetch("/session/");
 	let json = await response.json();
 	if (Object.keys(json).length === 0) {
@@ -125,12 +125,14 @@ async function load_current_session_info() {
 		document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
 		document.getElementById("groupingForm").hidden = false;
 		show_take_shot_form("takeShotForm");
-		let started = new Date(json.started);
-		let now = new Date().toISOString();
-		now = new Date(`${now.slice(0, 10)} ${now.slice(11, 19)}`);
-		if ((now - started) / 1000 / 60 / 60 > 12) {
-			if (confirm("The current session was started over 12 hours ago. Do you wish to end this session to start a new one?")) {
-				end_current_session(false);
+		if (checkifstale) {
+			let started = new Date(json.started);
+			let now = new Date().toISOString();
+			now = new Date(`${now.slice(0, 10)} ${now.slice(11, 19)}`);
+			if ((now - started) / 1000 / 60 / 60 > 12) {
+				if (confirm("The current session was started over 12 hours ago. Do you wish to end this session to start a new one?")) {
+					end_current_session(false);
+				}
 			}
 		}
 	}
