@@ -537,6 +537,8 @@ async function reset_database() {
 
 async function take_shot() {
 	show_take_shot_form("cancelShotForm");
+	document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
+	document.getElementById("groupingFormEndCurrentGroupingButton").hidden = true;
 	document.getElementById("outputBox").innerHTML = "";
 	let response = await fetch("/shot/");
 	let json = await response.json();
@@ -584,11 +586,15 @@ async function take_shot() {
 			}
 		}
 	}
+	document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
+	document.getElementById("groupingFormEndCurrentGroupingButton").hidden = false;
 	document.getElementById("outputBox").innerHTML = theoutput.join("\n");
 }
 
 async function cancel_shot() {
 	show_take_shot_form("takeShotForm");
+	document.getElementById("sessionFormEndCurrentSessionButton").hidden = false;
+	document.getElementById("groupingFormEndCurrentGroupingButton").hidden = false;
 	await fetch("/cancel/");
 }
 
