@@ -524,6 +524,7 @@ async function reset_database() {
 		load_prism_offsets();
 		load_date_and_time();
 		load_configs_menus();
+		load_sessions_menus();
 		load_sites_menus();
 		load_classes_menus();
 		load_geometries_menu();
