@@ -449,10 +449,10 @@ async function start_new_session(sessiontype) {
 		document.getElementById("sessionFormAbortResectionButton").hidden = true;
 	}
 	let status = await _update_data_via_api("/session/", "POST", sessionForm);
+	document.getElementById("sessionFormIndicator").hidden = true;
 	if (status >= 200 && status <= 299) {
 		load_atmospheric_conditions();
 		load_prism_offsets();
-		document.getElementById("sessionFormIndicator").hidden = true;
 		document.getElementById("sessionFormCancelBacksightButton").hidden = true;
 		if (document.getElementById("sessionFormCancelBacksightButton").getAttribute("backsightcanceled") === "yes") {
 			document.getElementById("sessionFormCancelBacksightButton").hidden = true;
@@ -487,7 +487,6 @@ async function start_new_session(sessiontype) {
 		update_required_new_session_fields("sessionFormSessionTypeMenu");
 		toggle_button("sessionForm");
 		if (sessiontype === "ResectionRight") {
-			document.getElementById("sessionFormIndicator").hidden = true;
 			document.getElementById("sessionFormStartSessionWithResectionRightButton").disabled = false;
 			document.getElementById("sessionFormStartSessionWithResectionLeftButton").hidden = true;
 			document.getElementById("sessionFormStartSessionWithResectionRightButton").hidden = false;
