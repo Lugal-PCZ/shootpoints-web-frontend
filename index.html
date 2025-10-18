@@ -46,10 +46,10 @@
 				<hr>
 				<label for="setAtmosphericConditionsFormTemperature">Temperature (°C):</label>
 				<input type="text" id="setAtmosphericConditionsFormTemperature" name="temperature"
-					pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" size="5" required /><br>
+					pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" inputmode="numeric" size="5" required /><br>
 				<label for="setAtmosphericConditionsFormPressure">Pressure (mmHg):</label>
 				<input type="text" id="setAtmosphericConditionsFormPressure" name="pressure"
-					pattern="4[8-9]\d|[5-7][0-9]\d|800" size="5" required />
+					pattern="4[8-9]\d|[5-7][0-9]\d|800" inputmode="numeric" size="5" required />
 				<br>
 				<input type="button" id="setAtmosphericConditionsFormButton" class="safe"
 					value="Set Atmospheric Conditions" onclick="set_atmospheric_conditions();" />
@@ -65,7 +65,7 @@
 				<label for="setPrismOffsetsVerticalDistance">Vertical
 					Offset:</label>
 				<input type="text" id="setPrismOffsetsVerticalDistance" name="vertical_distance"
-					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" inputmode="numeric" size="5" />
 				<select id="setPrismOffsetsVerticalDirection" name="vertical_direction">
 					<option value="-1">Down</option>
 					<option value="1">Up</option>
@@ -73,7 +73,7 @@
 				<span class="redx" onclick="clear_field('setPrismOffsetsVerticalDistance');">×</span><br>
 				<label for="setPrismOffsetsLatitudeDistance">Latitude Offset:</label>
 				<input type="text" id="setPrismOffsetsLatitudeDistance" name="latitude_distance"
-					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" inputmode="numeric" size="5" />
 				<select id="setPrismOffsetsLatitudeDirection" name="latitude_direction">
 					<option value="1">North</option>
 					<option value="-1">South</option>
@@ -81,7 +81,7 @@
 				<span class="redx" onclick="clear_field('setPrismOffsetsLatitudeDistance');">×</span><br>
 				<label for="setPrismOffsetsLongitudeDistance">Longitude Offset:</label>
 				<input type="text" id="setPrismOffsetsLongitudeDistance" name="longitude_distance"
-					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" inputmode="numeric" size="5" />
 				<select id="setPrismOffsetsLongitudeDirection" name="longitude_direction">
 					<option value="1">East</option>
 					<option value="-1">West</option>
@@ -89,7 +89,7 @@
 				<span class="redx" onclick="clear_field('setPrismOffsetsLongitudeDistance');">×</span><br>
 				<label for="setPrismOffsetsRadialDistance">Radial Offset:</label>
 				<input type="text" id="setPrismOffsetsRadialDistance" name="radial_distance"
-					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" inputmode="numeric" size="5" />
 				<select id="setPrismOffsetsRadialDirection" name="radial_direction">
 					<option value="1">Away</option>
 					<option value="-1">Toward</option>
@@ -97,7 +97,7 @@
 				<span class="redx" onclick="clear_field('setPrismOffsetsRadialDistance');">×</span><br>
 				<label for="setPrismOffsetsTangentDistance">Tangent Offset:</label>
 				<input type="text" id="setPrismOffsetsTangentDistance" name="tangent_distance"
-					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" inputmode="numeric" size="5" />
 				<select id="setPrismOffsetsTangentDirection" name="tangent_direction">
 					<option value="1">Right</option>
 					<option value="-1">Left</option>
@@ -105,7 +105,7 @@
 				<span class="redx" onclick="clear_field('setPrismOffsetsTangentDistance');">×</span><br>
 				<label for="setPrismOffsetsWedgeDistance">Wedge Offset:</label>
 				<input type="text" id="setPrismOffsetsWedgeDistance" name="wedge_distance"
-					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" size="5" />
+					pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" inputmode="numeric" size="5" />
 				<select id="setPrismOffsetsWedgeDirection" name="wedge_direction">
 					<option value="1">Clockwise</option>
 					<option value="-1">Counter-Clockwise</option>
@@ -287,7 +287,7 @@
 						<label for="sessionFormAzimuth" id="sessionFormAzimuthLabel">Azimuth (ddd.mmss):</label>
 						<input type="text" id="sessionFormAzimuth" name="azimuth"
 							pattern="(\d|[0-9]\d|[0-2]\d{2}|3[0-5]\d)\.[0-5][0-9][0-5][0-9]"
-							oninput="toggle_button('sessionForm');" /><br>
+							oninput="toggle_button('sessionForm');" inputmode="numeric" /><br>
 					</span>
 					<span id="sessionFormNewStationNameBlock" hidden>
 						<label for="sessionFormNewStationName" id="sessionFormNewStationLabel">New Station Name:</label>
@@ -317,21 +317,20 @@
 						<label for="sessionFormInstrumentHeight" id="sessionFormInstrumentHeightLabel">Instrument Height
 							(m):</label>
 						<input type="text" id="sessionFormInstrumentHeight" name="instrument_height"
-							pattern="\.\d{1,3}|[0-2](\.\d{0,3})?" oninput="toggle_button('sessionForm');" />
+							pattern="\.\d{1,3}|[0-2](\.\d{0,3})?" oninput="toggle_button('sessionForm');" inputmode="numeric" />
 						<br>
 					</span>
 					<span id="sessionFormPrismHeightBlock" hidden>
 						<label for="sessionFormPrismHeight" id="sessionFormPrismHeightLabel">Prism Height (m):</label>
 						<input type="text" id="sessionFormPrismHeight" name="prism_height"
-							pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" oninput="toggle_button('sessionForm');" />
+							pattern="\.\d{1,3}|[0-4](\.\d{0,3})?" oninput="toggle_button('sessionForm');" inputmode="numeric" />
 						<br>
 					</span>
 					<label for="sessionFormTemperature">Temperature (°C):</label>
 					<input type="text" id="sessionFormTemperature" name="temperature"
-						pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" oninput="toggle_button('sessionForm');" required /><br>
+						pattern="-1[0-8]|-?[1-9]|0|[1-4]\d|50" inputmode="numeric" oninput="toggle_button('sessionForm');" required /><br>
 					<label for="sessionFormPressure">Pressure (mmHg):</label>
-					<input type="text" id="sessionFormPressure" name="pressure" pattern="4[8-9]\d|[5-7][0-9]\d|800"
-						oninput="toggle_button('sessionForm');" required /><br>
+					<input type="text" id="sessionFormPressure" name="pressure" pattern="4[8-9]\d|[5-7][0-9]\d|800" inputmode="numeric" 						oninput="toggle_button('sessionForm');" required /><br>
 					<input type="button" id="sessionFormStartSessionBlankButton" value="Start New Session" disabled>
 					<input type="button" id="sessionFormStartSessionWithAzimuthButton" class="safe"
 						value="Set Instrument Azimuth" onclick="start_new_session('Azimuth');" hidden disabled>
@@ -393,9 +392,9 @@
 					onclick="toggle_stakeout_fields();" />Stakeout<br>
 				<span id="takeShotFormStakeoutTarget" hidden>
 					<label for="takeShotFormStakeoutTargetNorthing">Target Northing:</label>
-					<input type="text" id="takeShotFormStakeoutTargetNorthing" pattern="-?\d+(\.?\d{1,3})?" /><br>
+					<input type="text" id="takeShotFormStakeoutTargetNorthing" pattern="-?\d+(\.?\d{1,3})?" inputmode="numeric" /><br>
 					<label for="takeShotFormStakeoutTargetEasting">Target Easting:</label>
-					<input type="text" id="takeShotFormStakeoutTargetEasting" pattern="-?\d+(\.?\d{1,3})?" />
+					<input type="text" id="takeShotFormStakeoutTargetEasting" pattern="-?\d+(\.?\d{1,3})?" inputmode="numeric" />
 					<br>
 				</span>
 				<input type="button" id="takeShotFormButton" class="safe" value="Take Shot" onclick="take_shot();"
@@ -441,7 +440,7 @@
 					<select id="setConfigsFormModelMenu" name="model"></select><br>
 					<label id="setConfigsFormLimitLabel" for="setConfigsFormLimit">Backsight Error Limit (cm): </label>
 					<input type="text" id="setConfigsFormLimit" name="limit" size="5"
-						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" /><br>
+						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" inputmode="numeric" /><br>
 					<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" />
 				</span>
 			</form>
@@ -489,33 +488,33 @@
 						<label for="saveNewStationFormStationNorthing"
 							id="saveNewStationFormStationNorthingLabel">Northing:</label>
 						<input type="text" id="saveNewStationFormStationNorthing" name="northing"
-							oninput="toggle_button('saveNewStationForm');" pattern="-?\d+(\.?\d{1,3})?" /><br>
+							oninput="toggle_button('saveNewStationForm');" pattern="-?\d+(\.?\d{1,3})?" inputmode="numeric" /><br>
 					</span>
 					<span id="saveNewStationFormStationEastingBlock" hidden>
 						<label for="saveNewStationFormStationEasting"
 							id="saveNewStationFormStationEastingLabel">Easting:</label>
 						<input type="text" id="saveNewStationFormStationEasting" name="easting"
-							oninput="toggle_button('saveNewStationForm');" pattern="-?\d+(\.?\d{1,3})?" /><br>
+							oninput="toggle_button('saveNewStationForm');" pattern="-?\d+(\.?\d{1,3})?" inputmode="numeric" /><br>
 					</span>
 					<span id="saveNewStationFormStationLatitudeBlock" hidden>
 						<label for="saveNewStationFormStationLatitude"
 							id="saveNewStationFormStationLatitudeLabel">Latitude:</label>
 						<input type="text" id="saveNewStationFormStationLatitude" name="latitude"
 							oninput="toggle_button('saveNewStationForm');"
-							pattern="-?((\d|[1-8]\d)(\.\d{1,13})?|90)" /><br>
+							pattern="-?((\d|[1-8]\d)(\.\d{1,13})?|90)" inputmode="numeric" /><br>
 					</span>
 					<span id="saveNewStationFormStationLongitudeBlock" hidden>
 						<label for="saveNewStationFormStationLongitude"
 							id="saveNewStationFormStationLongitudeLabel">Longitude:</label>
 						<input type="text" id="saveNewStationFormStationLongitude" name="longitude"
 							oninput="toggle_button('saveNewStationForm');"
-							pattern="-?((0|[1-9]\d?|1[0-7][0-9])(\.\d{1,13})?|180)" /><br>
+							pattern="-?((0|[1-9]\d?|1[0-7][0-9])(\.\d{1,13})?|180)" inputmode="numeric" /><br>
 					</span>
 					<span id="saveNewStationFormStationElevationBlock" hidden>
 						<label for="saveNewStationFormStationElevation"
 							id="saveNewStationFormStationElevationLabel">Elevation:</label>
 						<input type="text" id="saveNewStationFormStationElevation" name="elevation"
-							oninput="toggle_button('saveNewStationForm');" pattern="-?\d+(\.?\d{1,3})?" /><br>
+							oninput="toggle_button('saveNewStationForm');" pattern="-?\d+(\.?\d{1,3})?" inputmode="numeric" /><br>
 					</span>
 					<span id="saveNewStationFormStationUTMZoneBlock" hidden>
 						<label for="saveNewStationFormStationUTMZone"
