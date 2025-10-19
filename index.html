@@ -401,11 +401,27 @@
 					disabled />
 			</form>
 			<form id="cancelShotForm" hidden>
+				<input type="checkbox" id="cancelShotFormStakeoutCheckbox" disabled />Stakeout<br>
+				<span id="cancelShotFormStakeoutTarget" hidden>
+					<label for="cancelShotFormStakeoutTargetNorthing">Target Northing:</label>
+					<input type="text" id="cancelShotFormStakeoutTargetNorthing" disabled /><br>
+					<label for="cancelShotFormStakeoutTargetEasting">Target Easting:</label>
+					<input type="text" id="cancelShotFormStakeoutTargetEasting" disabled />
+					<br>
+				</span>
 				<input type="button" id="cancelShotFormButton" class="dangerous" value="Cancel Shot"
 					onclick="cancel_shot();" />
 				<img id="takeShotFormIndicator" src="img/cylon.svg" /><br>
 			</form>
 			<form id="saveLastShotForm" hidden>
+				<input type="checkbox" id="saveLastShotFormStakeoutCheckbox" disabled />Stakeout<br>
+				<span id="saveLastShotFormStakeoutTarget" hidden>
+					<label for="saveLastShotFormStakeoutTargetNorthing">Target Northing:</label>
+					<input type="text" id="saveLastShotFormStakeoutTargetNorthing" disabled /><br>
+					<label for="saveLastShotFormStakeoutTargetEasting">Target Easting:</label>
+					<input type="text" id="saveLastShotFormStakeoutTargetEasting" disabled />
+					<br>
+				</span>
 				<label for="saveLastShotFormComment">Comment:</label>
 				<input type="text" id="saveLastShotFormComment" name="comment" />
 				<br>

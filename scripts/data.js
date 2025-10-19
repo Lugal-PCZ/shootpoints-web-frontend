@@ -539,6 +539,12 @@ async function take_shot() {
 	document.getElementById("sessionFormEndCurrentSessionButton").hidden = true;
 	document.getElementById("groupingFormEndCurrentGroupingButton").hidden = true;
 	document.getElementById("outputBox").innerHTML = "";
+	let stakeoutNorthing = document.getElementById("takeShotFormStakeoutTargetNorthing").value
+	let stakeoutEasting = document.getElementById("takeShotFormStakeoutTargetEasting").value
+	document.getElementById("cancelShotFormStakeoutTargetNorthing").value = stakeoutNorthing
+	document.getElementById("cancelShotFormStakeoutTargetEasting").value = stakeoutEasting
+	document.getElementById("saveLastShotFormStakeoutTargetNorthing").value = stakeoutNorthing
+	document.getElementById("saveLastShotFormStakeoutTargetEasting").value = stakeoutEasting
 	let response = await fetch("/shot/");
 	let json = await response.json();
 	let theoutput = [];

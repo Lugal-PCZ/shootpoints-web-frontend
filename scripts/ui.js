@@ -219,9 +219,17 @@ function toggle_rpi_power_buttons() {
 
 function toggle_stakeout_fields() {
     if (document.getElementById("takeShotFormStakeoutCheckbox").checked) {
+        document.getElementById("cancelShotFormStakeoutCheckbox").checked = true;
+        document.getElementById("saveLastShotFormStakeoutCheckbox").checked = true;
         document.getElementById("takeShotFormStakeoutTarget").hidden = false;
+        document.getElementById("cancelShotFormStakeoutTarget").hidden = false;
+        document.getElementById("saveLastShotFormStakeoutTarget").hidden = false;
     } else {
+        document.getElementById("cancelShotFormStakeoutTarget").checked = false;
+        document.getElementById("saveLastShotFormStakeoutTarget").checked = false;
         document.getElementById("takeShotFormStakeoutTarget").hidden = true;
+        document.getElementById("cancelShotFormStakeoutTarget").hidden = true;
+        document.getElementById("saveLastShotFormStakeoutTarget").hidden = true;
     }
 }
 
