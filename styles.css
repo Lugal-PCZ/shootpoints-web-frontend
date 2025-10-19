@@ -13,9 +13,14 @@ form {
 	background: rgba(255, 255, 255, 0.4);
 }
 
+input {
+	margin-bottom: 5px;
+}
+
 select {
 	width: 9em;
 	border: thin lightgrey solid;
+	margin-bottom: 5px;
 }
 
 select.sessionsmenu {
