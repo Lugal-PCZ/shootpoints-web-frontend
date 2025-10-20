@@ -1,5 +1,9 @@
 // UI manipulators
 
+function _fix_decimals(thefield) {
+    thefield.value = thefield.value.replace(",", ".");
+}
+
 function _hide_required_field(thefield) {
     document.getElementById(thefield).required = false;
     document.getElementById(`${thefield}Block`).hidden = true;
