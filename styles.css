@@ -23,6 +23,10 @@ select {
 	margin-bottom: 5px;
 }
 
+#setPrismOffsetsForm>span>select {
+	width: 6em;
+}
+
 select.sessionsmenu {
 	width: 18em;
 }
@@ -138,9 +142,12 @@ label {
 }
 
 #setAtmosphericConditionsForm label,
-#setPrismOffsetsForm label,
 #saveNewStationForm label {
 	width: 8em;
+}
+
+#setPrismOffsetsForm label {
+	width: 7.5em;
 }
 
 #sessionForm label {
