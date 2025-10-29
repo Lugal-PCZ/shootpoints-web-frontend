@@ -39,14 +39,20 @@ function handle_special_subclasses() {
         if (geometriesmenu.value != "1") {
             geometriesmenu.value = "1";
             update_description(geometriesmenu, 'groupingFormGeometryDescription');
-            themessage += "\n\nMoreover, because a survey station is by definition a single point in space, the geometry for this point has been changed to “Isolated Point.” Please verify the grouping information before continuing.";
+            themessage += "\n\nMoreover, because a survey station is by definition a single point in space, the geometry for this point will be changed to “Isolated Point.”";
         }
         alert(themessage);
-    } else if (document.getElementById("groupingFormSubclassesMenu").value === "5") {
-        if (geometriesmenu.value != "1" && geometriesmenu.value != "2") {
+    } else if (document.getElementById("groupingFormSubclassesMenu").value === "4") {
+        if (geometriesmenu.value != "1") {
             geometriesmenu.value = "1";
             update_description(geometriesmenu, 'groupingFormGeometryDescription');
-            alert("You’ve chosen the “GCP” subclass. These can only have “Isolated Point” or “Point Cloud” geometry, so it has been changed to “Isolated Point.” Please verify the grouping information before continuing.");
+            alert("Because an “Elevation Control Point” is a single point in space, the geometry for this point will be changed to “Isolated Point.”");
+        }
+    } else if (document.getElementById("groupingFormSubclassesMenu").value === "5") {
+        if (geometriesmenu.value != "1") {
+            geometriesmenu.value = "1";
+            update_description(geometriesmenu, 'groupingFormGeometryDescription');
+            alert("Because a “GCP” is a single point in space, the geometry for this point will be changed to “Isolated Point.”");
         }
     }
 }
