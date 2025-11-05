@@ -419,6 +419,7 @@ async function start_new_grouping() {
 	let status = await _update_data_via_api("/grouping/", "POST", groupingForm);
 	if (status >= 200 && status <= 299) {
 		document.getElementById("groupingForm").reset();
+		document.getElementById("groupingFormSubclassesMenu").innerHTML = "";
 		document.getElementById("groupingFormGeometryDescription").hidden = true;
 		document.getElementById("groupingFormClassDescription").hidden = true;
 		document.getElementById("groupingFormSubclassDescription").hidden = true;
