@@ -110,23 +110,33 @@ function show_take_shot_form(theform = null) {
 
 function show_current_grouping_details() {
     let details = [];
+    let numberofshots = "Number of Shots in Grouping: ";
     if (document.getElementById("currentGroupingInfo").getAttribute("currentgroupingdescription") !== "undefined") {
         details.push(`Description: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingdescription")}`);
     }
     if (document.getElementById("currentGroupingInfo").getAttribute("currentgroupingnumberofshots") !== "undefined") {
-        details.push(`Number of Shots in Grouping: ${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingnumberofshots")}`);
+        numberofshots += `${document.getElementById("currentGroupingInfo").getAttribute("currentgroupingnumberofshots")}`;
     } else {
-        details.push(`Number of Shots in Grouping: 0`);
+        numberofshots += "0";
     }
+    if (document.getElementById("saveLastShotForm").hidden == false) {
+        numberofshots += " (plus 1 unsaved)";
+    }
+    details.push(numberofshots);
     alert(details.join("\n"));
 }
 
 function show_current_session_details() {
     let details = [`Site: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionsite")}`];
+    let numberofshots = "Number of Shots in Session: ";
     details.push(`Started: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionstarted")}`);
     details.push(`Occupied Point: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionoccupiedpoint")}`);
     details.push(`Instrument Height: ${document.getElementById("currentSessionInfo").getAttribute("currentsessioninstrumentheight")}m`);
-    details.push(`Number of Shots in Session: ${document.getElementById("currentSessionInfo").getAttribute("currentsessionnumberofshots")}`);
+    numberofshots += `${document.getElementById("currentSessionInfo").getAttribute("currentsessionnumberofshots")}`;
+    if (document.getElementById("saveLastShotForm").hidden == false) {
+        numberofshots += " (plus 1 unsaved)";
+    }
+    details.push(numberofshots);
     alert(details.join("\n"));
 }
 
