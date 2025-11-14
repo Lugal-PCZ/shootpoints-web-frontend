@@ -520,6 +520,7 @@ async function abort_resection(feedback = true) {
 async function reset_database() {
 	if (confirm("Reset the ShootPoints database? If you are working with live data, it is recommended to back up the database before proceeding.")) {
 		await _update_data_via_api("/reset/", "DELETE", resetDatabaseForm);
+		alert("Database reset complete.");
 		load_atmospheric_conditions();
 		load_prism_offsets();
 		load_date_and_time();
