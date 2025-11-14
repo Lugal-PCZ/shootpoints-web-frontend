@@ -459,8 +459,8 @@
 					<select id="setConfigsFormMakeMenu" name="make" onchange="update_model_menu();"></select><br>
 					<label for="setConfigsFormModelMenu">Model:</label>
 					<select id="setConfigsFormModelMenu" name="model"></select><br>
-					<label id="setConfigsFormLimitLabel" for="setConfigsFormLimit">Backsight Error Limit (cm): </label>
-					<input type="text" id="setConfigsFormLimit" name="limit" size="5"
+					<label id="setConfigsFormToleranceLabel" for="setConfigsFormTolerance">Backsight Error Tolerance (cm): </label>
+					<input type="text" id="setConfigsFormTolerance" name="tolerance" size="5"
 						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" inputmode="decimal" oninput="_fix_decimals(this);" /><br>
 					<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" />
 				</span>

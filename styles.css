@@ -125,7 +125,7 @@ label {
 	width: 3em;
 }
 
-#setConfigsForm label:not(#setConfigsFormLimitLabel),
+#setConfigsForm label:not(#setConfigsFormToleranceLabel),
 #deleteSubclassForm label {
 	width: 4em;
 }
