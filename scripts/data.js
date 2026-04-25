@@ -68,7 +68,8 @@ async function load_configs_menus() {
 	document.getElementById("setConfigsFormMakeMenu").value = json.current.make;
 	update_model_menu(json.options.total_stations[json.current.make]);
 	document.getElementById("setConfigsFormModelMenu").value = json.current.model;
-	document.getElementById("setConfigsFormTolerance").value = json.current.tolerance;
+	document.getElementById("setConfigsFormHorizontalTolerance").value = json.current.tolerance_h;
+	document.getElementById("setConfigsFormVerticalTolerance").value = json.current.tolerance_v;
 	toggle_total_station_menus(document.getElementById("setConfigsFormPortMenu").value)
 }
 

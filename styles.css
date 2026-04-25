@@ -125,7 +125,9 @@ label {
 	width: 3em;
 }
 
-#setConfigsForm label:not(#setConfigsFormToleranceLabel),
+#setConfigsForm
+label:not(#setConfigsFormHorizontalToleranceLabel)
+label:not(#setConfigsFormVerticalToleranceLabel),
 #deleteSubclassForm label {
 	width: 4em;
 }

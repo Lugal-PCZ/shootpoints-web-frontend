@@ -10,11 +10,11 @@
 	<script src="lib/leaflet/leaflet.js"></script>
 	<script src="lib/Leaflet.SvgShapeMarkers/leaflet-svg-shape-markers.min.js"></script>
 	<!-- ShootPoints javascript and css. Version tracks the project version and needs to be updated manually -->
-	<script src="scripts/data.js?v=1.8.0"></script>
-	<script src="scripts/rpi.js?v=1.8.0"></script>
-	<script src="scripts/ui.js?v=1.8.0"></script>
-	<script src="scripts/livemap.js?v=1.8.0"></script>
-	<link rel="stylesheet" href="styles.css?v=1.8.0">
+	<script src="scripts/data.js?v=1.9.0"></script>
+	<script src="scripts/rpi.js?v=1.9.0"></script>
+	<script src="scripts/ui.js?v=1.9.0"></script>
+	<script src="scripts/livemap.js?v=1.9.0"></script>
+	<link rel="stylesheet" href="styles.css?v=1.9.0">
 	<link rel="icon" href="img/favicon.ico">
 </head>
 
@@ -459,8 +459,11 @@
 					<select id="setConfigsFormMakeMenu" name="make" onchange="update_model_menu();"></select><br>
 					<label for="setConfigsFormModelMenu">Model:</label>
 					<select id="setConfigsFormModelMenu" name="model"></select><br>
-					<label id="setConfigsFormToleranceLabel" for="setConfigsFormTolerance">Backsight Error Tolerance (cm): </label>
-					<input type="text" id="setConfigsFormTolerance" name="tolerance" size="5"
+					<label id="setConfigsFormHorizontalToleranceLabel" for="setConfigsFormHorizontalTolerance">Horiz. Backsight Tolerance (cm): </label>
+					<input type="text" id="setConfigsFormHorizontalTolerance" name="tolerance_h" size="5"
+						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" inputmode="decimal" oninput="_fix_decimals(this);" /><br>
+					<label id="setConfigsFormVerticalToleranceLabel" for="setConfigsFormTolerance">Vert. Backsight Tolerance (cm): </label>
+					<input type="text" id="setConfigsFormVerticalTolerance" name="tolerance_v" size="5"
 						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" inputmode="decimal" oninput="_fix_decimals(this);" /><br>
 					<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" />
 				</span>
