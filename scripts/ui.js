@@ -321,7 +321,7 @@ function update_required_new_session_fields() {
             _show_required_field("sessionFormOccupiedPointMenu");
             _show_required_field("sessionFormBacksightStationMenu");
             _show_required_field("sessionFormPrismHeight");
-            _hide_required_field("sessionFormInstrumentHeight");
+            _show_required_field("sessionFormInstrumentHeight");
             _hide_required_field("sessionFormAzimuth");
             _hide_required_field("sessionFormNewStationName");
             _hide_required_field("sessionFormBacksightStation1Menu");
