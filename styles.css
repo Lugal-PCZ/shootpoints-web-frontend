@@ -18,7 +18,7 @@ input {
 }
 
 select {
-	width: 9em;
+	width: 11em;
 	border: thin lightgrey solid;
 	margin-bottom: 5px;
 }
