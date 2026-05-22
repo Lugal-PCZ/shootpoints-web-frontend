@@ -147,6 +147,7 @@
 			<span class="collapsible" hidden>
 				<hr>
 				<a href="" id="sessionDataExportTrigger" download hidden></a>
+				<label for="exportSessionDataFormSessionsMenu">Session:</label>
 				<select id="exportSessionDataFormSessionsMenu" class="sessionsmenu" name="sessions_id"
 					onchange="toggle_info(this,'exportSessionDataFormSessionDescription'); toggle_button('exportSessionDataForm');"
 					required>
@@ -158,12 +159,38 @@
 					onclick="export_session_data();" disabled />
 			</span>
 		</form>
+		<form id="exportStationsForm" class="collapsible">
+			<span onclick="collapse(this);"><b>Export Stations</b> <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<a href="" id="stationsExportTrigger" download hidden></a>
+				<label for="exportStationsFormSitesMenu">Site:</label>
+				<select id="exportStationsFormSitesMenu" class="sitesmenu" name="sites_id"
+					onchange="update_description(this,'exportStationsFormSiteDescription'); toggle_button('exportStationsForm');"
+					required>
+				</select>
+				<img class="infobutton" id="exportStationsFormSiteDescription" src="img/info.svg" hidden>
+				<br>
+				<input type="button" id="exportStationsFormButton" class="safe" value="Export"
+					onclick="export_stations();" disabled />
+			</span>
+		</form>
+		<form id="exportClassesForm" class="collapsible">
+			<span onclick="collapse(this);"><b>Export All Classes and Subclasses</b> <span class="expander">‣</span><span
+					class="collapser" hidden>▾</span></span>
+			<span class="collapsible" hidden>
+				<hr>
+				<a href="/export/classes/" id="classesExportTrigger" download hidden></a>
+				<input type="button" class="safe" value="Export" onclick="export_classes();" />
+			</span>
+		</form>
 		<form id="downloadDatabaseForm" class="collapsible">
 			<span onclick="collapse(this)"><b>Download the ShootPoints Database</b> <span class="expander">‣</span><span
 					class="collapser" hidden>▾</span></span>
 			<span class="collapsible" hidden>
 				<hr>
-				<a href="/database/" id="databaseDownloadTrigger" download hidden></a>
+				<a href="/export/database/" id="databaseDownloadTrigger" download hidden></a>
 				<input type="button" class="safe" value="Download" onclick="download_database();" />
 			</span>
 		</form>
@@ -187,6 +214,7 @@
 					hidden>▾</span></span>
 			<span class="collapsible" hidden>
 				<hr>
+				<label for="deleteSessionFormSessionsMenu">Session:</label>
 				<select id="deleteSessionFormSessionsMenu" class="sessionsmenu" name="sessions_id"
 					onchange="toggle_info(this,'deleteSessionFormSessionDescription'); toggle_button('deleteSessionForm');"
 					required>
@@ -462,7 +490,7 @@
 					<label id="setConfigsFormHorizontalToleranceLabel" for="setConfigsFormHorizontalTolerance">Horiz. Backsight Tolerance (cm): </label>
 					<input type="text" id="setConfigsFormHorizontalTolerance" name="tolerance_h" size="5"
 						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" inputmode="decimal" oninput="_fix_decimals(this);" /><br>
-					<label id="setConfigsFormVerticalToleranceLabel" for="setConfigsFormTolerance">Vert. Backsight Tolerance (cm): </label>
+					<label id="setConfigsFormVerticalToleranceLabel" for="setConfigsFormVerticalTolerance">Vert. Backsight Tolerance (cm): </label>
 					<input type="text" id="setConfigsFormVerticalTolerance" name="tolerance_v" size="5"
 						pattern="\d{1,2}\.|\d{1,2}(\.\d{1})?" inputmode="decimal" oninput="_fix_decimals(this);" /><br>
 					<input type="button" id="setConfigsFormButton" value="Set Configs" onclick="set_configs();" />

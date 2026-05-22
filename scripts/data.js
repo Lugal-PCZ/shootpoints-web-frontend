@@ -4,7 +4,6 @@ async function download_database() {
 	document.getElementById("databaseDownloadTrigger").click();
 }
 
-
 async function ensure_unique_resection_station_name() {
 	let thesite = document.getElementById("sessionFormSitesMenu");
 	let newstation = document.getElementById("sessionFormNewStationName").value;
@@ -20,15 +19,28 @@ async function ensure_unique_resection_station_name() {
 	}
 }
 
+async function export_classes() {
+	document.getElementById("classesExportTrigger").click();
+}
 
 async function export_session_data() {
 	let sessions_id = document.getElementById("exportSessionDataFormSessionsMenu").value;
 	let thetrigger = document.getElementById("sessionDataExportTrigger");
-	thetrigger.setAttribute("href", `/export/${sessions_id}`);
+	thetrigger.setAttribute("href", `/export/session/${sessions_id}`);
 	thetrigger.click();
 	document.getElementById("exportSessionDataForm").reset();
 	document.getElementById("exportSessionDataFormButton").disabled = true;
 	document.getElementById("exportSessionDataFormSessionDescription").hidden = true;
+}
+
+async function export_stations() {
+	let site_id = document.getElementById("exportStationsFormSitesMenu").value;
+	let thetrigger = document.getElementById("stationsExportTrigger");
+	thetrigger.setAttribute("href", `/export/stations/${site_id}`);
+	thetrigger.click();
+	document.getElementById("exportStationsForm").reset();
+	document.getElementById("exportStationsFormButton").disabled = true;
+	document.getElementById("exportStationsFormSiteDescription").hidden = true;
 }
 
 async function load_atmospheric_conditions() {
@@ -534,6 +546,7 @@ async function reset_database() {
 		load_current_grouping_info();
 	}
 }
+
 
 // Shot Handling
 
