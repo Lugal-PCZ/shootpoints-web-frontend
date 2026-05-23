@@ -13,8 +13,17 @@ form {
 	background: rgba(255, 255, 255, 0.4);
 }
 
+hr {
+	color: rgba(255, 255, 255, 0.75);
+}
+
 input {
 	margin-bottom: 5px;
+}
+
+p#version {
+	font-size: small;
+	margin-left: 10px;
 }
 
 select {
@@ -281,4 +290,18 @@ label:not(#setConfigsFormVerticalToleranceLabel),
 
 .shotdata td {
 	padding-right: 1em;
+}
+
+.utilitiesGrouping > .utilitiesGroupingLabel {
+	font-weight: bold;
+	font-size: small;
+	background-color: rgba(0, 0, 0, 0.27);
+	padding: 3px 10px 3px 10px;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+.utilitiesGrouping > hr {
+	height: 2px;
+	color: rgba(0, 0, 0, 0);
 }

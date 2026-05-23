@@ -41,7 +41,8 @@
 		</div>
 		<form id="setAtmosphericConditionsForm" class="collapsible">
 			<span onclick="collapse(this);"><b>Set Atmospheric Conditions</b> <span class="expander">‣</span><span
-					class="collapser" hidden>▾</span></span>
+					class="collapser" hidden>▾</span>
+			</span>
 			<span class="collapsible" hidden>
 				<hr>
 				<label for="setAtmosphericConditionsFormTemperature">Temperature (°C):</label>
@@ -57,7 +58,8 @@
 		</form>
 		<form id="setPrismOffsetsForm" class="collapsible">
 			<span onclick="collapse(this)"><b>Set Prism Offsets</b> <span class="expander">‣</span><span
-					class="collapser" hidden>▾</span></span>
+					class="collapser" hidden>▾</span>
+			</span>
 			<span class="collapsible" hidden>
 				<hr>
 				<span style="font-size: small">(direction is in meters from prism to point, as seen from the total
@@ -121,112 +123,157 @@
 		<div class="formcollectionheader rounded">
 			Utilities
 		</div>
-		<form id="rpiPowerOffForm" class="collapsible" hidden>
-			<span onclick="collapse(this);"><b>Power Off the Data Collector</b> <span class="expander">‣</span><span
-					class="collapser" hidden>▾</span></span>
-			<span class="collapsible" hidden>
-				<hr>
-				<input type="checkbox" id="rpiPowerOffFormEndCurrentSessionCheckbox"
-					onchange="toggle_rpi_power_buttons();" checked />
-				<span id="rpiPowerOffFormEndCurrentSessionCheckboxLabel">End the Current
-					Session<br></span>
-				<input type="button" id="rpiPowerOffFormShutdownButton" value="Shut Down"
-					onclick="rpi_power('shutdown');" />
-				<input type="button" id="rpiPowerOffFormRebootButton" value="Reboot" onclick="rpi_power('reboot');" />
-				<img id="rpiPowerOffFormIndicator" src="img/cylon.svg" hidden />
-			</span>
-		</form>
-		<form id="setClockForm" hidden>
-			<!-- This used to be a real form, but now is just a data placeholder so that I can use
-			the _update_data_via_api() function in data.js. -->
-			<input type="text" id="setClockFormDateTimeString" name="datetimestring" />
-		</form>
-		<form id="exportSessionDataForm" class="collapsible">
-			<span onclick="collapse(this);"><b>Export Surveying Session Data</b> <span class="expander">‣</span><span
-					class="collapser" hidden>▾</span></span>
-			<span class="collapsible" hidden>
-				<hr>
-				<a href="" id="sessionDataExportTrigger" download hidden></a>
-				<label for="exportSessionDataFormSessionsMenu">Session:</label>
-				<select id="exportSessionDataFormSessionsMenu" class="sessionsmenu" name="sessions_id"
-					onchange="toggle_info(this,'exportSessionDataFormSessionDescription'); toggle_button('exportSessionDataForm');"
-					required>
-				</select>
-				<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg"
-					onclick="show_selected_session_details('exportSessionDataFormSessionsMenu')" hidden>
-				<br>
-				<input type="button" id="exportSessionDataFormButton" class="safe" value="Export"
-					onclick="export_session_data();" disabled />
-			</span>
-		</form>
-		<form id="exportStationsForm" class="collapsible">
-			<span onclick="collapse(this);"><b>Export Stations</b> <span class="expander">‣</span><span
-					class="collapser" hidden>▾</span></span>
-			<span class="collapsible" hidden>
-				<hr>
-				<a href="" id="stationsExportTrigger" download hidden></a>
-				<label for="exportStationsFormSitesMenu">Site:</label>
-				<select id="exportStationsFormSitesMenu" class="sitesmenu" name="sites_id"
-					onchange="update_description(this,'exportStationsFormSiteDescription'); toggle_button('exportStationsForm');"
-					required>
-				</select>
-				<img class="infobutton" id="exportStationsFormSiteDescription" src="img/info.svg" hidden>
-				<br>
-				<input type="button" id="exportStationsFormButton" class="safe" value="Export"
-					onclick="export_stations();" disabled />
-			</span>
-		</form>
-		<form id="exportClassesForm" class="collapsible">
-			<span onclick="collapse(this);"><b>Export All Classes and Subclasses</b> <span class="expander">‣</span><span
-					class="collapser" hidden>▾</span></span>
-			<span class="collapsible" hidden>
-				<hr>
-				<a href="/export/classes/" id="classesExportTrigger" download hidden></a>
-				<input type="button" class="safe" value="Export" onclick="export_classes();" />
-			</span>
-		</form>
-		<form id="downloadDatabaseForm" class="collapsible">
-			<span onclick="collapse(this)"><b>Download the ShootPoints Database</b> <span class="expander">‣</span><span
-					class="collapser" hidden>▾</span></span>
-			<span class="collapsible" hidden>
-				<hr>
-				<a href="/export/database/" id="databaseDownloadTrigger" download hidden></a>
-				<input type="button" class="safe" value="Download" onclick="download_database();" />
-			</span>
-		</form>
-		<form id="resetDatabaseForm" class="collapsible">
-			<span onclick="collapse(this)"><b>Reset the ShootPoints Database</b> <span class="expander">‣</span><span
-					class="collapser" hidden>▾</span></span>
-			<span class="collapsible" hidden>
-				<hr>
-				<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations"
-					value="True" checked>
-				<label for="resetDatabaseFormPreserveSitesAndStations">Preserve Sites and Stations</label><br>
-				<input type="checkbox" id="resetDatabaseFormPreserveClassesAndSubclasses"
-					name="preserveclassesandsubclasses" value="True" checked>
-				<label for="resetDatabaseFormPreserveClassesAndSubclasses">Preserve Classes and Subclasses</label><br>
-				<input type="hidden" name="ignore">
-				<input type="button" class="dangerous" value="Reset" onclick="reset_database();" />
-			</span>
-		</form>
-		<form id="deleteSessionForm" class="collapsible">
-			<span onclick="collapse(this)"><b>Delete Session</b> <span class="expander">‣</span><span class="collapser"
-					hidden>▾</span></span>
-			<span class="collapsible" hidden>
-				<hr>
-				<label for="deleteSessionFormSessionsMenu">Session:</label>
-				<select id="deleteSessionFormSessionsMenu" class="sessionsmenu" name="sessions_id"
-					onchange="toggle_info(this,'deleteSessionFormSessionDescription'); toggle_button('deleteSessionForm');"
-					required>
-				</select>
-				<img class="infobutton" id="deleteSessionFormSessionDescription" src="img/info.svg"
-					onclick="show_selected_session_details('deleteSessionFormSessionsMenu')" hidden>
-				<br>
-				<input type="button" id="deleteSessionFormButton" class="dangerous" value="Delete Session"
-					onclick="delete_session();" disabled />
-			</span>
-		</form>
-		<p id="version" style="font-size:x-small; padding-left: 10px;"></p>
+		<hr>
+		<div id="rpiUtilities" class="utilitiesGrouping" hidden>
+			<span class="utilitiesGroupingLabel">Data Collector Tools</span>
+			<form id="rpiPowerOffForm" class="collapsible">
+				<span onclick="collapse(this);"><b>Power Off the Data Collector</b> <span class="expander">‣</span><span
+						class="collapser" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<input type="checkbox" id="rpiPowerOffFormEndCurrentSessionCheckbox"
+						onchange="toggle_rpi_power_buttons();" checked />
+					<span id="rpiPowerOffFormEndCurrentSessionCheckboxLabel">End the Current
+						Session<br></span>
+					<input type="button" id="rpiPowerOffFormShutdownButton" value="Shut Down"
+						onclick="rpi_power('shutdown');" />
+					<input type="button" id="rpiPowerOffFormRebootButton" value="Reboot" onclick="rpi_power('reboot');" />
+					<img id="rpiPowerOffFormIndicator" src="img/cylon.svg" hidden />
+				</span>
+			</form>
+			<form id="setClockForm" hidden>
+				<!-- This used to be a real form, but now is just a data placeholder so that I can use
+				the _update_data_via_api() function in data.js. -->
+				<input type="text" id="setClockFormDateTimeString" name="datetimestring" />
+			</form>
+			<hr>
+		</div>
+		<div id="dataExporters" class="utilitiesGrouping">
+			<span class="utilitiesGroupingLabel">Export Data</span>
+			<form id="exportSessionDataForm" class="collapsible">
+				<span onclick="collapse(this);"><b>Export Surveying Session Data</b> <span class="expander">‣</span><span
+						class="collapser" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<a href="" id="sessionDataExportTrigger" download hidden></a>
+					<label for="exportSessionDataFormSessionsMenu">Session:</label>
+					<select id="exportSessionDataFormSessionsMenu" class="sessionsmenu" name="sessions_id"
+						onchange="toggle_info(this,'exportSessionDataFormSessionDescription'); toggle_button('exportSessionDataForm');"
+						required>
+					</select>
+					<img class="infobutton" id="exportSessionDataFormSessionDescription" src="img/info.svg"
+						onclick="show_selected_session_details('exportSessionDataFormSessionsMenu')" hidden>
+					<br>
+					<input type="button" id="exportSessionDataFormButton" class="safe" value="Export"
+						onclick="export_session_data();" disabled />
+				</span>
+			</form>
+			<form id="exportClassesForm" class="collapsible">
+				<span onclick="collapse(this);"><b>Export Classes and Subclasses</b> <span class="expander">‣</span><span
+						class="collapser" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<a href="/export/classes/" id="classesExportTrigger" download hidden></a>
+					<input type="button" class="safe" value="Export" onclick="export_classes();" />
+				</span>
+			</form>
+			<form id="exportStationsForm" class="collapsible">
+				<span onclick="collapse(this);"><b>Export Stations</b> <span class="expander">‣</span><span
+						class="collapser" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<a href="" id="stationsExportTrigger" download hidden></a>
+					<label for="exportStationsFormSitesMenu">Site:</label>
+					<select id="exportStationsFormSitesMenu" class="sitesmenu" name="sites_id"
+						onchange="update_description(this,'exportStationsFormSiteDescription'); toggle_button('exportStationsForm');"
+						required>
+					</select>
+					<img class="infobutton" id="exportStationsFormSiteDescription" src="img/info.svg" hidden>
+					<br>
+					<input type="button" id="exportStationsFormButton" class="safe" value="Export"
+						onclick="export_stations();" disabled />
+				</span>
+			</form>
+			<form id="downloadDatabaseForm" class="collapsible">
+				<span onclick="collapse(this)"><b>Download the ShootPoints Database</b> <span class="expander">‣</span><span
+						class="collapser" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<a href="/export/database/" id="databaseDownloadTrigger" download hidden></a>
+					<input type="button" class="safe" value="Download" onclick="download_database();" />
+				</span>
+			</form>
+			<hr>
+		</div>
+		<div id="dataImporters" class="utilitiesGrouping">
+			<span class="utilitiesGroupingLabel">Import Data</span>
+			<form id="importClassesForm" class="collapsible">
+				<span onclick="collapse(this);"><b>Import Classes and Subclasses</b> <span class="expander">‣</span><span
+						class="collapser" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<a href="" id="classesImportTrigger" download hidden></a>
+					<input type="button" class="dangerous" value="Import" onclick="import_classes();" />
+				</span>
+			</form>
+			<form id="importStationsForm" class="collapsible">
+				<span onclick="collapse(this);"><b>Import Stations</b> <span class="expander">‣</span><span
+						class="collapser" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<a href="" id="stationsImportTrigger" download hidden></a>
+					<input type="button" class="dangerous" value="Import" onclick="import_stations();" />
+				</span>
+			</form>
+			<hr>
+		</div>
+		<div id="dataClearers" class="utilitiesGrouping">
+			<span class="utilitiesGroupingLabel">Clear Data</span>
+			<form id="deleteSessionForm" class="collapsible">
+				<span onclick="collapse(this)"><b>Delete Session</b> <span class="expander">‣</span><span class="collapser"
+						hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<label for="deleteSessionFormSessionsMenu">Session:</label>
+					<select id="deleteSessionFormSessionsMenu" class="sessionsmenu" name="sessions_id"
+						onchange="toggle_info(this,'deleteSessionFormSessionDescription'); toggle_button('deleteSessionForm');"
+						required>
+					</select>
+					<img class="infobutton" id="deleteSessionFormSessionDescription" src="img/info.svg"
+						onclick="show_selected_session_details('deleteSessionFormSessionsMenu')" hidden>
+					<br>
+					<input type="button" id="deleteSessionFormButton" class="dangerous" value="Delete Session"
+						onclick="delete_session();" disabled />
+				</span>
+			</form>
+			<form id="resetDatabaseForm" class="collapsible">
+				<span onclick="collapse(this)"><b>Reset the ShootPoints Database</b> <span class="expander">‣</span><span
+						class="collapser" hidden>▾</span>
+				</span>
+				<span class="collapsible" hidden>
+					<hr>
+					<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations"
+						value="True" checked>
+					<label for="resetDatabaseFormPreserveSitesAndStations">Preserve Sites and Stations</label><br>
+					<input type="checkbox" id="resetDatabaseFormPreserveClassesAndSubclasses"
+						name="preserveclassesandsubclasses" value="True" checked>
+					<label for="resetDatabaseFormPreserveClassesAndSubclasses">Preserve Classes and Subclasses</label><br>
+					<input type="hidden" name="ignore">
+					<input type="button" class="dangerous" value="Reset" onclick="reset_database();" />
+				</span>
+			</form>
+			<hr>
+		</div>
+		<hr>
+		<p id="version"></p>
 	</div>
 
 	<div id="liveMap" class="rounded" hidden>
@@ -251,7 +298,8 @@
 	<div class="usage rounded">
 		<div id="surveyingPanel" class="formcollectionheader">
 			<span id="surveyingPanelLabel" onclick="collapse(this.parentNode);">Surveying <span
-					class="expander">‣</span><span class="collapser" hidden>▾</span></span>
+					class="expander">‣</span><span class="collapser" hidden>▾</span>
+			</span>
 			<img id="showLiveMapIcon" src="img/livemap.svg" onclick="livemap_show();">
 		</div>
 
