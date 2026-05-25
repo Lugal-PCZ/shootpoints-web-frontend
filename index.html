@@ -181,7 +181,7 @@
 				</span>
 			</form>
 			<form id="exportStationsForm" class="collapsible">
-				<span onclick="collapse(this);"><b>Export Stations</b> <span class="expander">‣</span><span
+				<span onclick="collapse(this);"><b>Export Sites and Stations</b> <span class="expander">‣</span><span
 						class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
@@ -223,7 +223,7 @@
 				</span>
 			</form>
 			<form id="importStationsForm" class="collapsible">
-				<span onclick="collapse(this);"><b>Import Stations</b> <span class="expander">‣</span><span
+				<span onclick="collapse(this);"><b>Import Sites and Stations</b> <span class="expander">‣</span><span
 						class="collapser" hidden>▾</span>
 				</span>
 				<span class="collapsible" hidden>
@@ -260,13 +260,13 @@
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
-					<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations"
-						value="True" checked>
-					<label for="resetDatabaseFormPreserveSitesAndStations">Preserve Sites and Stations</label><br>
 					<input type="checkbox" id="resetDatabaseFormPreserveClassesAndSubclasses"
 						name="preserveclassesandsubclasses" value="True" checked>
 					<label for="resetDatabaseFormPreserveClassesAndSubclasses">Preserve Classes and Subclasses</label><br>
-					<input type="hidden" name="ignore">
+					<input type="checkbox" id="resetDatabaseFormPreserveSitesAndStations" name="preservesitesandstations"
+						value="True" checked>
+					<label for="resetDatabaseFormPreserveSitesAndStations">Preserve Sites and Stations</label><br>
+					<!-- <input type="hidden" name="ignore"> -->
 					<input type="button" class="dangerous" value="Reset" onclick="reset_database();" />
 				</span>
 			</form>
