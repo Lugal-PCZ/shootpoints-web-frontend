@@ -1,8 +1,29 @@
-// Data getters
+// Helper Function for Data Setters
 
-async function download_database() {
-	document.getElementById("databaseDownloadTrigger").click();
+async function _update_data_via_api(theurl, themethod, theform, silent = false) {
+	let response = await fetch(
+		theurl, {
+		method: themethod,
+		body: new FormData(theform)
+	});
+	let json = await response.json();
+	let theoutput = [];
+	if ("errors" in json) {
+		json.errors.forEach(function (theerror) {
+			theoutput.push(`<b style="color: red;">ERROR:</b> ${theerror}<br>`);
+		});
+	}
+	if ("result" in json) {
+		theoutput.push(`${json.result}<br>`);
+	}
+	if (silent === false) {
+		document.getElementById("outputBox").innerHTML = theoutput.join("\n");
+	}
+	return response.status;
 }
+
+
+// Data Getters
 
 async function ensure_unique_resection_station_name() {
 	let thesite = document.getElementById("sessionFormSitesMenu");
@@ -17,30 +38,6 @@ async function ensure_unique_resection_station_name() {
 			}
 		});
 	}
-}
-
-async function export_classes() {
-	document.getElementById("classesExportTrigger").click();
-}
-
-async function export_session_data() {
-	let sessions_id = document.getElementById("exportSessionDataFormSessionsMenu").value;
-	let thetrigger = document.getElementById("sessionDataExportTrigger");
-	thetrigger.setAttribute("href", `/export/session/${sessions_id}`);
-	thetrigger.click();
-	document.getElementById("exportSessionDataForm").reset();
-	document.getElementById("exportSessionDataFormButton").disabled = true;
-	document.getElementById("exportSessionDataFormSessionDescription").hidden = true;
-}
-
-async function export_stations() {
-	let site_id = document.getElementById("exportStationsFormSitesMenu").value;
-	let thetrigger = document.getElementById("stationsExportTrigger");
-	thetrigger.setAttribute("href", `/export/stations/${site_id}`);
-	thetrigger.click();
-	document.getElementById("exportStationsForm").reset();
-	document.getElementById("exportStationsFormButton").disabled = true;
-	document.getElementById("exportStationsFormSiteDescription").hidden = true;
 }
 
 async function load_atmospheric_conditions() {
@@ -223,29 +220,7 @@ async function load_sites_menus() {
 }
 
 
-// Data setters
-
-async function _update_data_via_api(theurl, themethod, theform, silent = false) {
-	let response = await fetch(
-		theurl, {
-		method: themethod,
-		body: new FormData(theform)
-	});
-	let json = await response.json();
-	let theoutput = [];
-	if ("errors" in json) {
-		json.errors.forEach(function (theerror) {
-			theoutput.push(`<b style="color: red;">ERROR:</b> ${theerror}<br>`);
-		});
-	}
-	if ("result" in json) {
-		theoutput.push(`${json.result}<br>`);
-	}
-	if (silent === false) {
-		document.getElementById("outputBox").innerHTML = theoutput.join("\n");
-	}
-	return response.status;
-}
+// Data Setters
 
 async function delete_class() {
 	let classname = document.getElementById("deleteClassFormClassesMenu");
@@ -531,7 +506,7 @@ async function abort_resection(feedback = true) {
 }
 
 async function reset_database() {
-	if (confirm("Reset the ShootPoints database? If you are working with live data, it is recommended to back up the database before proceeding.")) {
+	if (confirm("Reset the ShootPoints database? This will erase all existing survey data.")) {
 		await _update_data_via_api("/reset/", "DELETE", resetDatabaseForm);
 		alert("Database reset complete.");
 		load_atmospheric_conditions();
@@ -632,5 +607,57 @@ function discard_last_shot() {
 		document.getElementById("outputBox").innerText = "Last shot discarded.";
 		show_take_shot_form("takeShotForm");
 		livemap_discard_last_shot();
+	}
+}
+
+
+// Data Exporters
+
+async function download_database() {
+	document.getElementById("databaseDownloadTrigger").click();
+}
+
+async function export_classes() {
+	document.getElementById("classesExportTrigger").click();
+}
+
+async function export_session_data() {
+	let sessions_id = document.getElementById("exportSessionDataFormSessionsMenu").value;
+	let thetrigger = document.getElementById("sessionDataExportTrigger");
+	thetrigger.setAttribute("href", `/export/session/${sessions_id}`);
+	thetrigger.click();
+	document.getElementById("exportSessionDataForm").reset();
+	document.getElementById("exportSessionDataFormButton").disabled = true;
+	document.getElementById("exportSessionDataFormSessionDescription").hidden = true;
+}
+
+async function export_stations() {
+	let site_id = document.getElementById("exportStationsFormSitesMenu").value;
+	let thetrigger = document.getElementById("stationsExportTrigger");
+	thetrigger.setAttribute("href", `/export/stations/${site_id}`);
+	thetrigger.click();
+	document.getElementById("exportStationsForm").reset();
+	document.getElementById("exportStationsFormButton").disabled = true;
+	document.getElementById("exportStationsFormSiteDescription").hidden = true;
+}
+
+
+// Data Importers
+
+async function import_classes() {
+	let status = await _update_data_via_api("/import/classes/", "POST", importClassesForm);
+	if (status >= 200 && status <= 299) {
+		document.getElementById("importClassesForm").reset();
+		document.getElementById("importClassesFormButton").disabled = true;
+		load_classes_menus();
+	}
+}
+
+async function import_stations() {
+	let status = await _update_data_via_api("/import/stations/", "POST", importStationsForm);
+	if (status >= 200 && status <= 299) {
+		document.getElementById("importStationsForm").reset();
+		document.getElementById("importStationsFormButton").disabled = true;
+		load_stations_menus();
 	}
 }

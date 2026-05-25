@@ -218,8 +218,8 @@
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
-					<a href="" id="classesImportTrigger" download hidden></a>
-					<input type="button" class="dangerous" value="Import" onclick="import_classes();" />
+					<input type="file" accept="application/json,.json" name="import_classes_file" onchange="toggle_button('importClassesForm');"/><br>
+					<input type="button" id="importClassesFormButton" class="safe" value="Import" onclick="import_classes();" disabled/>
 				</span>
 			</form>
 			<form id="importStationsForm" class="collapsible">
@@ -228,8 +228,8 @@
 				</span>
 				<span class="collapsible" hidden>
 					<hr>
-					<a href="" id="stationsImportTrigger" download hidden></a>
-					<input type="button" class="dangerous" value="Import" onclick="import_stations();" />
+					<input type="file" accept="application/json,.json" name="import_stations_file" onchange="toggle_button('importStationsForm');"/><br>
+					<input type="button" id="importStationsFormButton" class="safe" value="Import" onclick="import_stations();" disabled/>
 				</span>
 			</form>
 			<hr>
