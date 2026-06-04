@@ -281,6 +281,8 @@ async function delete_station() {
 			update_station_menu(document.getElementById("deleteStationFormSitesMenu"), "deleteStationFormStationsMenu");
 			document.getElementById("deleteStationFormStationDescription").hidden = true;
 			document.getElementById("deleteStationFormButton").disabled = true;
+			update_station_menu(document.getElementById("sessionFormSitesMenu"), 'sessionFormOccupiedPointMenu');
+			update_station_menu(document.getElementById("sessionFormSitesMenu"), 'sessionFormBacksightStation1Menu');
 		}
 	}
 }
@@ -369,6 +371,8 @@ async function save_new_station() {
 		document.getElementById("saveNewStationFormStationLongitude").value = "";
 		document.getElementById("saveNewStationFormStationElevation").value = "";
 		document.getElementById("saveNewStationFormButton").disabled = true;
+		update_station_menu(document.getElementById("sessionFormSitesMenu"), 'sessionFormOccupiedPointMenu');
+		update_station_menu(document.getElementById("sessionFormSitesMenu"), 'sessionFormBacksightStation1Menu');
 	}
 }
 
@@ -658,6 +662,5 @@ async function import_stations() {
 	if (status >= 200 && status <= 299) {
 		document.getElementById("importStationsForm").reset();
 		document.getElementById("importStationsFormButton").disabled = true;
-		load_stations_menus();
 	}
 }
